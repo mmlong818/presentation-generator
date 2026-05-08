@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '请求体不是合法 JSON' }, { status: 400 });
   }
 
-  const { brief, theme, llm, brand } = body;
+  const { brief, theme, llm, brand, outline } = body;
   if (!llm?.provider) {
     return NextResponse.json({ error: '请选择 LLM provider' }, { status: 400 });
   }
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   }
 
   const system = buildSystemPrompt();
-  const user = buildUserPrompt(brief, theme);
+  const user = buildUserPrompt(brief, theme, outline);
 
   // ── 第一次调用 ────────────────────────────────────────────────────────────
   let raw: string;

@@ -1,6 +1,6 @@
 // ─── 系统提示词组装：内嵌 presentation-coach 完整方法论 ───────────────────────
 import { layoutSchemasForPrompt } from './layouts/registry';
-import type { BriefInput, ThemeId } from './types';
+import type { BriefInput, Outline, ThemeId } from './types';
 import { THEMES } from './themes';
 
 const COACH_METHODOLOGY = `# 演讲设计方法论（必须遵守）
@@ -131,7 +131,21 @@ ${layoutSchemasForPrompt()}
     - 字符串内的换行用 \`\\n\` 转义，不要在 JSON 字符串里写真正的换行符`;
 }
 
-export function buildUserPrompt(brief: BriefInput, theme: ThemeId): string {
+function themeVibe(theme: ThemeId): string {
+  return theme === 'soft-warm' ? '人文叙事气质：多用故事、共鸣、克制；标题用感性观点句' :
+    theme === 'editorial-monocle' ? '杂志编辑气质：多用论证、引用、章节眉；像写一篇深度长文' :
+    theme === 'modern-minimal' ? '商业专业气质：多用数据、清晰判断、可执行结论' :
+    theme === 'tech-utility' ? '工程师气质：多用具体技术细节、量化指标、严谨术语' :
+    theme === 'brutalist-mono' ? '挑衅 manifesto 气质：多用立场、反差、不留情面的判断' :
+    theme === 'academic-paper' ? '学术气质：标题用 Title Case，正文严谨引用，数据必有出处；可在 quote 用块引格式' :
+    theme === 'midnight-luxe' ? '高端私享气质：克制低调、衬线大字、品牌叙事、避免过度激情' :
+    theme === 'risograph' ? '设计师手作气质：俏皮、双关、反套路；可在 statement 用诗化短句' :
+    theme === 'kraft-paper' ? '工坊手作气质：温度感、生活化用词、教学式语气；适合餐饮/教育/亲子，避免技术术语' :
+    theme === 'broadcast-hud' ? '直播节奏气质：短句、明确数字、强动作动词；像在做产品发布会' :
+    '通用专业气质';
+}
+
+function briefSection(brief: BriefInput, theme: ThemeId): string {
   const t = THEMES[theme];
   return `# 用户简介
 
@@ -147,22 +161,138 @@ ${brief.notes ? `- **用户提供的素材（必须优先采纳）**：\n${brief
 \`${theme}\` · ${t.name} · ${t.description}
 
 视觉风格已锁定，**不要在内容里给视觉建议**。专注于内容设计。
-但请按主题调整内容气质：${
-  theme === 'soft-warm' ? '人文叙事气质：多用故事、共鸣、克制；标题用感性观点句' :
-  theme === 'editorial-monocle' ? '杂志编辑气质：多用论证、引用、章节眉；像写一篇深度长文' :
-  theme === 'modern-minimal' ? '商业专业气质：多用数据、清晰判断、可执行结论' :
-  theme === 'tech-utility' ? '工程师气质：多用具体技术细节、量化指标、严谨术语' :
-  theme === 'brutalist-mono' ? '挑衅 manifesto 气质：多用立场、反差、不留情面的判断' :
-  theme === 'academic-paper' ? '学术气质：标题用 Title Case，正文严谨引用，数据必有出处；可在 quote 用块引格式' :
-  theme === 'midnight-luxe' ? '高端私享气质：克制低调、衬线大字、品牌叙事、避免过度激情' :
-  theme === 'risograph' ? '设计师手作气质：俏皮、双关、反套路；可在 statement 用诗化短句' :
-  theme === 'kraft-paper' ? '工坊手作气质：温度感、生活化用词、教学式语气；适合餐饮/教育/亲子，避免技术术语' :
-  theme === 'broadcast-hud' ? '直播节奏气质：短句、明确数字、强动作动词；像在做产品发布会' :
-  '通用专业气质'
-}。
+请按主题调整内容气质：${themeVibe(theme)}。`;
+}
+
+export function buildUserPrompt(brief: BriefInput, theme: ThemeId, outline?: Outline): string {
+  const base = briefSection(brief, theme);
+  if (outline) {
+    return `${base}
+
+# 用户已确认的大纲（必须严格遵守）
+
+整体叙事弧线：${outline.arc}
+
+框架：${outline.framework}
+
+章节列表（按此顺序、此版式、此时长生成 slides）：
+
+${outline.sections.map((s, i) => `${i + 1}. **${s.title}**（建议版式 \`${s.suggestedLayout ?? 'auto'}\`，${s.durationSec} 秒）
+   ${s.brief}`).join('\n\n')}
+
+⚠ 关键约束：
+- slides[].length **必须等于** ${outline.sections.length}
+- slides[i] 的 type 应符合 sections[i].suggestedLayout（除非该 layout 不能承载内容）
+- slides[i] 的标题应忠于 sections[i].title 的核心观点
+- script[i].durationSec ≈ sections[i].durationSec
+- 总时长仍要接近 ${brief.durationMin * 60} 秒
+
+# 任务
+
+按上述大纲扩写为完整 deck JSON。每张 slide 把对应章节的 brief 落到具体版式字段里，注意 anti-slop 规则。先 5 维自检再输出。只输出纯 JSON。`;
+  }
+  return `${base}
 
 # 任务
 
 按方法论生成 deck JSON。先在心里走一遍框架选择 → 5 维自检，再输出。
 只输出纯 JSON，不要任何解释文字。`;
+}
+
+// ─── 大纲生成提示词 ─────────────────────────────────────────────────────────
+const OUTLINE_METHODOLOGY = `# 大纲设计任务
+
+你是一个资深的演讲教练。**第一步只生成大纲**——结构化骨架，不写完整 slide 内容。
+
+用户会先看大纲、修正、确认，再请你扩写 deck。所以这一步要：
+1. 选对框架
+2. 规划合理的章节序（情感节奏 / 逻辑递进）
+3. 给每节一个**观点句标题** + **一两句话说要讲什么** + **建议版式** + **时长**
+4. 不要写 slides 字段、不要写讲稿——只大纲
+
+## 框架路由（同 deck 阶段）
+
+| 信号 | 框架 |
+|---|---|
+| 学术 / 通用 | Winston |
+| 高管 / 决策 | Pyramid（金字塔）|
+| 战略提案 / 诊断 | SCQA |
+| TED / 感召大众 | Duarte |
+| 产品发布 / Pitch | StoryBrand |
+| 培训 / 知识传播 | SUCCESs |
+
+Duarte 必须有 3 次 What Is ↔ What Could Be 张力循环。
+
+## 章节标题硬性要求
+
+- **观点句**，不是话题词
+  - ❌ "市场分析"  → ✅ "中国市场增速已连续三季度低于全球均值"
+  - ❌ "我们的方案" → ✅ "三步重构结账体验，留存率预计提升 25%"
+- 每个标题 ≤ 30 字
+
+## 建议版式 (suggestedLayout) 取值
+
+只能用以下版式 id 之一（或留空 "auto"）：
+{LAYOUT_LIST}
+
+按 brief 内容选最贴近的：
+- 一句话冲击 → statement
+- 数据对比 → data / chart-bar / kpi-board
+- 二元对比 → compare / matrix-2x2
+- 流程步骤 → process / roadmap
+- 故事 / 引用 → quote / persona / case-study
+- 论点 + 支撑 → argument / causality
+- 收尾 → cta / checklist / cover
+- 提问观众 → question
+
+## 时长分配
+
+所有 sections 的 durationSec 加起来 = brief.durationMin × 60（±10%）。每节 60 / density 秒为基准。
+
+# 输出契约
+
+返回**纯 JSON**：
+
+\`\`\`typescript
+{
+  "title": string,            // 演讲题目（观点句）
+  "framework": string,        // duarte | pyramid | scqa | winston | storybrand | success
+  "arc": string,              // 一段话讲整体叙事弧线
+  "sections": Array<{
+    "title": string,          // 章节标题（观点句，≤30 字）
+    "suggestedLayout": string,// 版式 id（或 "auto"）
+    "brief": string,          // 1-2 句话说这页要讲什么
+    "durationSec": number     // 秒
+  }>
+}
+\`\`\`
+
+第一字符 \`{\`，末字符 \`}\`，不要 markdown，不要解释。`;
+
+export function buildOutlineSystemPrompt(): string {
+  // 把版式列表注入到 OUTLINE_METHODOLOGY
+  return OUTLINE_METHODOLOGY.replace('{LAYOUT_LIST}', layoutListBrief());
+}
+
+export function buildOutlineUserPrompt(brief: BriefInput, theme: ThemeId): string {
+  return `${briefSection(brief, theme)}
+
+# 任务
+
+只输出大纲 JSON，不要 slides / script 完整内容。
+- 章节数 = ${brief.durationMin * (brief.density ?? 1)} 张（每节对应 1 张幻灯片）
+- 每节 durationSec ≈ ${Math.round(60 / (brief.density ?? 1))} 秒
+- title 必须是观点句，不要话题词`;
+}
+
+/** 简化版式列表，用在 outline prompt（不需要完整 schema） */
+function layoutListBrief(): string {
+  // 复用 registry 但只取 type + 简介
+  const registry = layoutSchemasForPrompt();
+  // 简化：从 registry 文档抽 type + label
+  return registry
+    .split('\n')
+    .filter((l) => l.startsWith('### `'))
+    .map((l) => l.replace(/^### `(\S+)`\s+·\s+(.+)/, '- `$1` · $2'))
+    .join('\n');
 }

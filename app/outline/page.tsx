@@ -1,0 +1,230 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import type { Outline, OutlineSection, BriefInput, ThemeId, BrandOverride, LayoutType } from '@/lib/types';
+
+const OUTLINE_STORAGE = 'pg_pending_outline';
+const BRIEF_STORAGE = 'pg_pending_brief';
+const THEME_STORAGE = 'pg_pending_theme';
+const BRAND_STORAGE = 'pg_pending_brand';
+const LLM_STORAGE = 'pg_llm_config';
+const DECK_STORAGE = 'pg_last_deck';
+
+const LAYOUT_OPTIONS: (LayoutType | 'auto')[] = [
+  'auto',
+  'cover','statement','process','data','compare','timeline',
+  'argument','quote','diagram','cta','checklist',
+  'matrix-2x2','chart-bar','kpi-board','roadmap','case-study',
+  'table','causality','persona','quadrant','question',
+];
+
+export default function OutlinePage() {
+  const router = useRouter();
+  const [outline, setOutline] = useState<Outline | null>(null);
+  const [brief, setBrief] = useState<BriefInput | null>(null);
+  const [theme, setTheme] = useState<ThemeId | null>(null);
+  const [brand, setBrand] = useState<BrandOverride | undefined>();
+  const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const o = sessionStorage.getItem(OUTLINE_STORAGE);
+      const b = sessionStorage.getItem(BRIEF_STORAGE);
+      const t = sessionStorage.getItem(THEME_STORAGE);
+      const br = sessionStorage.getItem(BRAND_STORAGE);
+      if (!o || !b || !t) {
+        router.push('/');
+        return;
+      }
+      setOutline(JSON.parse(o));
+      setBrief(JSON.parse(b));
+      setTheme(JSON.parse(t));
+      if (br) setBrand(JSON.parse(br));
+    } catch {
+      router.push('/');
+    }
+  }, [router]);
+
+  function persist(next: Outline) {
+    setOutline(next);
+    sessionStorage.setItem(OUTLINE_STORAGE, JSON.stringify(next));
+  }
+
+  function updateSection(idx: number, patch: Partial<OutlineSection>) {
+    if (!outline) return;
+    const sections = [...outline.sections];
+    sections[idx] = { ...sections[idx], ...patch };
+    persist({ ...outline, sections });
+  }
+  function moveSection(idx: number, delta: -1 | 1) {
+    if (!outline) return;
+    const j = idx + delta;
+    if (j < 0 || j >= outline.sections.length) return;
+    const sections = [...outline.sections];
+    [sections[idx], sections[j]] = [sections[j], sections[idx]];
+    persist({ ...outline, sections });
+  }
+  function addSection(after: number) {
+    if (!outline) return;
+    const sections = [...outline.sections];
+    sections.splice(after + 1, 0, {
+      title: '新章节标题',
+      brief: '这一页要讲什么...',
+      suggestedLayout: 'argument' as LayoutType,
+      durationSec: 60,
+    });
+    persist({ ...outline, sections });
+  }
+  function removeSection(idx: number) {
+    if (!outline || outline.sections.length <= 2) return;
+    persist({ ...outline, sections: outline.sections.filter((_, i) => i !== idx) });
+  }
+
+  async function handleGenerateDeck() {
+    if (!outline || !brief || !theme) return;
+    setError(null);
+    setGenerating(true);
+    try {
+      const llmStr = localStorage.getItem(LLM_STORAGE);
+      if (!llmStr) throw new Error('未找到 LLM 配置，请回主页设置');
+      const llmCfg = JSON.parse(llmStr);
+      // 找 preset 还原 provider
+      const { PROVIDER_PRESETS } = await import('@/lib/providers');
+      const preset = PROVIDER_PRESETS.find((p) => p.id === llmCfg.presetId);
+      if (!preset) throw new Error('Provider 配置已失效，请回主页重新设置');
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brief, theme, brand, outline,
+          llm: {
+            provider: preset.provider,
+            model: llmCfg.model || preset.defaultModel,
+            apiKey: preset.provider === 'claude-cli' ? undefined : llmCfg.apiKey,
+            baseURL: preset.provider === 'openai-compat' ? (llmCfg.baseURL || preset.baseURL) : undefined,
+          },
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      sessionStorage.setItem(DECK_STORAGE, JSON.stringify(data.deck));
+      router.push('/deck');
+    } catch (e) {
+      setError(e instanceof Error ? e.message : '生成失败');
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  if (!outline) {
+    return <main className="min-h-screen flex items-center justify-center text-stone-500">加载中…</main>;
+  }
+
+  const totalSec = outline.sections.reduce((s, x) => s + x.durationSec, 0);
+  const targetSec = brief ? brief.durationMin * 60 : 0;
+  const drift = totalSec - targetSec;
+
+  return (
+    <main className="min-h-screen px-6 py-10 sm:px-12 lg:px-16 max-w-5xl mx-auto">
+      <header className="mb-8 flex items-baseline justify-between gap-4">
+        <Link href="/" className="text-sm text-stone-600 hover:text-stone-900">← 返回主页</Link>
+        <div className="text-right">
+          <div className="text-xs uppercase tracking-[0.2em] text-stone-500">STEP 1 / 2</div>
+          <h1 className="text-2xl font-bold mt-1">大纲编辑</h1>
+        </div>
+      </header>
+
+      <section className="mb-8 p-5 rounded-lg border border-stone-200 bg-stone-50">
+        <Field label="演讲题目">
+          <input value={outline.title} onChange={(e) => persist({ ...outline, title: e.target.value })}
+            className="w-full p-2 border border-stone-300 rounded text-base font-bold" />
+        </Field>
+        <Field label="叙事弧线">
+          <textarea value={outline.arc} onChange={(e) => persist({ ...outline, arc: e.target.value })}
+            rows={2} className="w-full p-2 border border-stone-300 rounded text-sm" />
+        </Field>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="框架">
+            <input value={outline.framework} onChange={(e) => persist({ ...outline, framework: e.target.value })}
+              className="w-full p-2 border border-stone-300 rounded text-sm font-mono" />
+          </Field>
+          <Field label={`总时长：${Math.floor(totalSec/60)}分${totalSec%60}秒（目标 ${Math.floor(targetSec/60)} 分钟${drift !== 0 ? `，${drift > 0 ? '超' : '差'} ${Math.abs(drift)} 秒` : '，正好'}）`}>
+            <div className={`text-xs ${Math.abs(drift) > targetSec * 0.1 ? 'text-amber-700' : 'text-stone-500'}`}>
+              {Math.abs(drift) > targetSec * 0.1 ? '⚠ 偏差超 10%，建议调整' : '✓ 时长合理'}
+            </div>
+          </Field>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-4">章节列表 · {outline.sections.length} 张</h2>
+        <div className="space-y-3">
+          {outline.sections.map((s, i) => (
+            <div key={i} className="p-4 border border-stone-300 rounded-lg bg-white">
+              <div className="flex items-start gap-3">
+                <div className="flex flex-col gap-1 pt-1">
+                  <button onClick={() => moveSection(i, -1)} disabled={i === 0}
+                    className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30">↑</button>
+                  <button onClick={() => moveSection(i, 1)} disabled={i === outline.sections.length - 1}
+                    className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30">↓</button>
+                </div>
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-sm">
+                  {i + 1}
+                </div>
+                <div className="flex-1 space-y-2">
+                  <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
+                    placeholder="章节标题（观点句）"
+                    className="w-full p-2 border border-stone-300 rounded text-base font-bold" />
+                  <textarea value={s.brief} onChange={(e) => updateSection(i, { brief: e.target.value })}
+                    rows={2} placeholder="这一页要讲什么..."
+                    className="w-full p-2 border border-stone-300 rounded text-sm" />
+                  <div className="flex gap-3 items-center">
+                    <select value={s.suggestedLayout ?? 'auto'} onChange={(e) => updateSection(i, { suggestedLayout: e.target.value === 'auto' ? undefined : e.target.value as LayoutType })}
+                      className="text-xs p-1.5 border border-stone-300 rounded font-mono">
+                      {LAYOUT_OPTIONS.map((l) => <option key={l} value={l}>{l}</option>)}
+                    </select>
+                    <input type="number" value={s.durationSec} onChange={(e) => updateSection(i, { durationSec: Number(e.target.value) || 0 })}
+                      className="w-20 text-xs p-1.5 border border-stone-300 rounded" />
+                    <span className="text-xs text-stone-500">秒</span>
+                    <button onClick={() => addSection(i)} className="ml-auto text-xs text-stone-600 hover:text-stone-900 underline">+ 在下方插入新页</button>
+                    {outline.sections.length > 2 && (
+                      <button onClick={() => removeSection(i)} className="text-xs text-red-600 hover:underline">删除</button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <footer className="mt-10 sticky bottom-0 bg-white py-4 border-t border-stone-200 flex items-center justify-between gap-4">
+        <div className="text-sm text-stone-600">
+          {generating ? '正在写完整 deck（约 30-60 秒）…' : '满意后点右侧生成完整演讲'}
+        </div>
+        <div className="flex items-center gap-3">
+          {error && <div className="text-sm text-red-600 max-w-md">{error}</div>}
+          <button onClick={handleGenerateDeck} disabled={generating}
+            className="px-6 py-3 rounded-md bg-stone-900 text-white font-semibold disabled:opacity-50">
+            {generating ? '生成中…' : '✨ 按此大纲生成完整演讲 →'}
+          </button>
+        </div>
+      </footer>
+    </main>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="mb-3 last:mb-0">
+      <label className="block text-xs font-medium text-stone-600 mb-1">{label}</label>
+      {children}
+    </div>
+  );
+}

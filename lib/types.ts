@@ -386,6 +386,29 @@ export interface BriefInput {
   notes?: string;
 }
 
+// ─── 演讲大纲（第一步生成，用户可编辑） ─────────────────────────────────────
+export interface Outline {
+  /** 演讲题目 */
+  title: string;
+  /** 框架名（duarte / pyramid / scqa / winston / storybrand / success） */
+  framework: string;
+  /** 一段话讲整体叙事弧线 */
+  arc: string;
+  /** 章节列表（顺序即演讲顺序）*/
+  sections: OutlineSection[];
+}
+
+export interface OutlineSection {
+  /** 章节/页面标题（观点句） */
+  title: string;
+  /** 建议版式（参考 LayoutType；最终可由 deck 阶段调整）*/
+  suggestedLayout?: LayoutType;
+  /** 这一页要讲什么（1-2 句话）*/
+  brief: string;
+  /** 时长（秒） */
+  durationSec: number;
+}
+
 export interface SelfReview {
   philosophy: number;     // 1-5
   hierarchy: number;
@@ -401,6 +424,8 @@ export interface GenerateRequest {
   brief: BriefInput;
   theme: ThemeId;
   brand?: BrandOverride;
+  /** 用户确认（或编辑过）的大纲。为空 → AI 一气呵成 */
+  outline?: Outline;
   /** Provider 配置：决定调哪个模型 */
   llm: {
     provider: 'anthropic' | 'openai-compat' | 'claude-cli';
@@ -408,6 +433,16 @@ export interface GenerateRequest {
     apiKey?: string;
     baseURL?: string;
   };
+}
+
+export interface OutlineRequest {
+  brief: BriefInput;
+  theme: ThemeId;
+  llm: GenerateRequest['llm'];
+}
+
+export interface OutlineResponse {
+  outline: Outline;
 }
 
 export interface GenerateResponse {

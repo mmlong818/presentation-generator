@@ -57,9 +57,24 @@ export default function Home() {
   const preset = PROVIDER_PRESETS.find((p) => p.id === llm.presetId);
   const llmReady = llm.presetId === 'claude-cli' ? isLocal : !!llm.apiKey && !!llm.model;
 
-  async function handleGenerate() {
-    setError(null);
-    setErrorDetails(null);
+  function buildBriefAndLLM() {
+    const brief: BriefInput = {
+      topic: topic.trim(), audience: audience.trim(), goal: goal.trim(),
+      durationMin: duration, density,
+      notes: notes.trim() || undefined,
+    };
+    if (!preset) throw new Error('未知 provider');
+    const llmPayload = {
+      provider: preset.provider,
+      model: llm.model || preset.defaultModel,
+      apiKey: preset.provider === 'claude-cli' ? undefined : llm.apiKey,
+      baseURL: preset.provider === 'openai-compat' ? (llm.baseURL || preset.baseURL) : undefined,
+    };
+    return { brief, llmPayload };
+  }
+
+  async function handleGenerateOutline() {
+    setError(null); setErrorDetails(null);
     if (!topic.trim() || !audience.trim() || !goal.trim()) {
       setError('请把主题、听众、目标都填上。');
       return;
@@ -69,36 +84,62 @@ export default function Home() {
 
     setLoading(true);
     try {
-      const brief: BriefInput = {
-        topic: topic.trim(), audience: audience.trim(), goal: goal.trim(),
-        durationMin: duration, density,
-        notes: notes.trim() || undefined,
-      };
-      const res = await fetch('/api/generate', {
+      const { brief, llmPayload } = buildBriefAndLLM();
+      const res = await fetch('/api/outline', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          brief,
-          theme,
-          brand,
-          llm: {
-            provider: preset.provider,
-            model: llm.model || preset.defaultModel,
-            apiKey: preset.provider === 'claude-cli' ? undefined : llm.apiKey,
-            baseURL: preset.provider === 'openai-compat' ? (llm.baseURL || preset.baseURL) : undefined,
-          },
-        }),
+        body: JSON.stringify({ brief, theme, llm: llmPayload }),
       });
       if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'unknown' }));
+        const err = await res.json().catch(() => ({}));
         setErrorDetails({
-          preview: err.raw_preview,
-          hint: err.hint,
+          preview: err.raw_preview, hint: err.hint,
           raw_length: err.raw_length,
           first_attempt_preview: err.first_attempt_preview,
           first_attempt_length: err.first_attempt_length,
-          provider: err.provider,
-          model: err.model,
+          provider: err.provider, model: err.model,
+        });
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      sessionStorage.setItem('pg_pending_outline', JSON.stringify(data.outline));
+      sessionStorage.setItem('pg_pending_brief', JSON.stringify(brief));
+      sessionStorage.setItem('pg_pending_theme', JSON.stringify(theme));
+      if (brand) sessionStorage.setItem('pg_pending_brand', JSON.stringify(brand));
+      else sessionStorage.removeItem('pg_pending_brand');
+      router.push('/outline');
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : '生成失败');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGenerateDirect() {
+    setError(null); setErrorDetails(null);
+    if (!topic.trim() || !audience.trim() || !goal.trim()) {
+      setError('请把主题、听众、目标都填上。');
+      return;
+    }
+    if (!llmReady) { setLlmDialogOpen(true); return; }
+    if (!preset) { setError('未知 provider'); return; }
+
+    setLoading(true);
+    try {
+      const { brief, llmPayload } = buildBriefAndLLM();
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ brief, theme, brand, llm: llmPayload }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setErrorDetails({
+          preview: err.raw_preview, hint: err.hint,
+          raw_length: err.raw_length,
+          first_attempt_preview: err.first_attempt_preview,
+          first_attempt_length: err.first_attempt_length,
+          provider: err.provider, model: err.model,
         });
         throw new Error(err.error || `HTTP ${res.status}`);
       }
@@ -245,9 +286,13 @@ export default function Home() {
       </section>
 
       <section className="flex items-center gap-4 flex-wrap">
-        <button onClick={handleGenerate} disabled={loading}
+        <button onClick={handleGenerateOutline} disabled={loading}
           className="px-8 py-3 rounded-md bg-stone-900 text-white font-semibold disabled:opacity-50">
-          {loading ? '正在生成…（约 30 秒）' : '生成演讲 →'}
+          {loading ? '生成中…' : '① 先生成大纲（推荐）'}
+        </button>
+        <button onClick={handleGenerateDirect} disabled={loading}
+          className="px-6 py-3 rounded-md border border-stone-300 hover:bg-stone-100 text-sm disabled:opacity-50">
+          ② 跳过大纲，直接生成完整演讲
         </button>
         {error && (
           <div className="w-full mt-3 p-4 rounded-md border border-red-300 bg-red-50">
