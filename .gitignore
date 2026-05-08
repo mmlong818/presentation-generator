@@ -1,0 +1,38 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# next.js
+.next/
+out/
+dist/
+
+# production
+build/
+
+# env files
+.env
+.env.local
+.env*.local
+
+# misc
+.DS_Store
+*.log
+.vercel
+.turbo
+
+# OS
+Thumbs.db
+
+# data (database files if user adds DB)
+.data/
+*.db
+*.db-journal
+
+# editor
+.vscode/
+.idea/
+*.swp
+
+# claude code
+.claude/
