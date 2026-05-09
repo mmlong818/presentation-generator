@@ -51,10 +51,6 @@ pnpm dev
 
 打开 http://localhost:3000 → 点右上"📋 模型设置" → 填入你的 API key（存在浏览器 localStorage，不会上传任何服务器，除目标 LLM）→ 开始生成。
 
-### 桌面单机版
-
-参见 [`electron` 分支](../../tree/electron) —— 打包成 Windows `.exe` / macOS `.dmg`，无需浏览器、无需 Node。
-
 ---
 
 ## 文档导航
