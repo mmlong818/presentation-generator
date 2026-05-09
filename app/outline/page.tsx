@@ -143,58 +143,51 @@ export default function OutlinePage() {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">章节列表 · {outline.sections.length} 节</h2>
-        <div className="space-y-3">
+        <h2 className="text-lg font-semibold mb-3">章节列表 · {outline.sections.length} 节</h2>
+        <div className="border border-stone-200 rounded-lg bg-white divide-y divide-stone-200 overflow-hidden">
           {outline.sections.map((s, i) => (
-            <div key={i} className="px-3 py-2.5 border border-stone-200 rounded-md bg-white hover:border-stone-300">
-              <div className="flex items-start gap-2">
-                {/* 左：序号 + 上下移（更紧凑） */}
-                <div className="flex flex-col items-center flex-shrink-0 w-7">
+            <div key={i} className="px-3 py-2 hover:bg-stone-50 group">
+              {/* 标题行：序号 + 标题 + 时长 + 操作（全 inline） */}
+              <div className="flex items-center gap-2">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-[11px]">
+                  {i + 1}
+                </span>
+                <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
+                  placeholder="章节标题（观点句）"
+                  className="flex-1 px-2 py-1 border-b border-transparent focus:border-stone-400 hover:border-stone-300 text-sm font-semibold focus:outline-none bg-transparent" />
+                <input type="number" value={s.durationSec}
+                  onChange={(e) => updateSection(i, { durationSec: Number(e.target.value) || 0 })}
+                  title="时长（秒）"
+                  className="w-11 px-1 py-0.5 border border-stone-200 rounded text-xs text-center focus:border-stone-400" />
+                <span className="text-[11px] text-stone-400">秒</span>
+
+                <div className="flex items-center gap-0.5 flex-shrink-0 opacity-40 group-hover:opacity-100 transition-opacity">
                   <button onClick={() => moveSection(i, -1)} disabled={i === 0}
-                    className="text-[10px] w-6 h-4 rounded text-stone-500 disabled:opacity-30 hover:bg-stone-100">▲</button>
-                  <div className="w-7 h-7 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-xs my-0.5">
-                    {i + 1}
-                  </div>
+                    title="上移"
+                    className="w-6 h-6 rounded text-stone-500 disabled:opacity-30 hover:bg-stone-200 flex items-center justify-center text-xs">▲</button>
                   <button onClick={() => moveSection(i, 1)} disabled={i === outline.sections.length - 1}
-                    className="text-[10px] w-6 h-4 rounded text-stone-500 disabled:opacity-30 hover:bg-stone-100">▼</button>
-                </div>
-
-                {/* 中：标题（含时长 inline） + brief */}
-                <div className="flex-1 min-w-0 space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
-                      placeholder="章节标题（观点句）"
-                      className="flex-1 px-2 py-1.5 border border-stone-300 rounded text-sm font-bold" />
-                    <input type="number" value={s.durationSec}
-                      onChange={(e) => updateSection(i, { durationSec: Number(e.target.value) || 0 })}
-                      title="时长（秒）"
-                      className="w-12 px-1 py-1.5 border border-stone-300 rounded text-xs text-center" />
-                    <span className="text-xs text-stone-500">秒</span>
-                  </div>
-                  <AutoTextarea value={s.brief} onChange={(v) => updateSection(i, { brief: v })}
-                    placeholder="这一页要讲什么..."
-                    className="w-full px-2 py-1.5 border border-stone-300 rounded text-xs leading-relaxed" />
-                </div>
-
-                {/* 右：图标列 */}
-                <div className="flex flex-col gap-1 flex-shrink-0">
+                    title="下移"
+                    className="w-6 h-6 rounded text-stone-500 disabled:opacity-30 hover:bg-stone-200 flex items-center justify-center text-xs">▼</button>
                   <button onClick={() => addSection(i)}
                     title="在下方插入新节"
-                    className="w-7 h-7 rounded border border-stone-300 hover:bg-stone-100 flex items-center justify-center text-stone-700 text-base leading-none">
-                    +
-                  </button>
+                    className="w-6 h-6 rounded text-stone-700 hover:bg-stone-200 flex items-center justify-center text-sm">+</button>
                   {outline.sections.length > 2 && (
                     <button onClick={() => removeSection(i)}
                       title="删除此节"
-                      className="w-7 h-7 rounded border border-red-300 hover:bg-red-50 flex items-center justify-center text-red-600">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      className="w-6 h-6 rounded text-red-600 hover:bg-red-100 flex items-center justify-center">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="3 6 5 6 21 6" />
                         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                        <path d="M10 11v6M14 11v6" />
                       </svg>
                     </button>
                   )}
                 </div>
+              </div>
+              {/* Brief 行：缩进对齐标题，紧贴标题下方 */}
+              <div className="pl-8 pr-2 mt-0.5">
+                <AutoTextarea value={s.brief} onChange={(v) => updateSection(i, { brief: v })}
+                  placeholder="这一页要讲什么..."
+                  className="w-full px-1.5 py-0.5 border-b border-transparent focus:border-stone-300 hover:border-stone-200 text-xs leading-relaxed text-stone-600 focus:outline-none bg-transparent" />
               </div>
             </div>
           ))}
