@@ -140,16 +140,23 @@ export default function OutlinePage() {
           <AutoTextarea value={outline.arc} onChange={(v) => persist({ ...outline, arc: v })}
             className="w-full p-2 border border-stone-300 rounded text-sm bg-white leading-relaxed" />
         </Field>
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="框架">
-            <input value={outline.framework} onChange={(e) => persist({ ...outline, framework: e.target.value })}
-              className="w-full p-2 border border-stone-300 rounded text-sm font-mono bg-white" />
-          </Field>
-          <Field label={`总时长：${Math.floor(totalSec/60)} 分 ${totalSec%60} 秒（目标 ${Math.floor(targetSec/60)} 分钟）`}>
-            <div className={`text-xs ${Math.abs(drift) > targetSec * 0.1 ? 'text-amber-700' : 'text-stone-500'}`}>
-              {drift === 0 ? '✓ 时长正好' : `${drift > 0 ? '超' : '差'} ${Math.abs(drift)} 秒 ${Math.abs(drift) > targetSec * 0.1 ? '⚠ 偏差超 10%' : ''}`}
-            </div>
-          </Field>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3 text-xs text-stone-500">
+          <span>
+            <span className="text-stone-400 mr-1">框架</span>
+            <span className="font-mono text-stone-700">{outline.framework}</span>
+          </span>
+          <span>
+            <span className="text-stone-400 mr-1">总时长</span>
+            <span className={Math.abs(drift) > targetSec * 0.1 ? 'text-amber-700 font-semibold' : 'text-stone-700'}>
+              {Math.floor(totalSec/60)} 分 {totalSec%60} 秒
+            </span>
+            <span className="text-stone-400"> / 目标 {Math.floor(targetSec/60)} 分钟</span>
+            {drift !== 0 && (
+              <span className={`ml-1 ${Math.abs(drift) > targetSec * 0.1 ? 'text-amber-700' : 'text-stone-500'}`}>
+                ({drift > 0 ? '超' : '差'} {Math.abs(drift)} 秒)
+              </span>
+            )}
+          </span>
         </div>
       </section>
 
