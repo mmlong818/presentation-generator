@@ -426,6 +426,8 @@ export interface GenerateRequest {
   brand?: BrandOverride;
   /** 用户确认（或编辑过）的大纲。为空 → AI 一气呵成 */
   outline?: Outline;
+  /** 用户确认（或编辑过）的讲稿。提供时 AI 只生成 slides，不重写讲稿 */
+  script?: ScriptEntry[];
   /** Provider 配置：决定调哪个模型 */
   llm: {
     provider: 'anthropic' | 'openai-compat' | 'claude-cli';
@@ -437,12 +439,24 @@ export interface GenerateRequest {
 
 export interface OutlineRequest {
   brief: BriefInput;
-  theme: ThemeId;
+  /** 可选：用于内容气质提示。流程线性化后通常省略 */
+  theme?: ThemeId;
   llm: GenerateRequest['llm'];
 }
 
 export interface OutlineResponse {
   outline: Outline;
+}
+
+// ─── 讲稿（独立生成步骤） ────────────────────────────────────────────────────
+export interface ScriptRequest {
+  brief: BriefInput;
+  outline: Outline;
+  llm: GenerateRequest['llm'];
+}
+
+export interface ScriptResponse {
+  script: ScriptEntry[];
 }
 
 export interface GenerateResponse {

@@ -3,14 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import type { Outline, OutlineSection, BriefInput, ThemeId, BrandOverride, LayoutType } from '@/lib/types';
+import { FlowSteps } from '../page';
+import type { Outline, OutlineSection, BriefInput, LayoutType } from '@/lib/types';
 
 const OUTLINE_STORAGE = 'pg_pending_outline';
 const BRIEF_STORAGE = 'pg_pending_brief';
-const THEME_STORAGE = 'pg_pending_theme';
-const BRAND_STORAGE = 'pg_pending_brand';
+const SCRIPT_STORAGE = 'pg_pending_script';
 const LLM_STORAGE = 'pg_llm_config';
-const DECK_STORAGE = 'pg_last_deck';
 
 const LAYOUT_OPTIONS: (LayoutType | 'auto')[] = [
   'auto',
@@ -24,8 +23,6 @@ export default function OutlinePage() {
   const router = useRouter();
   const [outline, setOutline] = useState<Outline | null>(null);
   const [brief, setBrief] = useState<BriefInput | null>(null);
-  const [theme, setTheme] = useState<ThemeId | null>(null);
-  const [brand, setBrand] = useState<BrandOverride | undefined>();
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,19 +30,10 @@ export default function OutlinePage() {
     try {
       const o = sessionStorage.getItem(OUTLINE_STORAGE);
       const b = sessionStorage.getItem(BRIEF_STORAGE);
-      const t = sessionStorage.getItem(THEME_STORAGE);
-      const br = sessionStorage.getItem(BRAND_STORAGE);
-      if (!o || !b || !t) {
-        router.push('/');
-        return;
-      }
+      if (!o || !b) { router.push('/'); return; }
       setOutline(JSON.parse(o));
       setBrief(JSON.parse(b));
-      setTheme(JSON.parse(t));
-      if (br) setBrand(JSON.parse(br));
-    } catch {
-      router.push('/');
-    }
+    } catch { router.push('/'); }
   }, [router]);
 
   function persist(next: Outline) {
@@ -71,10 +59,8 @@ export default function OutlinePage() {
     if (!outline) return;
     const sections = [...outline.sections];
     sections.splice(after + 1, 0, {
-      title: '新章节标题',
-      brief: '这一页要讲什么...',
-      suggestedLayout: 'argument' as LayoutType,
-      durationSec: 60,
+      title: '新章节标题', brief: '这一页要讲什么...',
+      suggestedLayout: 'argument' as LayoutType, durationSec: 60,
     });
     persist({ ...outline, sections });
   }
@@ -83,23 +69,23 @@ export default function OutlinePage() {
     persist({ ...outline, sections: outline.sections.filter((_, i) => i !== idx) });
   }
 
-  async function handleGenerateDeck() {
-    if (!outline || !brief || !theme) return;
+  async function handleGenerateScript() {
+    if (!outline || !brief) return;
     setError(null);
     setGenerating(true);
     try {
       const llmStr = localStorage.getItem(LLM_STORAGE);
       if (!llmStr) throw new Error('未找到 LLM 配置，请回主页设置');
       const llmCfg = JSON.parse(llmStr);
-      // 找 preset 还原 provider
       const { PROVIDER_PRESETS } = await import('@/lib/providers');
       const preset = PROVIDER_PRESETS.find((p) => p.id === llmCfg.presetId);
-      if (!preset) throw new Error('Provider 配置已失效，请回主页重新设置');
-      const res = await fetch('/api/generate', {
+      if (!preset) throw new Error('Provider 配置失效，请回主页重新设置');
+
+      const res = await fetch('/api/script', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          brief, theme, brand, outline,
+          brief, outline,
           llm: {
             provider: preset.provider,
             model: llmCfg.model || preset.defaultModel,
@@ -113,13 +99,11 @@ export default function OutlinePage() {
         throw new Error(err.error || `HTTP ${res.status}`);
       }
       const data = await res.json();
-      sessionStorage.setItem(DECK_STORAGE, JSON.stringify(data.deck));
-      router.push('/deck');
+      sessionStorage.setItem(SCRIPT_STORAGE, JSON.stringify(data.script));
+      router.push('/script');
     } catch (e) {
-      setError(e instanceof Error ? e.message : '生成失败');
-    } finally {
-      setGenerating(false);
-    }
+      setError(e instanceof Error ? e.message : '生成讲稿失败');
+    } finally { setGenerating(false); }
   }
 
   if (!outline) {
@@ -131,39 +115,41 @@ export default function OutlinePage() {
   const drift = totalSec - targetSec;
 
   return (
-    <main className="min-h-screen px-6 py-10 sm:px-12 lg:px-16 max-w-5xl mx-auto">
-      <header className="mb-8 flex items-baseline justify-between gap-4">
+    <main className="min-h-screen px-6 py-10 sm:px-12 lg:px-16 max-w-5xl mx-auto pb-24">
+      <header className="mb-6 flex items-baseline justify-between gap-4">
         <Link href="/" className="text-sm text-stone-600 hover:text-stone-900">← 返回主页</Link>
         <div className="text-right">
-          <div className="text-xs uppercase tracking-[0.2em] text-stone-500">STEP 1 / 2</div>
+          <div className="text-xs uppercase tracking-[0.2em] text-stone-500">STEP 2 / 4 · 改大纲</div>
           <h1 className="text-2xl font-bold mt-1">大纲编辑</h1>
         </div>
       </header>
 
-      <section className="mb-8 p-5 rounded-lg border border-stone-200 bg-stone-50">
+      <FlowSteps current={2} />
+
+      <section className="my-8 p-5 rounded-lg border border-stone-200 bg-stone-50">
         <Field label="演讲题目">
           <input value={outline.title} onChange={(e) => persist({ ...outline, title: e.target.value })}
-            className="w-full p-2 border border-stone-300 rounded text-base font-bold" />
+            className="w-full p-2 border border-stone-300 rounded text-base font-bold bg-white" />
         </Field>
         <Field label="叙事弧线">
           <textarea value={outline.arc} onChange={(e) => persist({ ...outline, arc: e.target.value })}
-            rows={2} className="w-full p-2 border border-stone-300 rounded text-sm" />
+            rows={2} className="w-full p-2 border border-stone-300 rounded text-sm bg-white" />
         </Field>
         <div className="grid grid-cols-2 gap-4">
           <Field label="框架">
             <input value={outline.framework} onChange={(e) => persist({ ...outline, framework: e.target.value })}
-              className="w-full p-2 border border-stone-300 rounded text-sm font-mono" />
+              className="w-full p-2 border border-stone-300 rounded text-sm font-mono bg-white" />
           </Field>
-          <Field label={`总时长：${Math.floor(totalSec/60)}分${totalSec%60}秒（目标 ${Math.floor(targetSec/60)} 分钟${drift !== 0 ? `，${drift > 0 ? '超' : '差'} ${Math.abs(drift)} 秒` : '，正好'}）`}>
+          <Field label={`总时长：${Math.floor(totalSec/60)} 分 ${totalSec%60} 秒（目标 ${Math.floor(targetSec/60)} 分钟）`}>
             <div className={`text-xs ${Math.abs(drift) > targetSec * 0.1 ? 'text-amber-700' : 'text-stone-500'}`}>
-              {Math.abs(drift) > targetSec * 0.1 ? '⚠ 偏差超 10%，建议调整' : '✓ 时长合理'}
+              {drift === 0 ? '✓ 时长正好' : `${drift > 0 ? '超' : '差'} ${Math.abs(drift)} 秒 ${Math.abs(drift) > targetSec * 0.1 ? '⚠ 偏差超 10%' : ''}`}
             </div>
           </Field>
         </div>
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">章节列表 · {outline.sections.length} 张</h2>
+        <h2 className="text-lg font-semibold mb-4">章节列表 · {outline.sections.length} 节</h2>
         <div className="space-y-3">
           {outline.sections.map((s, i) => (
             <div key={i} className="p-4 border border-stone-300 rounded-lg bg-white">
@@ -192,7 +178,7 @@ export default function OutlinePage() {
                     <input type="number" value={s.durationSec} onChange={(e) => updateSection(i, { durationSec: Number(e.target.value) || 0 })}
                       className="w-20 text-xs p-1.5 border border-stone-300 rounded" />
                     <span className="text-xs text-stone-500">秒</span>
-                    <button onClick={() => addSection(i)} className="ml-auto text-xs text-stone-600 hover:text-stone-900 underline">+ 在下方插入新页</button>
+                    <button onClick={() => addSection(i)} className="ml-auto text-xs text-stone-600 hover:text-stone-900 underline">+ 在下方插入</button>
                     {outline.sections.length > 2 && (
                       <button onClick={() => removeSection(i)} className="text-xs text-red-600 hover:underline">删除</button>
                     )}
@@ -204,15 +190,16 @@ export default function OutlinePage() {
         </div>
       </section>
 
-      <footer className="mt-10 sticky bottom-0 bg-white py-4 border-t border-stone-200 flex items-center justify-between gap-4">
+      <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 px-6 py-3 flex items-center justify-between gap-4 z-30">
         <div className="text-sm text-stone-600">
-          {generating ? '正在写完整 deck（约 30-60 秒）…' : '满意后点右侧生成完整演讲'}
+          {generating ? '正在生成讲稿（约 30-60 秒）…' : '满意大纲后 → 生成讲稿'}
         </div>
         <div className="flex items-center gap-3">
-          {error && <div className="text-sm text-red-600 max-w-md">{error}</div>}
-          <button onClick={handleGenerateDeck} disabled={generating}
-            className="px-6 py-3 rounded-md bg-stone-900 text-white font-semibold disabled:opacity-50">
-            {generating ? '生成中…' : '✨ 按此大纲生成完整演讲 →'}
+          {error && <div className="text-sm text-red-600 max-w-md truncate">{error}</div>}
+          <Link href="/" className="text-sm text-stone-600 hover:underline">← 改需求</Link>
+          <button onClick={handleGenerateScript} disabled={generating}
+            className="px-6 py-2.5 rounded-md bg-stone-900 text-white font-semibold disabled:opacity-50">
+            {generating ? '生成中…' : '生成讲稿 →'}
           </button>
         </div>
       </footer>

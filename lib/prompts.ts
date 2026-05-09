@@ -1,6 +1,6 @@
 // ─── 系统提示词组装：内嵌 presentation-coach 完整方法论 ───────────────────────
 import { layoutSchemasForPrompt } from './layouts/registry';
-import type { BriefInput, Outline, ThemeId } from './types';
+import type { BriefInput, Outline, ScriptEntry, ThemeId } from './types';
 import { THEMES } from './themes';
 
 const COACH_METHODOLOGY = `# 演讲设计方法论（必须遵守）
@@ -164,10 +164,17 @@ ${brief.notes ? `- **用户提供的素材（必须优先采纳）**：\n${brief
 请按主题调整内容气质：${themeVibe(theme)}。`;
 }
 
-export function buildUserPrompt(brief: BriefInput, theme: ThemeId, outline?: Outline): string {
+export function buildUserPrompt(brief: BriefInput, theme: ThemeId, outline?: Outline, script?: ScriptEntry[]): string {
   const base = briefSection(brief, theme);
   if (outline) {
-    return `${base}
+    // density 决定 slides 数量。如果 density=2 且 outline 是 1 页/分钟，AI 需把每节扩成 2 张
+    const density = brief.density ?? 1;
+    const expectedSlides = density === 1 ? outline.sections.length : outline.sections.length * 2;
+    const fanOutHint = density === 2
+      ? `\n⚠ 用户选了密度=2（每分钟 2 张），需要把大纲每节**拆成 2 张幻灯片**。slides 总数 = ${expectedSlides}，每对相邻 slides 共享一节大纲的内容。`
+      : '';
+
+    let prompt = `${base}
 
 # 用户已确认的大纲（必须严格遵守）
 
@@ -181,15 +188,20 @@ ${outline.sections.map((s, i) => `${i + 1}. **${s.title}**（建议版式 \`${s.
    ${s.brief}`).join('\n\n')}
 
 ⚠ 关键约束：
-- slides[].length **必须等于** ${outline.sections.length}
-- slides[i] 的 type 应符合 sections[i].suggestedLayout（除非该 layout 不能承载内容）
-- slides[i] 的标题应忠于 sections[i].title 的核心观点
-- script[i].durationSec ≈ sections[i].durationSec
-- 总时长仍要接近 ${brief.durationMin * 60} 秒
+- slides[].length **必须等于** ${expectedSlides}${fanOutHint}
+- slides 的 type 应符合 sections 的 suggestedLayout（密度=2 时拆出的两张可以是不同版式）
+- slides 的标题应忠于 sections 的核心观点
+- 总时长仍要接近 ${brief.durationMin * 60} 秒`;
+
+    if (script) {
+      prompt = withConfirmedScript(prompt, script);
+    }
+    return `${prompt}
 
 # 任务
 
-按上述大纲扩写为完整 deck JSON。每张 slide 把对应章节的 brief 落到具体版式字段里，注意 anti-slop 规则。先 5 维自检再输出。只输出纯 JSON。`;
+${script ? '按上述大纲 + 已确认讲稿生成 slides 视觉数据。讲稿原文不要修改，只扩写 slides 字段。' : '按上述大纲扩写为完整 deck JSON。'}
+每张 slide 把对应章节的 brief 落到具体版式字段里，注意 anti-slop 规则。先 5 维自检再输出。只输出纯 JSON。`;
   }
   return `${base}
 
@@ -274,15 +286,114 @@ export function buildOutlineSystemPrompt(): string {
   return OUTLINE_METHODOLOGY.replace('{LAYOUT_LIST}', layoutListBrief());
 }
 
-export function buildOutlineUserPrompt(brief: BriefInput, theme: ThemeId): string {
-  return `${briefSection(brief, theme)}
+/** Outline 阶段的简介（不依赖 theme） */
+function briefSectionPlain(brief: BriefInput): string {
+  return `# 用户简介
+
+- **主题**：${brief.topic}
+- **听众**：${brief.audience}
+- **目标**：${brief.goal}
+- **时长**：${brief.durationMin} 分钟
+${brief.notes ? `- **用户提供的素材（必须优先采纳）**：\n${brief.notes}` : '- **用户未提供素材**：靠观点逻辑撑起来，不要编造数据/故事'}`;
+}
+
+export function buildOutlineUserPrompt(brief: BriefInput, theme?: ThemeId): string {
+  const base = theme ? briefSection(brief, theme) : briefSectionPlain(brief);
+  // 流程线性化阶段：density 还没选，按 1 张/分钟生成大纲，后续 density=2 时由 deck 阶段拆分
+  const sectionsHint = brief.density
+    ? `章节数 = ${brief.durationMin * brief.density} 张（每节对应 1 张幻灯片）`
+    : `章节数 = ${brief.durationMin} 张（默认每分钟 1 节，用户后续可选密度=2 让 deck 阶段每节拆 2 张）`;
+  const durHint = brief.density
+    ? `每节 durationSec ≈ ${Math.round(60 / brief.density)} 秒`
+    : `每节 durationSec ≈ 60 秒（密度 1，可后续翻倍）`;
+  return `${base}
 
 # 任务
 
 只输出大纲 JSON，不要 slides / script 完整内容。
-- 章节数 = ${brief.durationMin * (brief.density ?? 1)} 张（每节对应 1 张幻灯片）
-- 每节 durationSec ≈ ${Math.round(60 / (brief.density ?? 1))} 秒
+- ${sectionsHint}
+- ${durHint}
 - title 必须是观点句，不要话题词`;
+}
+
+// ─── 讲稿生成提示词 ─────────────────────────────────────────────────────────
+const SCRIPT_METHODOLOGY = `# 讲稿写作任务
+
+你是资深演讲教练。**这一步只写讲稿**——把已确认的大纲扩写成完整逐字稿。每节对应一段。
+
+## 讲稿写作铁律
+
+1. **讲稿 ≠ 抄幻灯片**。讲稿是"演讲者口述的话"，比幻灯片更口语、更有故事感。
+2. **每节开头有过渡句**：从上一节衔接到这一节
+3. **每节结尾有铺垫句**：引导下一节
+4. **口语化**：短句、有呼吸感、避免书面长句
+5. **可标注**：\`[停顿]\` 和 **重点词**（markdown 加粗）
+6. **时长精准**：每节 \`durationSec\` 应等于大纲 sections[i].durationSec
+
+## Anti-Slop（与 deck 阶段一致）
+
+- ❌ 编造数据 / 引用 / 案例。无源用 \`[需引用]\` 占位
+- ❌ 伪装具体故事。用户没在 notes 提供 → 不写
+- ❌ 拍脑袋名人金句（Einstein "如果你不能简单解释..." 高频伪托）
+- ❌ 通篇用"我们"。TED / 大众场用"你"为主语
+- ❌ 结尾套路三连："从今天开始 / 想象一下 / 让我们一起" 整篇 ≤ 1 次
+
+## 输出契约
+
+返回**纯 JSON**：
+
+\`\`\`typescript
+{
+  "script": Array<{
+    "slideIndex": number,    // 1-based
+    "text": string,          // 完整逐字稿
+    "durationSec": number    // 秒
+  }>
+}
+\`\`\`
+
+只输出 JSON，第一字符 \`{\`，末字符 \`}\`，不要 markdown / 解释 / 思考。
+\`script.length\` 必须等于 \`outline.sections.length\`。`;
+
+export function buildScriptSystemPrompt(): string {
+  return SCRIPT_METHODOLOGY;
+}
+
+export function buildScriptUserPrompt(brief: BriefInput, outline: Outline): string {
+  return `${briefSectionPlain(brief)}
+
+# 已确认的大纲（按此扩写讲稿）
+
+题目：**${outline.title}**
+框架：${outline.framework}
+叙事弧线：${outline.arc}
+
+${outline.sections.map((s, i) => `## 第 ${i + 1} 节 · ${s.title}（${s.durationSec} 秒）
+
+要点：${s.brief}`).join('\n\n')}
+
+# 任务
+
+为上述 ${outline.sections.length} 节分别写完整逐字稿。
+- 每节衔接上下文（开头过渡 + 结尾铺垫）
+- 时长加起来约 ${brief.durationMin * 60} 秒
+- 只输出讲稿 JSON，不要 slides / 不要 outline 重述`;
+}
+
+/** 把已确认的讲稿注入到 deck 用户 prompt 后面（slides 阶段调用）*/
+export function withConfirmedScript(prompt: string, script: ScriptEntry[]): string {
+  return `${prompt}
+
+# 用户已确认的讲稿（必须严格沿用，不要重写）
+
+${script.map((s) => `## 第 ${s.slideIndex} 张（${s.durationSec} 秒）
+
+${s.text}`).join('\n\n')}
+
+⚠ 重要：
+- script 字段直接复用上面的内容（slideIndex / text / durationSec 一一对应）
+- 你的工作是只生成 slides 视觉数据，不要重写讲稿
+- script[i] 的 text 字段保持上面的原文不变`;
 }
 
 /** 简化版式列表，用在 outline prompt（不需要完整 schema） */
