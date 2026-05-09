@@ -109,7 +109,7 @@ export default function OutlinePage() {
   const drift = totalSec - targetSec;
 
   return (
-    <main className="min-h-screen px-6 py-10 sm:px-12 lg:px-20 max-w-7xl mx-auto pb-24">
+    <main className="min-h-screen px-6 py-10 sm:px-12 lg:px-16 mx-auto pb-24" style={{ maxWidth: 'min(1800px, 100%)' }}>
       <header className="mb-6 flex items-baseline justify-between gap-4">
         <Link href="/" className="text-sm text-stone-600 hover:text-stone-900">← 返回主页</Link>
         <div className="text-right">
@@ -147,16 +147,16 @@ export default function OutlinePage() {
         <div className="space-y-3">
           {outline.sections.map((s, i) => (
             <div key={i} className="p-4 border border-stone-300 rounded-lg bg-white">
-              <div className="flex items-start gap-3">
-                {/* 左栏：序号 + 上下移 */}
-                <div className="flex flex-col items-center gap-2 flex-shrink-0">
+              <div className="flex items-start gap-2">
+                {/* 左栏：紧凑序号 + 上下移 */}
+                <div className="flex flex-col items-center gap-1 flex-shrink-0 w-9">
                   <button onClick={() => moveSection(i, -1)} disabled={i === 0}
-                    className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↑</button>
-                  <div className="w-10 h-10 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-sm">
+                    className="text-xs w-7 h-5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↑</button>
+                  <div className="w-9 h-9 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-sm">
                     {i + 1}
                   </div>
                   <button onClick={() => moveSection(i, 1)} disabled={i === outline.sections.length - 1}
-                    className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↓</button>
+                    className="text-xs w-7 h-5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↓</button>
                 </div>
 
                 {/* 中栏：标题 + brief + 时长，独占 flex-1 */}
