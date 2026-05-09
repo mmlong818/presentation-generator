@@ -9,6 +9,18 @@ import SlideEditor from '@/components/SlideEditor';
 import type { Deck, Slide } from '@/lib/types';
 
 const DECK_STORAGE = 'pg_last_deck';
+const HISTORY_KEY = 'pg_deck_history';
+const HISTORY_MAX = 20;
+
+function pushToHistory(deck: Deck) {
+  if (typeof window === 'undefined') return;
+  try {
+    const list: { id: string; deck: Deck }[] = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? '[]');
+    const filtered = list.filter((x) => x.deck.createdAt !== deck.createdAt);
+    filtered.unshift({ id: crypto.randomUUID(), deck });
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(filtered.slice(0, HISTORY_MAX)));
+  } catch {}
+}
 
 export default function DeckPage() {
   const [deck, setDeck] = useState<Deck | null>(null);
@@ -36,7 +48,11 @@ export default function DeckPage() {
   useEffect(() => {
     const raw = sessionStorage.getItem(DECK_STORAGE);
     if (raw) {
-      try { setDeck(JSON.parse(raw)); } catch { setDeck(null); }
+      try {
+        const d = JSON.parse(raw);
+        setDeck(d);
+        pushToHistory(d);
+      } catch { setDeck(null); }
     }
   }, []);
 
