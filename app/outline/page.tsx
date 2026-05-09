@@ -153,34 +153,52 @@ export default function OutlinePage() {
         <div className="space-y-3">
           {outline.sections.map((s, i) => (
             <div key={i} className="p-4 border border-stone-300 rounded-lg bg-white">
-              <div className="flex items-start gap-3">
-                <div className="flex flex-col gap-1 pt-1">
+              <div className="flex items-start gap-4">
+                {/* 序号 + 上下移 */}
+                <div className="flex flex-col items-center gap-2 flex-shrink-0">
                   <button onClick={() => moveSection(i, -1)} disabled={i === 0}
-                    className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30">↑</button>
+                    className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↑</button>
+                  <div className="w-10 h-10 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-sm">
+                    {i + 1}
+                  </div>
                   <button onClick={() => moveSection(i, 1)} disabled={i === outline.sections.length - 1}
-                    className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30">↓</button>
+                    className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↓</button>
                 </div>
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-sm">
-                  {i + 1}
-                </div>
-                <div className="flex-1 space-y-2">
+
+                {/* 中间：标题 + brief 占满空间 */}
+                <div className="flex-1 min-w-0 space-y-2">
                   <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
                     placeholder="章节标题（观点句）"
                     className="w-full p-2 border border-stone-300 rounded text-base font-bold" />
                   <AutoTextarea value={s.brief} onChange={(v) => updateSection(i, { brief: v })}
                     placeholder="这一页要讲什么..."
                     className="w-full p-2 border border-stone-300 rounded text-sm leading-relaxed" />
-                  <div className="flex gap-3 items-center">
-                    <select value={s.suggestedLayout ?? 'auto'} onChange={(e) => updateSection(i, { suggestedLayout: e.target.value === 'auto' ? undefined : e.target.value as LayoutType })}
-                      className="text-xs p-1.5 border border-stone-300 rounded font-mono">
-                      {LAYOUT_OPTIONS.map((l) => <option key={l} value={l}>{l}</option>)}
-                    </select>
-                    <input type="number" value={s.durationSec} onChange={(e) => updateSection(i, { durationSec: Number(e.target.value) || 0 })}
-                      className="w-20 text-xs p-1.5 border border-stone-300 rounded" />
-                    <span className="text-xs text-stone-500">秒</span>
-                    <button onClick={() => addSection(i)} className="ml-auto text-xs text-stone-600 hover:text-stone-900 underline">+ 在下方插入</button>
+                </div>
+
+                {/* 右侧：版式 / 时长 / 操作 */}
+                <div className="flex flex-col gap-2 flex-shrink-0 w-44 items-stretch">
+                  <label className="text-xs text-stone-500">建议版式</label>
+                  <select value={s.suggestedLayout ?? 'auto'}
+                    onChange={(e) => updateSection(i, { suggestedLayout: e.target.value === 'auto' ? undefined : e.target.value as LayoutType })}
+                    className="text-xs p-1.5 border border-stone-300 rounded font-mono w-full">
+                    {LAYOUT_OPTIONS.map((l) => <option key={l} value={l}>{l}</option>)}
+                  </select>
+
+                  <label className="text-xs text-stone-500 mt-1">时长（秒）</label>
+                  <input type="number" value={s.durationSec}
+                    onChange={(e) => updateSection(i, { durationSec: Number(e.target.value) || 0 })}
+                    className="text-xs p-1.5 border border-stone-300 rounded w-full" />
+
+                  <div className="mt-2 pt-2 border-t border-stone-200 flex flex-col gap-1.5">
+                    <button onClick={() => addSection(i)}
+                      className="text-xs text-stone-600 hover:text-stone-900 hover:bg-stone-100 px-2 py-1 rounded text-left">
+                      + 下方插入
+                    </button>
                     {outline.sections.length > 2 && (
-                      <button onClick={() => removeSection(i)} className="text-xs text-red-600 hover:underline">删除</button>
+                      <button onClick={() => removeSection(i)}
+                        className="text-xs text-red-600 hover:bg-red-50 px-2 py-1 rounded text-left">
+                        删除此节
+                      </button>
                     )}
                   </div>
                 </div>
