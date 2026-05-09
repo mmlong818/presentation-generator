@@ -147,28 +147,8 @@ export default function OutlinePage() {
         <div className="space-y-3">
           {outline.sections.map((s, i) => (
             <div key={i} className="p-4 border border-stone-300 rounded-lg bg-white">
-              <div className="relative flex items-start gap-3">
-                {/* 顶角图标：插入 / 删除（绝对定位，不挤标题） */}
-                <div className="absolute top-0 right-0 flex gap-1 z-10">
-                  <button onClick={() => addSection(i)}
-                    title="在下方插入新节"
-                    className="w-7 h-7 rounded border border-stone-300 bg-white hover:bg-stone-100 flex items-center justify-center text-stone-700 text-base leading-none">
-                    +
-                  </button>
-                  {outline.sections.length > 2 && (
-                    <button onClick={() => removeSection(i)}
-                      title="删除此节"
-                      className="w-7 h-7 rounded border border-red-300 bg-white hover:bg-red-50 flex items-center justify-center text-red-600">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="3 6 5 6 21 6" />
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                        <path d="M10 11v6M14 11v6" />
-                      </svg>
-                    </button>
-                  )}
-                </div>
-
-                {/* 左：序号 + 上下移 */}
+              <div className="flex items-start gap-3">
+                {/* 左栏：序号 + 上下移 */}
                 <div className="flex flex-col items-center gap-2 flex-shrink-0">
                   <button onClick={() => moveSection(i, -1)} disabled={i === 0}
                     className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↑</button>
@@ -179,17 +159,14 @@ export default function OutlinePage() {
                     className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↓</button>
                 </div>
 
-                {/* 右：标题 / brief / 时长 三行独占 */}
-                <div className="flex-1 min-w-0 space-y-2 pr-20">
-                  {/* 标题独占整行 */}
+                {/* 中栏：标题 + brief + 时长，独占 flex-1 */}
+                <div className="flex-1 min-w-0 space-y-2">
                   <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
                     placeholder="章节标题（观点句）"
                     className="w-full p-2 border border-stone-300 rounded text-base font-bold" />
-                  {/* Brief 整行 */}
                   <AutoTextarea value={s.brief} onChange={(v) => updateSection(i, { brief: v })}
                     placeholder="这一页要讲什么..."
                     className="w-full p-2 border border-stone-300 rounded text-sm leading-relaxed" />
-                  {/* 时长在底部一行小字 */}
                   <div className="flex items-center gap-2 text-xs text-stone-500">
                     <span>时长</span>
                     <input type="number" value={s.durationSec}
@@ -197,6 +174,26 @@ export default function OutlinePage() {
                       className="w-14 text-xs p-1 border border-stone-300 rounded text-center" />
                     <span>秒</span>
                   </div>
+                </div>
+
+                {/* 右栏：纯图标列，固定 32px */}
+                <div className="flex flex-col gap-1 flex-shrink-0">
+                  <button onClick={() => addSection(i)}
+                    title="在下方插入新节"
+                    className="w-8 h-8 rounded border border-stone-300 hover:bg-stone-100 flex items-center justify-center text-stone-700 text-base leading-none">
+                    +
+                  </button>
+                  {outline.sections.length > 2 && (
+                    <button onClick={() => removeSection(i)}
+                      title="删除此节"
+                      className="w-8 h-8 rounded border border-red-300 hover:bg-red-50 flex items-center justify-center text-red-600">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                        <path d="M10 11v6M14 11v6" />
+                      </svg>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
