@@ -15,7 +15,7 @@ interface LLMConfig {
   presetId: string; model: string; apiKey: string; baseURL: string;
 }
 
-const DEFAULT_LLM: LLMConfig = { presetId: 'anthropic', model: 'claude-sonnet-4-5', apiKey: '', baseURL: '' };
+const DEFAULT_LLM: LLMConfig = { presetId: 'anthropic', model: 'claude-sonnet-4-6', apiKey: '', baseURL: '' };
 
 export default function Home() {
   const router = useRouter();
