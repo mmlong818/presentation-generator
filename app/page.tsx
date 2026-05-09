@@ -97,7 +97,7 @@ export default function Home() {
       <header className="mb-12 flex items-start justify-between gap-6">
         <div>
           <div className="text-xs uppercase tracking-[0.2em] text-stone-500 font-medium">STEP 1 / 4 · 写需求</div>
-          <h1 className="text-4xl sm:text-5xl font-bold mt-3 tracking-tight">演讲生成器</h1>
+          <h1 className="text-4xl sm:text-5xl font-bold mt-3 tracking-tight">演讲材料生成器</h1>
           <p className="text-stone-600 mt-3 text-lg">先把演讲想清楚 — 大纲 → 讲稿 → 风格 → PPT。每步都可改。</p>
         </div>
         <div className="flex gap-2">

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "演讲生成器",
+  title: "演讲材料生成器",
   description: "把一个想法，变成一场可放映的演讲。",
 };
 

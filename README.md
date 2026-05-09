@@ -1,4 +1,4 @@
-# 演讲生成器 · Presentation Generator
+# 演讲材料生成器 · Presentation Generator
 
 > 把一个想法，变成一场可放映的演讲。
 > 填一段简介 → 选一个风格 → 30 秒后拿到结构化的幻灯片 + 讲稿。
