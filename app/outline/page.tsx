@@ -4,20 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FlowSteps } from '../page';
-import type { Outline, OutlineSection, BriefInput, LayoutType } from '@/lib/types';
+import type { Outline, OutlineSection, BriefInput } from '@/lib/types';
 
 const OUTLINE_STORAGE = 'pg_pending_outline';
 const BRIEF_STORAGE = 'pg_pending_brief';
 const SCRIPT_STORAGE = 'pg_pending_script';
 const LLM_STORAGE = 'pg_llm_config';
-
-const LAYOUT_OPTIONS: (LayoutType | 'auto')[] = [
-  'auto',
-  'cover','statement','process','data','compare','timeline',
-  'argument','quote','diagram','cta','checklist',
-  'matrix-2x2','chart-bar','kpi-board','roadmap','case-study',
-  'table','causality','persona','quadrant','question',
-];
 
 export default function OutlinePage() {
   const router = useRouter();
@@ -60,7 +52,7 @@ export default function OutlinePage() {
     const sections = [...outline.sections];
     sections.splice(after + 1, 0, {
       title: '新章节标题', brief: '这一页要讲什么...',
-      suggestedLayout: 'argument' as LayoutType, durationSec: 60,
+      durationSec: 60,
     });
     persist({ ...outline, sections });
   }
@@ -156,7 +148,7 @@ export default function OutlinePage() {
           {outline.sections.map((s, i) => (
             <div key={i} className="p-4 border border-stone-300 rounded-lg bg-white">
               <div className="flex items-start gap-4">
-                {/* 序号 + 上下移 */}
+                {/* 左：序号 + 上下移 */}
                 <div className="flex flex-col items-center gap-2 flex-shrink-0">
                   <button onClick={() => moveSection(i, -1)} disabled={i === 0}
                     className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↑</button>
@@ -167,29 +159,26 @@ export default function OutlinePage() {
                     className="text-xs px-2 py-0.5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↓</button>
                 </div>
 
-                {/* 中间：标题 + brief 占满空间 */}
+                {/* 中右：标题 + brief 占满；标题右侧紧跟时长 + 操作图标 */}
                 <div className="flex-1 min-w-0 space-y-2">
-                  <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
-                    placeholder="章节标题（观点句）"
-                    className="w-full p-2 border border-stone-300 rounded text-base font-bold" />
-                  <AutoTextarea value={s.brief} onChange={(v) => updateSection(i, { brief: v })}
-                    placeholder="这一页要讲什么..."
-                    className="w-full p-2 border border-stone-300 rounded text-sm leading-relaxed" />
-                </div>
-
-                {/* 右侧：版式 / 时长 + 角落 icon 操作 */}
-                <div className="flex flex-col gap-2 flex-shrink-0 w-32 items-stretch relative">
-                  {/* 顶角：插入 / 删除图标 */}
-                  <div className="absolute -top-1 right-0 flex gap-1">
+                  <div className="flex items-center gap-2">
+                    <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
+                      placeholder="章节标题（观点句）"
+                      className="flex-1 p-2 border border-stone-300 rounded text-base font-bold" />
+                    <input type="number" value={s.durationSec}
+                      onChange={(e) => updateSection(i, { durationSec: Number(e.target.value) || 0 })}
+                      title="时长（秒）"
+                      className="w-16 text-xs p-2 border border-stone-300 rounded text-center" />
+                    <span className="text-xs text-stone-500">秒</span>
                     <button onClick={() => addSection(i)}
                       title="在下方插入新节"
-                      className="w-7 h-7 rounded border border-stone-300 hover:bg-stone-100 flex items-center justify-center text-stone-700 text-base leading-none">
+                      className="w-7 h-7 rounded border border-stone-300 hover:bg-stone-100 flex items-center justify-center text-stone-700 text-base leading-none flex-shrink-0">
                       +
                     </button>
                     {outline.sections.length > 2 && (
                       <button onClick={() => removeSection(i)}
                         title="删除此节"
-                        className="w-7 h-7 rounded border border-red-300 hover:bg-red-50 flex items-center justify-center text-red-600">
+                        className="w-7 h-7 rounded border border-red-300 hover:bg-red-50 flex items-center justify-center text-red-600 flex-shrink-0">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="3 6 5 6 21 6" />
                           <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
@@ -198,23 +187,9 @@ export default function OutlinePage() {
                       </button>
                     )}
                   </div>
-
-                  <div className="mt-9 space-y-2">
-                    <div>
-                      <label className="block text-xs text-stone-500 mb-0.5">版式</label>
-                      <select value={s.suggestedLayout ?? 'auto'}
-                        onChange={(e) => updateSection(i, { suggestedLayout: e.target.value === 'auto' ? undefined : e.target.value as LayoutType })}
-                        className="w-full text-xs p-1.5 border border-stone-300 rounded font-mono">
-                        {LAYOUT_OPTIONS.map((l) => <option key={l} value={l}>{l}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs text-stone-500 mb-0.5">时长 (秒)</label>
-                      <input type="number" value={s.durationSec}
-                        onChange={(e) => updateSection(i, { durationSec: Number(e.target.value) || 0 })}
-                        className="w-full text-xs p-1.5 border border-stone-300 rounded" />
-                    </div>
-                  </div>
+                  <AutoTextarea value={s.brief} onChange={(v) => updateSection(i, { brief: v })}
+                    placeholder="这一页要讲什么..."
+                    className="w-full p-2 border border-stone-300 rounded text-sm leading-relaxed" />
                 </div>
               </div>
             </div>
