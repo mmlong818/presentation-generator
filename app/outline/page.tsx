@@ -109,7 +109,18 @@ export default function OutlinePage() {
   const drift = totalSec - targetSec;
 
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-10 lg:px-16 max-w-6xl mx-auto pb-24">
+    <main
+      className="min-h-screen pb-24"
+      style={{
+        width: '100%',
+        maxWidth: 1280,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        paddingLeft: 64,
+        paddingRight: 64,
+        paddingTop: 32,
+      }}
+    >
       <header className="mb-6 flex items-baseline justify-between gap-4">
         <Link href="/" className="text-sm text-stone-600 hover:text-stone-900">← 返回主页</Link>
         <div className="text-right">
