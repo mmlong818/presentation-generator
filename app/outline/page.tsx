@@ -160,17 +160,17 @@ export default function OutlinePage() {
             <div key={i} className="px-3 py-2 hover:bg-stone-50 group">
               {/* 标题行：序号 + 标题 + 时长 + 操作（全 inline） */}
               <div className="flex items-center gap-2">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-[11px]">
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-xs">
                   {i + 1}
                 </span>
                 <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
                   placeholder="章节标题（观点句）"
-                  className="flex-1 px-2 py-1 border-b border-transparent focus:border-stone-400 hover:border-stone-300 text-sm font-semibold focus:outline-none bg-transparent" />
+                  className="flex-1 px-2 py-1.5 border-b border-transparent focus:border-stone-400 hover:border-stone-300 text-base font-bold focus:outline-none bg-transparent" />
                 <input type="number" value={s.durationSec}
                   onChange={(e) => updateSection(i, { durationSec: Number(e.target.value) || 0 })}
                   title="时长（秒）"
-                  className="w-11 px-1 py-0.5 border border-stone-200 rounded text-xs text-center focus:border-stone-400" />
-                <span className="text-[11px] text-stone-400">秒</span>
+                  className="w-12 px-1.5 py-1 border border-stone-200 rounded text-sm text-center focus:border-stone-400" />
+                <span className="text-xs text-stone-400">秒</span>
 
                 <div className="flex items-center gap-0.5 flex-shrink-0 opacity-40 group-hover:opacity-100 transition-opacity">
                   <button onClick={() => moveSection(i, -1)} disabled={i === 0}
@@ -195,10 +195,10 @@ export default function OutlinePage() {
                 </div>
               </div>
               {/* Brief 行：缩进对齐标题，紧贴标题下方 */}
-              <div className="pl-8 pr-2 mt-0.5">
+              <div className="pl-9 pr-2 mt-1">
                 <AutoTextarea value={s.brief} onChange={(v) => updateSection(i, { brief: v })}
                   placeholder="这一页要讲什么..."
-                  className="w-full px-1.5 py-0.5 border-b border-transparent focus:border-stone-300 hover:border-stone-200 text-xs leading-relaxed text-stone-600 focus:outline-none bg-transparent" />
+                  className="w-full px-2 py-1 border-b border-transparent focus:border-stone-300 hover:border-stone-200 text-sm leading-relaxed text-stone-700 focus:outline-none bg-transparent" />
               </div>
             </div>
           ))}
