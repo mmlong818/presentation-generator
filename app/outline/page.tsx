@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FlowSteps } from '../page';
@@ -115,7 +115,7 @@ export default function OutlinePage() {
   const drift = totalSec - targetSec;
 
   return (
-    <main className="min-h-screen px-6 py-10 sm:px-12 lg:px-16 max-w-5xl mx-auto pb-24">
+    <main className="min-h-screen px-6 py-10 sm:px-12 lg:px-20 max-w-7xl mx-auto pb-24">
       <header className="mb-6 flex items-baseline justify-between gap-4">
         <Link href="/" className="text-sm text-stone-600 hover:text-stone-900">← 返回主页</Link>
         <div className="text-right">
@@ -132,8 +132,8 @@ export default function OutlinePage() {
             className="w-full p-2 border border-stone-300 rounded text-base font-bold bg-white" />
         </Field>
         <Field label="叙事弧线">
-          <textarea value={outline.arc} onChange={(e) => persist({ ...outline, arc: e.target.value })}
-            rows={2} className="w-full p-2 border border-stone-300 rounded text-sm bg-white" />
+          <AutoTextarea value={outline.arc} onChange={(v) => persist({ ...outline, arc: v })}
+            className="w-full p-2 border border-stone-300 rounded text-sm bg-white leading-relaxed" />
         </Field>
         <div className="grid grid-cols-2 gap-4">
           <Field label="框架">
@@ -167,9 +167,9 @@ export default function OutlinePage() {
                   <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
                     placeholder="章节标题（观点句）"
                     className="w-full p-2 border border-stone-300 rounded text-base font-bold" />
-                  <textarea value={s.brief} onChange={(e) => updateSection(i, { brief: e.target.value })}
-                    rows={2} placeholder="这一页要讲什么..."
-                    className="w-full p-2 border border-stone-300 rounded text-sm" />
+                  <AutoTextarea value={s.brief} onChange={(v) => updateSection(i, { brief: v })}
+                    placeholder="这一页要讲什么..."
+                    className="w-full p-2 border border-stone-300 rounded text-sm leading-relaxed" />
                   <div className="flex gap-3 items-center">
                     <select value={s.suggestedLayout ?? 'auto'} onChange={(e) => updateSection(i, { suggestedLayout: e.target.value === 'auto' ? undefined : e.target.value as LayoutType })}
                       className="text-xs p-1.5 border border-stone-300 rounded font-mono">
@@ -214,4 +214,37 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       {children}
     </div>
   );
+}
+
+/** 自动按内容撑高的 textarea；最少 2 行 */
+function AutoTextarea({ value, onChange, className, placeholder }: {
+  value: string;
+  onChange: (v: string) => void;
+  className?: string;
+  placeholder?: string;
+}) {
+  const ref = useAutoHeight(value);
+  return (
+    <textarea
+      ref={ref}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      className={className}
+      rows={2}
+      style={{ resize: 'vertical', minHeight: '3.5rem', overflow: 'hidden' }}
+    />
+  );
+}
+
+function useAutoHeight(value: string) {
+  const ref = useRef<HTMLTextAreaElement | null>(null);
+  // recompute on value change
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }, [value]);
+  return ref;
 }
