@@ -109,7 +109,7 @@ export default function OutlinePage() {
   const drift = totalSec - targetSec;
 
   return (
-    <main className="min-h-screen px-8 py-10 sm:px-12 lg:px-16 xl:px-24 pb-24 w-full">
+    <main className="min-h-screen px-6 py-8 sm:px-10 lg:px-16 max-w-6xl mx-auto pb-24">
       <header className="mb-6 flex items-baseline justify-between gap-4">
         <Link href="/" className="text-sm text-stone-600 hover:text-stone-900">← 返回主页</Link>
         <div className="text-right">
@@ -146,48 +146,48 @@ export default function OutlinePage() {
         <h2 className="text-lg font-semibold mb-4">章节列表 · {outline.sections.length} 节</h2>
         <div className="space-y-3">
           {outline.sections.map((s, i) => (
-            <div key={i} className="p-4 border border-stone-300 rounded-lg bg-white">
+            <div key={i} className="px-3 py-2.5 border border-stone-200 rounded-md bg-white hover:border-stone-300">
               <div className="flex items-start gap-2">
-                {/* 左栏：紧凑序号 + 上下移 */}
-                <div className="flex flex-col items-center gap-1 flex-shrink-0 w-9">
+                {/* 左：序号 + 上下移（更紧凑） */}
+                <div className="flex flex-col items-center flex-shrink-0 w-7">
                   <button onClick={() => moveSection(i, -1)} disabled={i === 0}
-                    className="text-xs w-7 h-5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↑</button>
-                  <div className="w-9 h-9 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-sm">
+                    className="text-[10px] w-6 h-4 rounded text-stone-500 disabled:opacity-30 hover:bg-stone-100">▲</button>
+                  <div className="w-7 h-7 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-xs my-0.5">
                     {i + 1}
                   </div>
                   <button onClick={() => moveSection(i, 1)} disabled={i === outline.sections.length - 1}
-                    className="text-xs w-7 h-5 rounded border border-stone-300 disabled:opacity-30 hover:bg-stone-50">↓</button>
+                    className="text-[10px] w-6 h-4 rounded text-stone-500 disabled:opacity-30 hover:bg-stone-100">▼</button>
                 </div>
 
-                {/* 中栏：标题 + brief + 时长，独占 flex-1 */}
-                <div className="flex-1 min-w-0 space-y-2">
-                  <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
-                    placeholder="章节标题（观点句）"
-                    className="w-full p-2 border border-stone-300 rounded text-base font-bold" />
-                  <AutoTextarea value={s.brief} onChange={(v) => updateSection(i, { brief: v })}
-                    placeholder="这一页要讲什么..."
-                    className="w-full p-2 border border-stone-300 rounded text-sm leading-relaxed" />
-                  <div className="flex items-center gap-2 text-xs text-stone-500">
-                    <span>时长</span>
+                {/* 中：标题（含时长 inline） + brief */}
+                <div className="flex-1 min-w-0 space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
+                      placeholder="章节标题（观点句）"
+                      className="flex-1 px-2 py-1.5 border border-stone-300 rounded text-sm font-bold" />
                     <input type="number" value={s.durationSec}
                       onChange={(e) => updateSection(i, { durationSec: Number(e.target.value) || 0 })}
-                      className="w-14 text-xs p-1 border border-stone-300 rounded text-center" />
-                    <span>秒</span>
+                      title="时长（秒）"
+                      className="w-12 px-1 py-1.5 border border-stone-300 rounded text-xs text-center" />
+                    <span className="text-xs text-stone-500">秒</span>
                   </div>
+                  <AutoTextarea value={s.brief} onChange={(v) => updateSection(i, { brief: v })}
+                    placeholder="这一页要讲什么..."
+                    className="w-full px-2 py-1.5 border border-stone-300 rounded text-xs leading-relaxed" />
                 </div>
 
-                {/* 右栏：纯图标列，固定 32px */}
+                {/* 右：图标列 */}
                 <div className="flex flex-col gap-1 flex-shrink-0">
                   <button onClick={() => addSection(i)}
                     title="在下方插入新节"
-                    className="w-8 h-8 rounded border border-stone-300 hover:bg-stone-100 flex items-center justify-center text-stone-700 text-base leading-none">
+                    className="w-7 h-7 rounded border border-stone-300 hover:bg-stone-100 flex items-center justify-center text-stone-700 text-base leading-none">
                     +
                   </button>
                   {outline.sections.length > 2 && (
                     <button onClick={() => removeSection(i)}
                       title="删除此节"
-                      className="w-8 h-8 rounded border border-red-300 hover:bg-red-50 flex items-center justify-center text-red-600">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      className="w-7 h-7 rounded border border-red-300 hover:bg-red-50 flex items-center justify-center text-red-600">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="3 6 5 6 21 6" />
                         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
                         <path d="M10 11v6M14 11v6" />
@@ -242,8 +242,8 @@ function AutoTextarea({ value, onChange, className, placeholder }: {
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       className={className}
-      rows={2}
-      style={{ resize: 'vertical', minHeight: '3.5rem', overflow: 'hidden' }}
+      rows={1}
+      style={{ resize: 'none', minHeight: '2rem', overflow: 'hidden' }}
     />
   );
 }
