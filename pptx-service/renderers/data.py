@@ -1,4 +1,4 @@
-from builder import add_bg, add_textbox, add_line
+from builder import add_bg, add_textbox, add_line, add_eyebrow
 from theme import ThemeColors
 
 
@@ -9,7 +9,6 @@ def render(slide, data: dict, t: ThemeColors) -> None:
     eyebrow = data.get("eyebrow", "")
 
     if eyebrow:
-        from builder import add_eyebrow
         add_eyebrow(slide, eyebrow, t)
 
     add_textbox(slide, 0.83, 0.7, 11.0, 1.2, heading,
