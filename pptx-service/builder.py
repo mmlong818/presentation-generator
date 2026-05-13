@@ -1,9 +1,11 @@
+import dataclasses
 import io
 import logging
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
+from pptx.enum.shapes import MSO_CONNECTOR_TYPE
 from typing import Any
 
 from models import Deck
@@ -33,8 +35,9 @@ def add_rect(slide: Any, x: float, y: float, w: float, h: float,
              fill_hex: str | None = None,
              line_hex: str | None = None,
              line_width_pt: float = 0) -> Any:
+    from pptx.enum.shapes import MSO_SHAPE_TYPE
     shape = slide.shapes.add_shape(
-        1,  # MSO_SHAPE_TYPE.RECTANGLE
+        MSO_SHAPE_TYPE.RECTANGLE,
         Inches(x), Inches(y), Inches(w), Inches(h),
     )
     if fill_hex:
@@ -78,7 +81,7 @@ def add_textbox(slide: Any, x: float, y: float, w: float, h: float,
 def add_line(slide: Any, x1: float, y1: float, x2: float, y2: float,
              color_hex: str, width_pt: float = 1.0) -> Any:
     connector = slide.shapes.add_connector(
-        1,  # MSO_CONNECTOR_TYPE.STRAIGHT
+        MSO_CONNECTOR_TYPE.STRAIGHT,
         Inches(x1), Inches(y1), Inches(x2), Inches(y2),
     )
     connector.line.color.rgb = hex_to_rgb(color_hex)
@@ -110,7 +113,7 @@ def render_slide(slide: Any, data: dict, t: ThemeColors) -> None:
 def build_pptx(deck: Deck) -> bytes:
     t = get_theme(deck.theme)
     if deck.brand and deck.brand.accent:
-        t.accent = deck.brand.accent
+        t = dataclasses.replace(t, accent=deck.brand.accent)
 
     prs = Presentation()
     prs.slide_width = SLIDE_W
