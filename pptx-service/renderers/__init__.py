@@ -14,10 +14,11 @@ from renderers.kpi_board import render as render_kpi_board
 from renderers.table import render as render_table
 from renderers.matrix_2x2 import render as render_matrix
 from renderers.roadmap import render as render_roadmap
-from typing import Callable
-
-# Stub for layouts not yet implemented (Task 6)
-_stub: Callable = lambda slide, data, t: None
+from renderers.case_study import render as render_case_study
+from renderers.causality import render as render_causality
+from renderers.persona import render as render_persona
+from renderers.quadrant import render as render_quadrant
+from renderers.diagram import render as render_diagram
 
 RENDERERS = {
     "cover": render_cover,
@@ -34,11 +35,11 @@ RENDERERS = {
     "chart-bar": render_chart_bar,
     "kpi-board": render_kpi_board,
     "table": render_table,
-    "roadmap": render_roadmap,
     "matrix-2x2": render_matrix,
-    "case-study": _stub,
-    "causality": _stub,
-    "persona": _stub,
-    "quadrant": _stub,
-    "diagram": _stub,
+    "roadmap": render_roadmap,
+    "case-study": render_case_study,
+    "causality": render_causality,
+    "persona": render_persona,
+    "quadrant": render_quadrant,
+    "diagram": render_diagram,
 }
