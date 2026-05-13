@@ -9,9 +9,14 @@ from renderers.compare import render as render_compare
 from renderers.checklist import render as render_checklist
 from renderers.process import render as render_process
 from renderers.timeline import render as render_timeline
+from renderers.chart_bar import render as render_chart_bar
+from renderers.kpi_board import render as render_kpi_board
+from renderers.table import render as render_table
+from renderers.matrix_2x2 import render as render_matrix
+from renderers.roadmap import render as render_roadmap
 from typing import Callable
 
-# Stub for layouts not yet implemented (Tasks 5-6)
+# Stub for layouts not yet implemented (Task 6)
 _stub: Callable = lambda slide, data, t: None
 
 RENDERERS = {
@@ -26,11 +31,11 @@ RENDERERS = {
     "checklist": render_checklist,
     "process": render_process,
     "timeline": render_timeline,
-    "chart-bar": _stub,
-    "kpi-board": _stub,
-    "table": _stub,
-    "roadmap": _stub,
-    "matrix-2x2": _stub,
+    "chart-bar": render_chart_bar,
+    "kpi-board": render_kpi_board,
+    "table": render_table,
+    "roadmap": render_roadmap,
+    "matrix-2x2": render_matrix,
     "case-study": _stub,
     "causality": _stub,
     "persona": _stub,
