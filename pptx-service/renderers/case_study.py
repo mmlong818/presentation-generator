@@ -1,5 +1,5 @@
 import logging
-from builder import add_bg, add_textbox, add_rect, add_line
+from builder import add_bg, add_textbox, add_rect, add_line, contrast_color
 from theme import ThemeColors
 
 logger = logging.getLogger(__name__)
@@ -20,7 +20,6 @@ def render(slide, data: dict, t: ThemeColors) -> None:
     quote = data.get("quote", "")
     quote_attr = data.get("quoteAttribution", "")
 
-    from builder import contrast_color
     badge_text = contrast_color(t.accent)
 
     add_rect(slide, 0.5, 0.3, 3.5, 0.8, fill_hex=t.accent)

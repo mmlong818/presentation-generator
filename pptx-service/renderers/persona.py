@@ -40,19 +40,19 @@ def render(slide, data: dict, t: ThemeColors) -> None:
 
         add_textbox(slide, 0.5, 4.8, 5.8, 0.5, "NEEDS",
                     t.font_body, 14, t.muted, bold=True)
-        ny = 5.3
+        need_y = 5.3
         for n_item in needs[:3]:
-            add_textbox(slide, 0.5, ny, 5.8, 0.5,
+            add_textbox(slide, 0.5, need_y, 5.8, 0.5,
                         f"+ {n_item}", t.font_body, 18, t.text, wrap=True)
-            ny += 0.5
+            need_y += 0.5
 
         add_textbox(slide, 7.0, 4.8, 5.8, 0.5, "PAIN POINTS",
                     t.font_body, 14, t.muted, bold=True)
-        py2 = 5.3
+        pain_y = 5.3
         for p_item in pains[:3]:
-            add_textbox(slide, 7.0, py2, 5.8, 0.5,
+            add_textbox(slide, 7.0, pain_y, 5.8, 0.5,
                         f"- {p_item}", t.font_body, 18, t.text, wrap=True)
-            py2 += 0.5
+            pain_y += 0.5
 
     if quote:
         add_line(slide, 0.5, 6.8, 12.8, 6.8, t.border, 0.3)
