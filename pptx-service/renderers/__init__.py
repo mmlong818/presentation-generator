@@ -4,9 +4,14 @@ from renderers.argument import render as render_argument
 from renderers.quote import render as render_quote
 from renderers.cta import render as render_cta
 from renderers.question import render as render_question
+from renderers.data import render as render_data
+from renderers.compare import render as render_compare
+from renderers.checklist import render as render_checklist
+from renderers.process import render as render_process
+from renderers.timeline import render as render_timeline
 from typing import Callable
 
-# Stub for layouts not yet implemented (Tasks 4-6)
+# Stub for layouts not yet implemented (Tasks 5-6)
 _stub: Callable = lambda slide, data, t: None
 
 RENDERERS = {
@@ -16,12 +21,11 @@ RENDERERS = {
     "quote": render_quote,
     "cta": render_cta,
     "question": render_question,
-    # Stubs — replaced in Tasks 4-6
-    "process": _stub,
-    "data": _stub,
-    "compare": _stub,
-    "checklist": _stub,
-    "timeline": _stub,
+    "data": render_data,
+    "compare": render_compare,
+    "checklist": render_checklist,
+    "process": render_process,
+    "timeline": render_timeline,
     "chart-bar": _stub,
     "kpi-board": _stub,
     "table": _stub,
