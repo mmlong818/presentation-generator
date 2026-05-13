@@ -35,9 +35,9 @@ def add_rect(slide: Any, x: float, y: float, w: float, h: float,
              fill_hex: str | None = None,
              line_hex: str | None = None,
              line_width_pt: float = 0) -> Any:
-    from pptx.enum.shapes import MSO_SHAPE_TYPE
+    # 1 = MSO_SHAPE_TYPE.RECTANGLE (integer constant avoids enum import bug)
     shape = slide.shapes.add_shape(
-        MSO_SHAPE_TYPE.RECTANGLE,
+        1,
         Inches(x), Inches(y), Inches(w), Inches(h),
     )
     if fill_hex:
