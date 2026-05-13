@@ -1,5 +1,9 @@
+import logging
+
 from builder import add_bg, add_textbox, add_rect, add_line
 from theme import ThemeColors
+
+logger = logging.getLogger(__name__)
 
 
 def render(slide, data: dict, t: ThemeColors) -> None:
@@ -16,6 +20,8 @@ def render(slide, data: dict, t: ThemeColors) -> None:
         add_textbox(slide, 0.83, 1.3, 4.0, 0.4, f"Unit: {unit}",
                     t.font_body, 16, t.muted)
 
+    if len(bars) > 8:
+        logger.warning("chart-bar: %d bars provided, displaying first 8", len(bars))
     bars = bars[:8]
     if not bars:
         return

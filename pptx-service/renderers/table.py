@@ -1,14 +1,9 @@
-from builder import add_bg, add_textbox, add_rect, add_line
+import logging
+
+from builder import add_bg, add_textbox, add_rect, add_line, contrast_color
 from theme import ThemeColors
 
-
-def _contrast_color(hex_bg: str) -> str:
-    h = hex_bg.lstrip("#")
-    if len(h) == 3:
-        h = "".join(c * 2 for c in h)
-    r, g, b = int(h[0:2], 16) / 255, int(h[2:4], 16) / 255, int(h[4:6], 16) / 255
-    luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
-    return "#000000" if luminance > 0.5 else "#ffffff"
+logger = logging.getLogger(__name__)
 
 
 def render(slide, data: dict, t: ThemeColors) -> None:
@@ -31,7 +26,7 @@ def render(slide, data: dict, t: ThemeColors) -> None:
     col_w = table_w / len(columns)
     row_h = 0.65
     header_h = 0.7
-    header_text = _contrast_color(t.accent)
+    header_text = contrast_color(t.accent)
 
     add_rect(slide, table_x, table_top, table_w, header_h, fill_hex=t.accent)
 
@@ -42,7 +37,10 @@ def render(slide, data: dict, t: ThemeColors) -> None:
                     t.font_body, 20, header_text,
                     bold=True, align=col.get("align", "left"))
 
-    for i, row in enumerate(rows[:6]):
+    if len(rows) > 6:
+        logger.warning("table: %d rows provided, displaying first 6", len(rows))
+    rows = rows[:6]
+    for i, row in enumerate(rows):
         y = table_top + header_h + i * row_h
         is_emphasis = row.get("emphasis", False)
         row_fill = t.paper if i % 2 == 0 else t.bg

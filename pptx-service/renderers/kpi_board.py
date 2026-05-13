@@ -1,7 +1,9 @@
-from builder import add_bg, add_textbox, add_rect, add_line
+import logging
+
+from builder import add_bg, add_textbox, add_rect, add_line, DELTA_COLORS
 from theme import ThemeColors
 
-DELTA_COLORS = {"pos": "#22c55e", "neg": "#ef4444", "flat": "#888888"}
+logger = logging.getLogger(__name__)
 
 
 def render(slide, data: dict, t: ThemeColors) -> None:
@@ -17,6 +19,8 @@ def render(slide, data: dict, t: ThemeColors) -> None:
         add_textbox(slide, 10.0, 0.3, 3.0, 0.8, period,
                     t.font_body, 20, t.muted, align="right")
 
+    if len(kpis) > 6:
+        logger.warning("kpi-board: %d KPIs provided, displaying first 6", len(kpis))
     kpis = kpis[:6]
     n = len(kpis)
     if n == 0:

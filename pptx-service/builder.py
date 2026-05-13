@@ -110,6 +110,24 @@ def render_slide(slide: Any, data: dict, t: ThemeColors) -> None:
                     t.font_body, 28, t.muted, align="center")
 
 
+# Semantic status colors for delta indicators (pos/neg/flat)
+DELTA_COLORS: dict[str, str] = {
+    "pos": "#22c55e",
+    "neg": "#ef4444",
+    "flat": "#888888",
+}
+
+
+def contrast_color(hex_bg: str) -> str:
+    """Return #000000 or #ffffff based on perceived luminance of hex_bg."""
+    h = hex_bg.lstrip("#")
+    if len(h) == 3:
+        h = "".join(c * 2 for c in h)
+    r, g, b = int(h[0:2], 16) / 255, int(h[2:4], 16) / 255, int(h[4:6], 16) / 255
+    luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    return "#000000" if luminance > 0.5 else "#ffffff"
+
+
 def build_pptx(deck: Deck) -> bytes:
     t = get_theme(deck.theme)
     if deck.brand and deck.brand.accent:

@@ -1,14 +1,5 @@
-from builder import add_bg, add_textbox, add_rect, add_line
+from builder import add_bg, add_textbox, add_rect, add_line, contrast_color
 from theme import ThemeColors
-
-
-def _contrast_color(hex_bg: str) -> str:
-    h = hex_bg.lstrip("#")
-    if len(h) == 3:
-        h = "".join(c * 2 for c in h)
-    r, g, b = int(h[0:2], 16) / 255, int(h[2:4], 16) / 255, int(h[4:6], 16) / 255
-    luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
-    return "#000000" if luminance > 0.5 else "#ffffff"
 
 
 def render(slide, data: dict, t: ThemeColors) -> None:
@@ -28,8 +19,8 @@ def render(slide, data: dict, t: ThemeColors) -> None:
     table_top = 1.2
     period_w = table_w / len(periods)
     lane_h = (6.0 - table_top) / max(len(lanes), 1) if lanes else 1.0
-    accent_text = _contrast_color(t.accent)
-    muted_text = _contrast_color(t.muted)
+    accent_text = contrast_color(t.accent)
+    muted_text = contrast_color(t.muted)
 
     for j, period in enumerate(periods):
         px = table_x + j * period_w
