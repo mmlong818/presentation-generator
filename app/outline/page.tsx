@@ -20,8 +20,8 @@ export default function OutlinePage() {
 
   useEffect(() => {
     try {
-      const o = sessionStorage.getItem(OUTLINE_STORAGE);
-      const b = sessionStorage.getItem(BRIEF_STORAGE);
+      const o = localStorage.getItem(OUTLINE_STORAGE);
+      const b = localStorage.getItem(BRIEF_STORAGE);
       if (!o || !b) { router.push('/'); return; }
       setOutline(JSON.parse(o));
       setBrief(JSON.parse(b));
@@ -30,7 +30,7 @@ export default function OutlinePage() {
 
   function persist(next: Outline) {
     setOutline(next);
-    sessionStorage.setItem(OUTLINE_STORAGE, JSON.stringify(next));
+    localStorage.setItem(OUTLINE_STORAGE, JSON.stringify(next));
   }
 
   function updateSection(idx: number, patch: Partial<OutlineSection>) {
@@ -93,7 +93,7 @@ export default function OutlinePage() {
         throw new Error(err.error || `HTTP ${res.status}`);
       }
       const data = await res.json();
-      sessionStorage.setItem(SCRIPT_STORAGE, JSON.stringify(data.script));
+      localStorage.setItem(SCRIPT_STORAGE, JSON.stringify(data.script));
       router.push('/script');
     } catch (e) {
       setError(e instanceof Error ? e.message : '生成讲稿失败');

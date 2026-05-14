@@ -17,9 +17,9 @@ export default function ScriptPage() {
 
   useEffect(() => {
     try {
-      const o = sessionStorage.getItem(OUTLINE_STORAGE);
-      const s = sessionStorage.getItem(SCRIPT_STORAGE);
-      const b = sessionStorage.getItem(BRIEF_STORAGE);
+      const o = localStorage.getItem(OUTLINE_STORAGE);
+      const s = localStorage.getItem(SCRIPT_STORAGE);
+      const b = localStorage.getItem(BRIEF_STORAGE);
       if (!o || !s || !b) { router.push('/outline'); return; }
       setOutline(JSON.parse(o));
       setScript(JSON.parse(s));
@@ -28,7 +28,7 @@ export default function ScriptPage() {
 
   function persist(next: ScriptEntry[]) {
     setScript(next);
-    sessionStorage.setItem(SCRIPT_STORAGE, JSON.stringify(next));
+    localStorage.setItem(SCRIPT_STORAGE, JSON.stringify(next));
   }
   function updateText(slideIndex: number, text: string) {
     if (!script) return;

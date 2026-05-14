@@ -30,11 +30,19 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<{ preview?: string; hint?: string } | null>(null);
+  const [resumeStep, setResumeStep] = useState<'/outline' | '/script' | '/style' | null>(null);
 
   useEffect(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem(LLM_STORAGE) : null;
     if (saved) { try { setLlm({ ...DEFAULT_LLM, ...JSON.parse(saved) }); } catch {} }
     fetch('/api/generate').then((r) => r.json()).then((d) => setIsLocal(!!d.local)).catch(() => {});
+    // 检测未完成会话
+    const hasBrief = !!localStorage.getItem(BRIEF_STORAGE);
+    const hasOutline = !!localStorage.getItem(OUTLINE_STORAGE);
+    const hasScript = !!localStorage.getItem(SCRIPT_STORAGE);
+    if (hasBrief && hasOutline && hasScript) setResumeStep('/style');
+    else if (hasBrief && hasOutline) setResumeStep('/script');
+    else if (hasBrief) setResumeStep('/outline');
   }, []);
 
   function persistLlm(next: LLMConfig) {
@@ -94,6 +102,27 @@ export default function Home() {
 
   return (
     <main className="min-h-screen px-6 py-12 sm:px-12 lg:px-20 max-w-4xl mx-auto w-full">
+      {resumeStep && (
+        <div className="mb-6 p-4 rounded-lg border border-amber-300 bg-amber-50 flex items-center justify-between gap-4">
+          <div className="text-sm text-amber-900">
+            <span className="font-semibold">检测到上次未完成的会话</span>
+            <span className="ml-2 text-amber-700">— 从上次中断的步骤继续？</span>
+          </div>
+          <div className="flex gap-2 shrink-0">
+            <Link href={resumeStep} className="text-sm px-4 py-2 rounded bg-amber-900 text-white font-medium hover:bg-amber-800">
+              继续上次
+            </Link>
+            <button onClick={() => {
+              localStorage.removeItem(BRIEF_STORAGE);
+              localStorage.removeItem(OUTLINE_STORAGE);
+              localStorage.removeItem(SCRIPT_STORAGE);
+              setResumeStep(null);
+            }} className="text-sm px-3 py-2 rounded border border-amber-300 text-amber-800 hover:bg-amber-100">
+              放弃
+            </button>
+          </div>
+        </div>
+      )}
       <header className="mb-12 flex items-start justify-between gap-6">
         <div>
           <div className="text-xs uppercase tracking-[0.2em] text-stone-500 font-medium">STEP 1 / 4 · 写需求</div>

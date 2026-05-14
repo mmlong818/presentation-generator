@@ -173,7 +173,9 @@ export const LAYOUTS: Record<LayoutType, LayoutDefinition> = {
 
 /** 给 AI 看的版式列表 markdown */
 export function layoutSchemasForPrompt(): string {
-  return Object.values(LAYOUTS).map((l) => `### \`${l.type}\` · ${l.label}
+  return Object.values(LAYOUTS)
+    .filter((l) => l.type !== 'diagram')
+    .map((l) => `### \`${l.type}\` · ${l.label}
 - 何时用: ${l.whenToUse}
 - 字段: ${l.fieldsDoc}
 - 示例: ${l.example}`).join('\n\n');

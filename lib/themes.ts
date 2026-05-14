@@ -573,4 +573,430 @@ export const THEMES: Record<ThemeId, ThemeTokens> = {
     palette: ['#ff3a5a','#ffd13a','#1a1a1a','#3a8aff','#2eb56a','#f0e8d4'],
     paletteRule: 'flat',
   },
+
+  // ── v3 · html-ppt-skill 移植（26 套）───────────────────────────────────────
+
+  'arctic-cool': {
+    id: 'arctic-cool', name: '北极蓝', description: '冰川蓝白 · 清冽专业 · 科技/金融/医疗', mode: 'light',
+    bg: '#f2f6fb', paper: '#ffffff', text: '#0e1f33', muted: '#6b819b', soft: '#2a4a6b', border: '#ccd8ea', rule: '#ccd8ea',
+    accent: '#1e6fb0', danger: '#c0392b',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 4, borderWeight: 1, letterSpacingTitle: '-0.02em',
+    showFooter: false, eyebrowStyle: 'caps-tracking', allowGradient: false,
+  },
+
+  'aurora-borealis': {
+    id: 'aurora-borealis', name: '极光', description: '深宇宙 + 青绿极光 · AI/未来科技/创新', mode: 'dark',
+    bg: '#06091c', paper: '#0a1130', text: '#e8f0ff', muted: '#6a7a9e', soft: '#a0b0d0', border: '#1a2040', rule: '#1a2040',
+    accent: '#5ef2c6', danger: '#ff6b6b',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 4, borderWeight: 1, letterSpacingTitle: '-0.02em',
+    showFooter: false, eyebrowStyle: 'mono-prefix', allowGradient: true,
+    decoration: 'radial-gradient(ellipse at 30% 20%,rgba(94,242,198,0.15) 0,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(124,96,255,0.12) 0,transparent 40%)',
+  },
+
+  'blueprint': {
+    id: 'blueprint', name: '蓝图', description: '工程蓝图 · 等宽字体 · 建筑/工程/技术方案', mode: 'dark',
+    bg: '#0b3a6f', paper: '#0a3260', text: '#e8f3ff', muted: '#7da8cf', soft: '#b0d0ef', border: '#3a6090', rule: '#3a6090',
+    accent: '#ffffff', danger: '#ff8c42',
+    fontDisplay: '"JetBrains Mono","SF Mono",ui-monospace,monospace', fontBody: '"JetBrains Mono","SF Mono",ui-monospace,monospace', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 120, section: 60, body: 30, caption: 20, padding: 140, radius: 0, borderWeight: 1, letterSpacingTitle: '0',
+    showFooter: true, eyebrowStyle: 'mono-prefix', allowGradient: false,
+    decoration: 'repeating-linear-gradient(0deg,rgba(255,255,255,0.03) 0,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 40px),repeating-linear-gradient(90deg,rgba(255,255,255,0.03) 0,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 40px)',
+  },
+
+  'catppuccin-latte': {
+    id: 'catppuccin-latte', name: '猫奇拿铁', description: '奶油柔色 · 开发者友好 · 工具/开源/内部分享', mode: 'light',
+    bg: '#eff1f5', paper: '#ffffff', text: '#4c4f69', muted: '#9ca0b0', soft: '#6c6f85', border: '#c5c8d1', rule: '#c5c8d1',
+    accent: '#8839ef', danger: '#d20f39',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 8, borderWeight: 1, letterSpacingTitle: '-0.02em',
+    showFooter: false, eyebrowStyle: 'mono-prefix', allowGradient: false,
+    palette: ['#8839ef','#1e66f5','#04a5e5','#40a02b','#fe640b','#df8e1d'],
+    paletteRule: 'soft-tint',
+  },
+
+  'catppuccin-mocha': {
+    id: 'catppuccin-mocha', name: '猫奇摩卡', description: '深色柔色 · 开发者友好 · 工具/开源/夜间主题', mode: 'dark',
+    bg: '#1e1e2e', paper: '#313244', text: '#cdd6f4', muted: '#7f849c', soft: '#a6adc8', border: '#45475a', rule: '#45475a',
+    accent: '#cba6f7', danger: '#f38ba8',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 8, borderWeight: 1, letterSpacingTitle: '-0.02em',
+    showFooter: false, eyebrowStyle: 'mono-prefix', allowGradient: false,
+    palette: ['#cba6f7','#89b4fa','#94e2d5','#a6e3a1','#fab387','#f9e2af'],
+    paletteRule: 'soft-tint',
+  },
+
+  'corporate-clean': {
+    id: 'corporate-clean', name: '企业蓝', description: '标准企业蓝白 · 通用商务汇报', mode: 'light',
+    bg: '#ffffff', paper: '#f5f7fa', text: '#0a2540', muted: '#8898aa', soft: '#3d5a78', border: '#dde3ea', rule: '#dde3ea',
+    accent: '#1d4ed8', danger: '#dc2626',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 36, caption: 22, padding: 140, radius: 4, borderWeight: 1, letterSpacingTitle: '-0.015em',
+    showFooter: true, eyebrowStyle: 'caps-tracking', allowGradient: false,
+  },
+
+  'cyberpunk-neon': {
+    id: 'cyberpunk-neon', name: '赛博朋克', description: '黑底霓虹紫 · 游戏/科技/发布会', mode: 'dark',
+    bg: '#000000', paper: '#0f0f1a', text: '#f5f7ff', muted: '#6b6e8a', soft: '#9a9dc0', border: '#1a0a20', rule: '#1a0a20',
+    accent: '#ff2bd6', accent2: '#00e5ff', danger: '#ff2b2b',
+    fontDisplay: '"JetBrains Mono","SF Mono",ui-monospace,monospace', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 144, section: 72, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 1, letterSpacingTitle: '0.02em',
+    showFooter: false, eyebrowStyle: 'mono-prefix', allowGradient: true,
+    decoration: 'radial-gradient(ellipse at 20% 50%,rgba(255,43,214,0.12) 0,transparent 40%),radial-gradient(ellipse at 80% 50%,rgba(0,229,255,0.08) 0,transparent 40%)',
+  },
+
+  'dracula': {
+    id: 'dracula', name: '德古拉', description: '紫色暗色系 · 开发者经典 · 技术分享', mode: 'dark',
+    bg: '#282a36', paper: '#343746', text: '#f8f8f2', muted: '#6272a4', soft: '#8be9fd', border: '#44475a', rule: '#44475a',
+    accent: '#bd93f9', accent2: '#50fa7b', danger: '#ff5555',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 8, borderWeight: 1, letterSpacingTitle: '-0.015em',
+    showFooter: false, eyebrowStyle: 'mono-prefix', allowGradient: false,
+    palette: ['#bd93f9','#ff79c6','#8be9fd','#50fa7b','#ffb86c','#f1fa8c'],
+    paletteRule: 'soft-tint',
+  },
+
+  'engineering-whiteprint': {
+    id: 'engineering-whiteprint', name: '工程白图', description: '白底工程图纸 · 等宽标注 · 硬件/系统设计', mode: 'light',
+    bg: '#ffffff', paper: '#f8fafc', text: '#0a1e46', muted: '#8090a8', soft: '#2a4a7a', border: '#0a1e46', rule: '#0a1e46',
+    accent: '#1e5ac4', danger: '#c0392b',
+    fontDisplay: '"JetBrains Mono","SF Mono",ui-monospace,monospace', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 120, section: 60, body: 30, caption: 20, padding: 140, radius: 0, borderWeight: 1, letterSpacingTitle: '0',
+    showFooter: true, eyebrowStyle: 'mono-prefix', allowGradient: false,
+    decoration: 'repeating-linear-gradient(0deg,rgba(10,30,70,0.04) 0,rgba(10,30,70,0.04) 1px,transparent 1px,transparent 40px),repeating-linear-gradient(90deg,rgba(10,30,70,0.04) 0,rgba(10,30,70,0.04) 1px,transparent 1px,transparent 40px)',
+  },
+
+  'glassmorphism': {
+    id: 'glassmorphism', name: '玻璃态', description: '深蓝玻璃质感 · 模糊半透明卡 · AI/科技/产品', mode: 'dark',
+    bg: '#0b1024', paper: '#0e1530', text: '#f2f4ff', muted: '#8287a8', soft: '#b0b5d8', border: '#1a2040', rule: '#1a2040',
+    accent: '#7dd3fc', accent2: '#a78bfa', danger: '#fb7185',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 144, section: 72, body: 34, caption: 22, padding: 140, radius: 16, borderWeight: 1, letterSpacingTitle: '-0.02em',
+    showFooter: false, eyebrowStyle: 'mono-prefix', allowGradient: true,
+    glass: true,
+    decoration: 'radial-gradient(ellipse at 25% 30%,rgba(125,211,252,0.12) 0,transparent 45%),radial-gradient(ellipse at 75% 70%,rgba(167,139,250,0.10) 0,transparent 40%)',
+  },
+
+  'gruvbox-dark': {
+    id: 'gruvbox-dark', name: 'Gruvbox 暗', description: '温暖复古暗色 · 开发者/编辑器主题 · 技术', mode: 'dark',
+    bg: '#282828', paper: '#3c3836', text: '#ebdbb2', muted: '#928374', soft: '#d5c4a1', border: '#504945', rule: '#504945',
+    accent: '#fabd2f', accent2: '#b8bb26', danger: '#fb4934',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 4, borderWeight: 1, letterSpacingTitle: '-0.015em',
+    showFooter: false, eyebrowStyle: 'mono-prefix', allowGradient: false,
+    palette: ['#fabd2f','#b8bb26','#8ec07c','#83a598','#d3869b','#fb4934'],
+    paletteRule: 'soft-tint',
+  },
+
+  'memphis-pop': {
+    id: 'memphis-pop', name: '孟菲斯', description: '80年代几何图案 · 几何色块 · 创意/设计/文化', mode: 'light',
+    bg: '#fef6e8', paper: '#ffffff', text: '#111111', muted: '#666666', soft: '#333333', border: '#111111', rule: '#111111',
+    accent: '#ff3d8b', accent2: '#3d8bff', danger: '#ff3d8b',
+    fontDisplay: '"Archivo Black","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 156, section: 80, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 3, letterSpacingTitle: '-0.025em',
+    showFooter: false, eyebrowStyle: 'caps-bold', allowGradient: false,
+    palette: ['#ff3d8b','#3d8bff','#ffe800','#00c9a7','#ff6b35','#a855f7'],
+    paletteRule: 'flat',
+  },
+
+  'midcentury': {
+    id: 'midcentury', name: '中世纪现代', description: '50-60年代暖色 · 衬线 + 黄金色调 · 品牌/历史/经典', mode: 'light',
+    bg: '#f3ead8', paper: '#f9f2e0', text: '#201810', muted: '#9a8868', soft: '#4a3820', border: '#8c7050', rule: '#8c7050',
+    accent: '#d4902a', danger: '#c0392b',
+    fontDisplay: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Source Serif 4",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 1, letterSpacingTitle: '-0.01em',
+    showFooter: true, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  'minimal-white': {
+    id: 'minimal-white', name: '纯白极简', description: '纯白无装饰 · 极简兜底 · 通用', mode: 'light',
+    bg: '#ffffff', paper: '#fafafa', text: '#0c0d10', muted: '#9ca1b0', soft: '#4a4d5a', border: '#e0e0e2', rule: '#e0e0e2',
+    accent: '#111216', danger: '#dc2626',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 36, caption: 22, padding: 160, radius: 0, borderWeight: 1, letterSpacingTitle: '-0.02em',
+    showFooter: false, eyebrowStyle: 'plain', allowGradient: false,
+  },
+
+  'nord': {
+    id: 'nord', name: 'Nord', description: '北欧极地蓝 · 开发者经典 · 技术分享/工具', mode: 'dark',
+    bg: '#2e3440', paper: '#3b4252', text: '#eceff4', muted: '#7b8394', soft: '#d8dee9', border: '#434c5e', rule: '#434c5e',
+    accent: '#88c0d0', accent2: '#81a1c1', danger: '#bf616a',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 4, borderWeight: 1, letterSpacingTitle: '-0.015em',
+    showFooter: false, eyebrowStyle: 'caps-tracking', allowGradient: false,
+    palette: ['#88c0d0','#81a1c1','#5e81ac','#a3be8c','#ebcb8b','#bf616a'],
+    paletteRule: 'soft-tint',
+  },
+
+  'pitch-deck-vc': {
+    id: 'pitch-deck-vc', name: 'VC Pitch', description: '标准 VC 风格 · 干净蓝白 · 融资路演', mode: 'light',
+    bg: '#ffffff', paper: '#fafbfc', text: '#0b0d12', muted: '#8b93a8', soft: '#2a3048', border: '#e0e4eb', rule: '#e0e4eb',
+    accent: '#0070f3', danger: '#ef4444',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 144, section: 72, body: 36, caption: 22, padding: 140, radius: 4, borderWeight: 1, letterSpacingTitle: '-0.025em',
+    showFooter: false, eyebrowStyle: 'caps-tracking', allowGradient: false,
+  },
+
+  'retro-tv': {
+    id: 'retro-tv', name: '复古电视', description: '70年代暖橙 · 衬线复古 · 媒体/品牌历史/怀旧', mode: 'light',
+    bg: '#f5ecd7', paper: '#fbf5e2', text: '#2a1a08', muted: '#a68656', soft: '#4a2a10', border: '#c09060', rule: '#c09060',
+    accent: '#e67e14', danger: '#c0392b',
+    fontDisplay: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Source Serif 4",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 1, letterSpacingTitle: '-0.01em',
+    showFooter: true, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  'rose-pine': {
+    id: 'rose-pine', name: '玫瑰松针', description: '暗玫瑰紫 · 低调精致 · 设计/文学/创意', mode: 'dark',
+    bg: '#191724', paper: '#26233a', text: '#e0def4', muted: '#6e6a86', soft: '#c0bce4', border: '#2a2740', rule: '#2a2740',
+    accent: '#ebbcba', accent2: '#9ccfd8', danger: '#eb6f92',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 8, borderWeight: 1, letterSpacingTitle: '-0.015em',
+    showFooter: false, eyebrowStyle: 'caps-tracking', allowGradient: false,
+    palette: ['#ebbcba','#c4a7e7','#9ccfd8','#31748f','#f6c177','#eb6f92'],
+    paletteRule: 'soft-tint',
+  },
+
+  'sharp-mono': {
+    id: 'sharp-mono', name: '锋利等宽', description: '全黑 + Arial Black · 极简粗野 · 设计宣言/manifesto', mode: 'light',
+    bg: '#ffffff', paper: '#ffffff', text: '#000000', muted: '#4a4a4a', soft: '#1a1a1a', border: '#000000', rule: '#000000',
+    accent: '#000000',
+    fontDisplay: '"Archivo Black","Helvetica Neue",sans-serif', fontBody: '"Archivo Black","Helvetica Neue",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 200, section: 100, body: 36, caption: 24, padding: 100, radius: 0, borderWeight: 3, letterSpacingTitle: '-0.04em',
+    showFooter: true, eyebrowStyle: 'caps-bold', allowGradient: false,
+  },
+
+  'soft-pastel': {
+    id: 'soft-pastel', name: '柔粉马卡龙', description: '粉紫柔和 · 圆角卡片 · 美妆/生活方式/女性品牌', mode: 'light',
+    bg: '#fdf7fb', paper: '#ffffff', text: '#3a1f33', muted: '#a28a99', soft: '#6a3a58', border: '#d8c0d0', rule: '#d8c0d0',
+    accent: '#f49bb8', accent2: '#b49af0', danger: '#e05c8a',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 12, borderWeight: 1, letterSpacingTitle: '-0.015em',
+    showFooter: false, eyebrowStyle: 'plain', allowGradient: false,
+    palette: ['#f49bb8','#b49af0','#97e0f0','#a8d8a0','#ffd08a','#fdf7fb'],
+    paletteRule: 'soft-tint',
+  },
+
+  'solarized-light': {
+    id: 'solarized-light', name: 'Solarized 浅', description: '米黄底蓝字 · 护眼经典 · 技术/学术', mode: 'light',
+    bg: '#fdf6e3', paper: '#ffffff', text: '#073642', muted: '#93a1a1', soft: '#2a5060', border: '#c0c8c0', rule: '#c0c8c0',
+    accent: '#268bd2', accent2: '#2aa198', danger: '#dc322f',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 1, letterSpacingTitle: '-0.015em',
+    showFooter: false, eyebrowStyle: 'caps-tracking', allowGradient: false,
+  },
+
+  'swiss-grid': {
+    id: 'swiss-grid', name: '瑞士网格红', description: '瑞士国际风格 · 红黑网格 · 设计/平面/品牌', mode: 'light',
+    bg: '#ffffff', paper: '#f4f4f4', text: '#111111', muted: '#888888', soft: '#2a2a2a', border: '#111111', rule: '#111111',
+    accent: '#d6001c', danger: '#d6001c',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 144, section: 72, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 2, letterSpacingTitle: '-0.025em',
+    showFooter: true, eyebrowStyle: 'caps-tracking', allowGradient: false,
+  },
+
+  'tokyo-night': {
+    id: 'tokyo-night', name: '东京夜晚', description: '蓝紫夜色 · 开发者偏好 · 技术/ACG/夜间', mode: 'dark',
+    bg: '#1a1b26', paper: '#24283b', text: '#c0caf5', muted: '#565f89', soft: '#9aa5ce', border: '#2f334d', rule: '#2f334d',
+    accent: '#7aa2f7', accent2: '#bb9af7', danger: '#f7768e',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 4, borderWeight: 1, letterSpacingTitle: '-0.015em',
+    showFooter: false, eyebrowStyle: 'mono-prefix', allowGradient: false,
+    palette: ['#7aa2f7','#bb9af7','#7dcfff','#9ece6a','#ff9e64','#f7768e'],
+    paletteRule: 'soft-tint',
+  },
+
+  'vaporwave': {
+    id: 'vaporwave', name: '蒸汽波', description: '紫粉复古未来 · 80年代赛博 · 创意/音乐/潮流', mode: 'dark',
+    bg: '#1a0938', paper: '#261050', text: '#fdf0ff', muted: '#8a6ba8', soft: '#d0a8f0', border: '#2a1050', rule: '#2a1050',
+    accent: '#ff6ec7', accent2: '#00e5ff', danger: '#ff6b6b',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 144, section: 72, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 1, letterSpacingTitle: '0.02em',
+    showFooter: false, eyebrowStyle: 'caps-tracking', allowGradient: true,
+    decoration: 'linear-gradient(180deg,rgba(255,110,199,0.08) 0,rgba(0,229,255,0.06) 100%)',
+  },
+
+  'xiaohongshu': {
+    id: 'xiaohongshu', name: '小红书', description: '暖白 + 红豆 · 生活方式内容 · 消费/美妆/种草', mode: 'light',
+    bg: '#fffdfb', paper: '#ffffff', text: '#1a1210', muted: '#a08d85', soft: '#4a2820', border: '#e8d8d0', rule: '#e8d8d0',
+    accent: '#ff2742', danger: '#ff2742',
+    fontDisplay: '"Noto Serif SC","Source Han Serif SC",Georgia,serif', fontBody: '"PingFang SC","Microsoft YaHei",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Noto Serif SC",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 8, borderWeight: 1, letterSpacingTitle: '-0.01em',
+    showFooter: false, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  'y2k-chrome': {
+    id: 'y2k-chrome', name: 'Y2K 铬', description: '千禧金属铬 · 渐变紫蓝 · 潮流/科技回顾/时尚', mode: 'light',
+    bg: '#dfe4ec', paper: '#eef1f6', text: '#1a1f2e', muted: '#8590a6', soft: '#2a3048', border: '#a0aabf', rule: '#a0aabf',
+    accent: '#8a5cff', accent2: '#4ab8ff', danger: '#ff5c8a',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 12, borderWeight: 1, letterSpacingTitle: '-0.02em',
+    showFooter: false, eyebrowStyle: 'caps-tracking', allowGradient: true,
+    decoration: 'linear-gradient(135deg,rgba(138,92,255,0.08) 0,rgba(74,184,255,0.08) 100%)',
+  },
+
+  // ── v4 · guizang 系列（9 套）────────────────────────────────────────────────
+
+  'guizang-monocle': {
+    id: 'guizang-monocle', name: '归藏·墨白', description: '墨汁纯黑 · 衬线书卷气 · 文化/知识/学术', mode: 'light',
+    bg: '#f1efea', paper: '#faf8f3', text: '#0a0a0b', muted: '#5a5850', soft: '#2a2820', border: '#c8c4ba', rule: '#c8c4ba',
+    accent: '#0a0a0b', danger: '#8a1a1a',
+    fontDisplay: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontBody: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Source Serif 4",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 160, radius: 0, borderWeight: 0.5, letterSpacingTitle: '-0.005em',
+    showFooter: false, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  'guizang-indigo': {
+    id: 'guizang-indigo', name: '归藏·靛蓝', description: '靛蓝墨色 · 衬线典雅 · 政策/报告/高端商务', mode: 'light',
+    bg: '#f1f3f5', paper: '#ffffff', text: '#0a1f3d', muted: '#6080a0', soft: '#1a3a6a', border: '#c0c8d0', rule: '#c0c8d0',
+    accent: '#0a1f3d', danger: '#8a1a1a',
+    fontDisplay: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontBody: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Source Serif 4",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 160, radius: 0, borderWeight: 0.5, letterSpacingTitle: '-0.005em',
+    showFooter: false, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  'guizang-forest': {
+    id: 'guizang-forest', name: '归藏·竹绿', description: '竹林暗绿 · 衬线自然 · 可持续/环境/东方', mode: 'light',
+    bg: '#f5f1e8', paper: '#faf8f0', text: '#1a2e1f', muted: '#607060', soft: '#253020', border: '#c8c4b0', rule: '#c8c4b0',
+    accent: '#1a2e1f', danger: '#8a1a1a',
+    fontDisplay: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontBody: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Source Serif 4",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 160, radius: 0, borderWeight: 0.5, letterSpacingTitle: '-0.005em',
+    showFooter: false, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  'guizang-dune': {
+    id: 'guizang-dune', name: '归藏·沙丘', description: '沙漠暖黄 · 衬线朴素 · 人文/田野/旅行', mode: 'light',
+    bg: '#f0e6d2', paper: '#f8f0e0', text: '#1f1a14', muted: '#706050', soft: '#3a2a18', border: '#c8baa8', rule: '#c8baa8',
+    accent: '#1f1a14', danger: '#8a1a1a',
+    fontDisplay: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontBody: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Source Serif 4",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 160, radius: 0, borderWeight: 0.5, letterSpacingTitle: '-0.005em',
+    showFooter: false, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  'guizang-crimson': {
+    id: 'guizang-crimson', name: '归藏·深红', description: '深红暗夜 · 衬线戏剧 · 发布会/文学/激情', mode: 'dark',
+    bg: '#1a0a0a', paper: '#2a1010', text: '#f5e6e6', muted: '#a07070', soft: '#d0a0a0', border: '#3d1515', rule: '#3d1515',
+    accent: '#e63946', danger: '#e63946',
+    fontDisplay: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Source Serif 4",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 160, radius: 0, borderWeight: 0.5, letterSpacingTitle: '-0.005em',
+    showFooter: false, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  'guizang-slate': {
+    id: 'guizang-slate', name: '归藏·石青', description: '石板蓝灰 · 衬线专业 · 科技/金融/正式报告', mode: 'light',
+    bg: '#f0f2f4', paper: '#e4e8ec', text: '#1c2330', muted: '#6b7a8d', soft: '#2a3848', border: '#c8d0da', rule: '#c8d0da',
+    accent: '#4a6fa5', danger: '#c0392b',
+    fontDisplay: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Source Serif 4",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 160, radius: 0, borderWeight: 0.5, letterSpacingTitle: '-0.005em',
+    showFooter: false, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  'guizang-amber': {
+    id: 'guizang-amber', name: '归藏·琥珀', description: '琥珀暗金 · 衬线典藏 · 金融/文化/奢侈品', mode: 'dark',
+    bg: '#1c1608', paper: '#2a2010', text: '#f5ead0', muted: '#a09060', soft: '#d0b880', border: '#3d3010', rule: '#3d3010',
+    accent: '#f4a100', danger: '#e06030',
+    fontDisplay: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Source Serif 4",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 160, radius: 0, borderWeight: 0.5, letterSpacingTitle: '-0.005em',
+    showFooter: false, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  'guizang-teal': {
+    id: 'guizang-teal', name: '归藏·松石', description: '松石绿清新 · 衬线自然 · 健康/可持续/东方', mode: 'light',
+    bg: '#f0f6f5', paper: '#e0eeec', text: '#0d2b28', muted: '#5a8a85', soft: '#1a4a45', border: '#b8d8d5', rule: '#b8d8d5',
+    accent: '#00897b', danger: '#c0392b',
+    fontDisplay: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Source Serif 4",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 160, radius: 0, borderWeight: 0.5, letterSpacingTitle: '-0.005em',
+    showFooter: false, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  'guizang-night': {
+    id: 'guizang-night', name: '归藏·夜蓝', description: '深夜靛蓝 · 衬线宁静 · 冥想/科技哲学/夜间', mode: 'dark',
+    bg: '#0a0a0f', paper: '#12121a', text: '#e8e8f0', muted: '#6060a0', soft: '#a0a0d0', border: '#1e1e30', rule: '#1e1e30',
+    accent: '#7c7cff', accent2: '#a0a0ff', danger: '#ff6b6b',
+    fontDisplay: '"Source Serif 4","Noto Serif SC",Georgia,serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    fontEyebrowSerif: '"Source Serif 4",Georgia,serif',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 160, radius: 0, borderWeight: 0.5, letterSpacingTitle: '-0.005em',
+    showFooter: false, eyebrowStyle: 'serif-italic', allowGradient: false,
+  },
+
+  // ── v5 · swiss 变体（4 套）─────────────────────────────────────────────────
+
+  'swiss-ikb': {
+    id: 'swiss-ikb', name: '瑞士·IKB蓝', description: '克莱因蓝 · 瑞士网格 · 艺术/设计/品牌', mode: 'light',
+    bg: '#fafaf8', paper: '#ffffff', text: '#0a0a0a', muted: '#737373', soft: '#1a1a1a', border: '#d4d4d2', rule: '#d4d4d2',
+    accent: '#002FA7', danger: '#c0392b',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 144, section: 72, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 2, letterSpacingTitle: '-0.025em',
+    showFooter: true, eyebrowStyle: 'caps-tracking', allowGradient: false,
+  },
+
+  'swiss-lemon': {
+    id: 'swiss-lemon', name: '瑞士·柠檬黄', description: '柠檬黄 · 瑞士网格 · 创意/食品/年轻', mode: 'light',
+    bg: '#fafaf8', paper: '#ffffff', text: '#0a0a0a', muted: '#737373', soft: '#1a1a1a', border: '#d4d4d2', rule: '#d4d4d2',
+    accent: '#FFD500', danger: '#c0392b',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 144, section: 72, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 2, letterSpacingTitle: '-0.025em',
+    showFooter: true, eyebrowStyle: 'caps-tracking', allowGradient: false,
+  },
+
+  'swiss-neon-green': {
+    id: 'swiss-neon-green', name: '瑞士·霓虹绿', description: '霓虹绿 · 瑞士网格 · 科技/环保/潮流', mode: 'light',
+    bg: '#fafaf8', paper: '#ffffff', text: '#0a0a0a', muted: '#737373', soft: '#1a1a1a', border: '#d4d4d2', rule: '#d4d4d2',
+    accent: '#C5E803', danger: '#c0392b',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 144, section: 72, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 2, letterSpacingTitle: '-0.025em',
+    showFooter: true, eyebrowStyle: 'caps-tracking', allowGradient: false,
+  },
+
+  'swiss-orange': {
+    id: 'swiss-orange', name: '瑞士·橙', description: '活力橙 · 瑞士网格 · 运动/消费/能量', mode: 'light',
+    bg: '#fafaf8', paper: '#ffffff', text: '#0a0a0a', muted: '#737373', soft: '#1a1a1a', border: '#d4d4d2', rule: '#d4d4d2',
+    accent: '#FF6B35', danger: '#c0392b',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 144, section: 72, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 2, letterSpacingTitle: '-0.025em',
+    showFooter: true, eyebrowStyle: 'caps-tracking', allowGradient: false,
+  },
+
+  // ── v6 · open-slide（3 套）─────────────────────────────────────────────────
+
+  'open-aurora': {
+    id: 'open-aurora', name: 'Open·极光', description: '紫光暗底 · 通用开放 · 科技/AI/产品', mode: 'dark',
+    bg: '#0E0E0E', paper: '#161616', text: '#F5F5F5', muted: '#8B8B8B', soft: '#C5C5C5', border: '#2A2A2A', rule: '#2A2A2A',
+    accent: '#A78BFA', accent2: '#60a5fa', danger: '#f87171',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 144, section: 72, body: 34, caption: 22, padding: 140, radius: 4, borderWeight: 1, letterSpacingTitle: '-0.02em',
+    showFooter: false, eyebrowStyle: 'caps-tracking', allowGradient: false,
+  },
+
+  'open-bright-sans': {
+    id: 'open-bright-sans', name: 'Open·亮蓝', description: '谷歌风亮蓝 · 通用开放 · SaaS/工具/教育', mode: 'light',
+    bg: '#ffffff', paper: '#f7f9fc', text: '#202124', muted: '#5f6368', soft: '#1a2030', border: '#e8eaed', rule: '#e8eaed',
+    accent: '#1a73e8', danger: '#ea4335',
+    fontDisplay: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 132, section: 64, body: 34, caption: 22, padding: 140, radius: 8, borderWeight: 1, letterSpacingTitle: '-0.02em',
+    showFooter: false, eyebrowStyle: 'caps-tracking', allowGradient: false,
+  },
+
+  'open-sticker-pop': {
+    id: 'open-sticker-pop', name: 'Open·贴纸波普', description: '热粉贴纸 · 撞色边框 · 年轻/潮流/消费', mode: 'light',
+    bg: '#fff2e8', paper: '#ffe6d3', text: '#2d1b4e', muted: '#9a8aa8', soft: '#4a2a70', border: '#2d1b4e', rule: '#2d1b4e',
+    accent: '#ff4d8d', accent2: '#ffd600', danger: '#ff4d8d',
+    fontDisplay: '"Archivo Black","Helvetica Neue","PingFang SC",sans-serif', fontBody: '"Inter","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
+    hero: 156, section: 80, body: 34, caption: 22, padding: 120, radius: 12, borderWeight: 3, letterSpacingTitle: '-0.03em',
+    showFooter: false, eyebrowStyle: 'caps-bold', allowGradient: false,
+    palette: ['#ff4d8d','#ffd600','#2d1b4e','#00e5ff','#b6ff00','#fff2e8'],
+    paletteRule: 'block-border',
+  },
 };

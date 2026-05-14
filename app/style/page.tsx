@@ -31,29 +31,29 @@ export default function StylePage() {
 
   useEffect(() => {
     try {
-      const b = sessionStorage.getItem(BRIEF_STORAGE);
-      const o = sessionStorage.getItem(OUTLINE_STORAGE);
-      const s = sessionStorage.getItem(SCRIPT_STORAGE);
+      const b = localStorage.getItem(BRIEF_STORAGE);
+      const o = localStorage.getItem(OUTLINE_STORAGE);
+      const s = localStorage.getItem(SCRIPT_STORAGE);
       if (!b || !o || !s) { router.push('/'); return; }
       setBrief(JSON.parse(b));
       setOutline(JSON.parse(o));
       setScript(JSON.parse(s));
       // 恢复之前选过的
-      const t = sessionStorage.getItem(THEME_STORAGE);
-      const d = sessionStorage.getItem(DENSITY_STORAGE);
-      const br = sessionStorage.getItem(BRAND_STORAGE);
+      const t = localStorage.getItem(THEME_STORAGE);
+      const d = localStorage.getItem(DENSITY_STORAGE);
+      const br = localStorage.getItem(BRAND_STORAGE);
       if (t) setTheme(JSON.parse(t));
       if (d) setDensity(JSON.parse(d));
       if (br) setBrand(JSON.parse(br));
     } catch { router.push('/'); }
   }, [router]);
 
-  function persistTheme(v: ThemeId) { setTheme(v); sessionStorage.setItem(THEME_STORAGE, JSON.stringify(v)); }
-  function persistDensity(v: 1 | 2) { setDensity(v); sessionStorage.setItem(DENSITY_STORAGE, JSON.stringify(v)); }
+  function persistTheme(v: ThemeId) { setTheme(v); localStorage.setItem(THEME_STORAGE, JSON.stringify(v)); }
+  function persistDensity(v: 1 | 2) { setDensity(v); localStorage.setItem(DENSITY_STORAGE, JSON.stringify(v)); }
   function persistBrand(v: BrandOverride | undefined) {
     setBrand(v);
-    if (v) sessionStorage.setItem(BRAND_STORAGE, JSON.stringify(v));
-    else sessionStorage.removeItem(BRAND_STORAGE);
+    if (v) localStorage.setItem(BRAND_STORAGE, JSON.stringify(v));
+    else localStorage.removeItem(BRAND_STORAGE);
   }
 
   async function handleGenerateDeck() {
@@ -87,7 +87,7 @@ export default function StylePage() {
         throw new Error(err.error || `HTTP ${res.status}`);
       }
       const data = await res.json();
-      sessionStorage.setItem(DECK_STORAGE, JSON.stringify(data.deck));
+      localStorage.setItem(DECK_STORAGE, JSON.stringify(data.deck));
       router.push('/deck');
     } catch (e) {
       setError(e instanceof Error ? e.message : '生成失败');
