@@ -321,8 +321,8 @@ function Process({ slide, t, n, total }: LayoutProps<ProcessSlide>) {
                  t.id === 'risograph' ? <RisoText t={t} offset={2} color={t.accent}>{String(i + 1).padStart(2, '0')}</RisoText> :
                  String(i + 1).padStart(2, '0')}
               </div>
-              <div data-ef={`steps.${i}.title`} style={{ fontSize: isTech ? t.body : t.body, fontWeight: 700, marginTop: 18, fontFamily: t.fontDisplay }}>{s.title}</div>
-              {s.desc && <div data-ef={`steps.${i}.desc`} style={{ fontSize: t.body, color: t.muted, marginTop: 14, lineHeight: 1.5 }}>{s.desc}</div>}
+              <div data-ef={`steps.${i}.title`} style={{ fontSize: t.body, fontWeight: 700, marginTop: 18, fontFamily: t.fontDisplay }}>{s.title}</div>
+              {s.desc && <div data-ef={`steps.${i}.desc`} style={{ fontSize: t.caption, color: t.muted, marginTop: 14, lineHeight: 1.5 }}>{s.desc}</div>}
             </div>
             {/* tech: 节点之间用 mono ─→ */}
             {isTech && i < slide.steps.length - 1 && (
@@ -431,8 +431,8 @@ function Timeline({ slide, t, n, total }: LayoutProps<TimelineSlide>) {
             <div key={i} style={{ textAlign: 'center' }}>
               <div style={{ width: 22, height: 22, background: t.accent, borderRadius: 999, margin: '50px auto 0' }} />
               <div style={{ fontSize: 50, fontWeight: 800, marginTop: 28, fontFamily: t.fontDisplay }}>{e.time}</div>
-              <div style={{ fontSize: 26, color: t.soft, marginTop: 10 }}>{e.title}</div>
-              {e.desc && <div style={{ fontSize: 18, color: t.muted, marginTop: 6, lineHeight: 1.5 }}>{e.desc}</div>}
+              <div style={{ fontSize: t.body, color: t.soft, marginTop: 10 }}>{e.title}</div>
+              {e.desc && <div style={{ fontSize: t.caption, color: t.muted, marginTop: 6, lineHeight: 1.5 }}>{e.desc}</div>}
             </div>
           ))}
         </div>
@@ -650,7 +650,7 @@ function Matrix2x2({ slide, t, n, total }: LayoutProps<Matrix2x2Slide>) {
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 56px', lineHeight: 1.25, fontFamily: t.fontDisplay, maxWidth: 1500 }}>
+      <h2 style={{ fontSize: Math.min(t.section, 56), fontWeight: 700, margin: '24px 0 56px', lineHeight: 1.25, fontFamily: t.fontDisplay, maxWidth: 1500 }}>
         {slide.heading}
       </h2>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -875,7 +875,7 @@ function KpiBoard({ slide, t, n, total }: LayoutProps<KpiBoardSlide>) {
           {slide.period}
         </div>
       </div>
-      <h2 style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 56px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
+      <h2 style={{ fontSize: Math.min(t.section, 56), fontWeight: 700, margin: '24px 0 56px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
         {slide.heading}
       </h2>
       <div style={{
@@ -994,7 +994,7 @@ function Roadmap({ slide, t, n, total }: LayoutProps<RoadmapSlide>) {
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 48px', lineHeight: 1.25, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
+      <h2 style={{ fontSize: Math.min(t.section, 52), fontWeight: 700, margin: '24px 0 48px', lineHeight: 1.25, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
         {slide.heading}
       </h2>
       {/* 时段表头 */}
@@ -1074,14 +1074,14 @@ function CaseStudy({ slide, t, n, total }: LayoutProps<CaseStudySlide>) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24, paddingRight: 32, borderRight: `${t.borderWeight}px solid ${t.rule}` }}>
           {([['CONTEXT 背景', slide.context], ['CHALLENGE 挑战', slide.challenge], ['APPROACH 方法', slide.approach]] as const).map(([label, body]) => (
             <div key={label}>
-              <div style={{ fontSize: 20, color: t.muted, fontWeight: 600, letterSpacing: '0.1em', fontFamily: t.fontEyebrowSerif ?? t.fontDisplay }}>{label}</div>
-              <div style={{ fontSize: 24, color: t.text, marginTop: 10, lineHeight: 1.55, fontFamily: t.fontDisplay }}>{body}</div>
+              <div style={{ fontSize: t.caption, color: t.muted, fontWeight: 600, letterSpacing: '0.1em', fontFamily: t.fontEyebrowSerif ?? t.fontDisplay }}>{label}</div>
+              <div style={{ fontSize: t.body, color: t.text, marginTop: 10, lineHeight: 1.55, fontFamily: t.fontDisplay }}>{body}</div>
             </div>
           ))}
         </div>
         {/* 右：结果 */}
         <div>
-          <div style={{ fontSize: 20, color: t.accent, fontWeight: 600, letterSpacing: '0.1em', fontFamily: t.fontEyebrowSerif ?? t.fontDisplay, marginBottom: 24 }}>RESULTS 结果</div>
+          <div style={{ fontSize: t.caption, color: t.accent, fontWeight: 600, letterSpacing: '0.1em', fontFamily: t.fontEyebrowSerif ?? t.fontDisplay, marginBottom: 24 }}>RESULTS 结果</div>
           {slide.results.map((r, i) => (
             <div key={i} style={{ paddingTop: i > 0 ? 24 : 0, marginTop: i > 0 ? 24 : 0, borderTop: i > 0 ? `${t.borderWeight}px solid ${t.rule}` : 'none' }}>
               <div style={{ fontSize: 56, fontWeight: 800, color: t.accent, lineHeight: 1, fontFamily: t.fontDisplay, fontVariantNumeric: 'tabular-nums' }}>{r.value}</div>
@@ -1096,7 +1096,7 @@ function CaseStudy({ slide, t, n, total }: LayoutProps<CaseStudySlide>) {
           <div style={{ fontSize: 26, fontStyle: 'italic', fontFamily: t.fontDisplay, color: t.soft, lineHeight: 1.5 }}>
             &ldquo;{slide.quote}&rdquo;
           </div>
-          {slide.quoteAttribution && <div style={{ fontSize: 20, color: t.muted, marginTop: 8 }}>— {slide.quoteAttribution}</div>}
+          {slide.quoteAttribution && <div style={{ fontSize: t.caption, color: t.muted, marginTop: 8 }}>— {slide.quoteAttribution}</div>}
         </div>
       )}
       <Footer n={n} total={total} t={t} />
@@ -1129,7 +1129,7 @@ function TableLayout({ slide, t, n, total }: LayoutProps<TableSlide>) {
         </div>
       )}
       {!isAcademic && (
-        <h2 style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 48px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
+        <h2 style={{ fontSize: Math.min(t.section, 52), fontWeight: 700, margin: '24px 0 48px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
           {slide.heading}
         </h2>
       )}
@@ -1168,7 +1168,7 @@ function TableLayout({ slide, t, n, total }: LayoutProps<TableSlide>) {
               const inverted = isBrutalist && isHi;
               return (
                 <div key={c.id} style={{
-                  fontSize: 26, color: inverted ? t.bg : t.text, padding: 20,
+                  fontSize: t.body, color: inverted ? t.bg : t.text, padding: 20,
                   textAlign: c.align ?? 'left',
                   background: inverted ? t.text : (isHi && !isAcademic ? `${t.accent}10` : 'transparent'),
                   fontFamily: t.fontDisplay,
@@ -1221,7 +1221,7 @@ function Causality({ slide, t, n, total }: LayoutProps<CausalitySlide>) {
                 fontFamily: isTech ? t.fontMono : undefined,
               }}>
                 <div style={{
-                  fontSize: 26, fontWeight: 700,
+                  fontSize: t.body, fontWeight: 700,
                   fontFamily: isTech ? t.fontMono : t.fontDisplay,
                   lineHeight: 1.35,
                 }}>
@@ -1229,7 +1229,7 @@ function Causality({ slide, t, n, total }: LayoutProps<CausalitySlide>) {
                 </div>
                 {link.because && (
                   <div style={{
-                    fontSize: 18,
+                    fontSize: t.caption,
                     color: isBrutalist && isLast ? t.bg : t.muted,
                     marginTop: 12, lineHeight: 1.5,
                     fontStyle: isTech ? 'normal' : 'italic',
