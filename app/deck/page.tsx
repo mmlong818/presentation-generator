@@ -28,10 +28,10 @@ export default function DeckPage() {
   const [fullscreen, setFullscreen] = useState(false);
   const [editing, setEditing] = useState<'slide' | 'script' | null>(null);
 
-  // 持久化任意 deck 修改回 sessionStorage
+  // 持久化任意 deck 修改回 localStorage
   function persistDeck(next: Deck) {
     setDeck(next);
-    sessionStorage.setItem(DECK_STORAGE, JSON.stringify(next));
+    localStorage.setItem(DECK_STORAGE, JSON.stringify(next));
   }
   function updateSlide(slideIdx: number, next: Slide) {
     if (!deck) return;
@@ -46,7 +46,7 @@ export default function DeckPage() {
   }
 
   useEffect(() => {
-    const raw = sessionStorage.getItem(DECK_STORAGE);
+    const raw = localStorage.getItem(DECK_STORAGE);
     if (raw) {
       try {
         const d = JSON.parse(raw);
