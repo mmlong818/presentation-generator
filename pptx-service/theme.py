@@ -320,6 +320,32 @@ THEMES: dict[str, ThemeColors] = {
         font_display="Arial", font_body="Arial", mode="light",
     ),
 
+    "guizang-crimson": ThemeColors(
+        bg="#1a0a0a", paper="#2a1010", text="#f5e6e6", muted="#a07070",
+        accent="#e63946", border="#3d1515",
+        font_display="Georgia", font_body="Arial", mode="dark",
+    ),
+    "guizang-slate": ThemeColors(
+        bg="#f0f2f4", paper="#e4e8ec", text="#1c2330", muted="#6b7a8d",
+        accent="#4a6fa5", border="#c8d0da",
+        font_display="Georgia", font_body="Arial", mode="light",
+    ),
+    "guizang-amber": ThemeColors(
+        bg="#1c1608", paper="#2a2010", text="#f5ead0", muted="#a09060",
+        accent="#f4a100", border="#3d3010",
+        font_display="Georgia", font_body="Arial", mode="dark",
+    ),
+    "guizang-teal": ThemeColors(
+        bg="#f0f6f5", paper="#e0eeec", text="#0d2b28", muted="#5a8a85",
+        accent="#00897b", border="#b8d8d5",
+        font_display="Georgia", font_body="Arial", mode="light",
+    ),
+    "guizang-night": ThemeColors(
+        bg="#0a0a0f", paper="#12121a", text="#e8e8f0", muted="#6060a0",
+        accent="#7c7cff", border="#1e1e30",
+        font_display="Georgia", font_body="Arial", mode="dark",
+    ),
+
     # ── open-slide ────────────────────────────────────────────────────────────
     "open-aurora": ThemeColors(
         bg="#0E0E0E", paper="#161616", text="#F5F5F5", muted="#8B8B8B",
