@@ -396,6 +396,56 @@ ${s.text}`).join('\n\n')}
 - script[i] 的 text 字段保持上面的原文不变`;
 }
 
+// ─── 快速直出模式（Quick Mode）────────────────────────────────────────────────
+
+const QUICK_SYSTEM = `你是一个 PPT 内容设计师。用户会给你一段对 PPT 的描述（按页或整体），你需要把它转换为结构化的幻灯片 JSON。
+
+## 你的任务
+
+1. 理解用户的每页描述，选择最匹配的版式（type）
+2. 把用户的文字填入对应字段，可适当润色但不扩写过多
+3. 不要编造用户未提及的数据
+4. 不需要叙事框架，逐页忠实实现
+
+## 版式选择参考
+
+${layoutSchemasForPrompt()}
+
+## 输出契约
+
+返回**纯 JSON**，结构：
+
+\`\`\`typescript
+{
+  "title": string,      // deck 标题（如用户未给出则从内容推断）
+  "slides": Slide[]     // 按用户描述的顺序
+}
+\`\`\`
+
+- 只输出 JSON，第一个字符 \`{\`，末字符 \`}\`
+- 不要 markdown 代码块，不要任何解释文字
+- 字段引号必须是 ASCII 双引号 \`"\`
+- 字符串内换行用 \`\\n\` 转义`;
+
+export function buildQuickSystemPrompt(): string {
+  return QUICK_SYSTEM;
+}
+
+export function buildQuickUserPrompt(text: string, theme: ThemeId, title?: string): string {
+  const t = THEMES[theme];
+  return `# 用户输入${title ? `\n\n标题：${title}` : ''}
+
+主题风格：\`${theme}\` · ${t.name} · ${t.description}
+
+## PPT 内容描述
+
+${text.trim()}
+
+# 任务
+
+把上面的描述转换为 slides JSON。每页对应一个 slide 对象，选择最匹配的版式。只输出纯 JSON。`;
+}
+
 /** 简化版式列表，用在 outline prompt（不需要完整 schema） */
 function layoutListBrief(): string {
   // 复用 registry 但只取 type + 简介

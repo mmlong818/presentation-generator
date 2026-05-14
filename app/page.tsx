@@ -130,6 +130,7 @@ export default function Home() {
           <p className="text-stone-600 mt-3 text-lg">先把演讲想清楚 — 大纲 → 讲稿 → 风格 → PPT。每步都可改。</p>
         </div>
         <div className="flex gap-2">
+          <Link href="/quick" className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap">⚡ 快速直出</Link>
           <Link href="/history" className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap">📚 历史</Link>
           <Link href="/preview" className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap">🎨 主题画廊</Link>
         </div>
