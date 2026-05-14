@@ -61,7 +61,7 @@ export default function HistoryPage() {
       ) : (
         <ul className="space-y-3">
           {items.map((item) => {
-            const t = THEMES[item.deck.theme];
+            const t = THEMES[item.deck.theme] ?? THEMES['modern-minimal'];
             return (
               <li key={item.id}
                 className="flex items-center gap-4 p-4 rounded-lg border border-stone-200 hover:border-stone-400 transition cursor-pointer"
