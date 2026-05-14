@@ -5,8 +5,31 @@ import Link from 'next/link';
 import { THEMES } from '@/lib/themes';
 import { applyBrand } from '@/lib/brand';
 import { SlideRenderer } from '@/components/layouts';
-import SlideEditor from '@/components/SlideEditor';
-import type { Deck, Slide } from '@/lib/types';
+import DirectEditOverlay from '@/components/DirectEditOverlay';
+import type { Deck, Slide, ElementStyleOverride } from '@/lib/types';
+
+function applyTextEdit(slide: Slide, path: string, value: string): Slide {
+  const result: Record<string, unknown> = JSON.parse(JSON.stringify(slide));
+  const parts = path.split('.');
+  let cur: Record<string, unknown> = result;
+  for (let i = 0; i < parts.length - 1; i++) {
+    const k = /^\d+$/.test(parts[i]) ? Number(parts[i]) : parts[i];
+    cur = cur[k] as Record<string, unknown>;
+    if (cur == null) return slide;
+  }
+  const last = parts[parts.length - 1];
+  cur[/^\d+$/.test(last) ? Number(last) : last] = value;
+  return result as unknown as Slide;
+}
+
+function applyStyleEdit(slide: Slide, path: string, style: ElementStyleOverride): Slide {
+  const result = JSON.parse(JSON.stringify(slide)) as Record<string, unknown> & { _styles?: Record<string, ElementStyleOverride> };
+  if (!result._styles) result._styles = {};
+  if (Object.keys(style).length === 0) delete result._styles[path];
+  else result._styles[path] = style;
+  if (Object.keys(result._styles).length === 0) delete result._styles;
+  return result as unknown as Slide;
+}
 
 const DECK_STORAGE = 'pg_last_deck';
 const HISTORY_KEY = 'pg_deck_history';
@@ -26,7 +49,9 @@ export default function DeckPage() {
   const [deck, setDeck] = useState<Deck | null>(null);
   const [idx, setIdx] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
-  const [editing, setEditing] = useState<'slide' | 'script' | null>(null);
+  const [editing, setEditing] = useState<'script' | null>(null);
+  const [liveSlide, setLiveSlide] = useState<Slide | null>(null);
+  const [directEdit, setDirectEdit] = useState(false);
 
   // 持久化任意 deck 修改回 localStorage
   function persistDeck(next: Deck) {
@@ -37,6 +62,7 @@ export default function DeckPage() {
     if (!deck) return;
     const slides = [...deck.slides];
     slides[slideIdx] = next;
+    setLiveSlide(null);
     persistDeck({ ...deck, slides });
   }
   function updateScript(slideIndex: number, text: string) {
@@ -56,8 +82,29 @@ export default function DeckPage() {
     }
   }, []);
 
-  const next = useCallback(() => setIdx((i) => deck ? Math.min(i + 1, deck.slides.length - 1) : 0), [deck]);
-  const prev = useCallback(() => setIdx((i) => Math.max(i - 1, 0)), []);
+  function handleDirectText(path: string, value: string) {
+    if (!deck) return;
+    const updated = applyTextEdit(deck.slides[idx], path, value);
+    updateSlide(idx, updated);
+  }
+
+  function handleDirectStyle(path: string, style: ElementStyleOverride) {
+    if (!deck) return;
+    const updated = applyStyleEdit(deck.slides[idx], path, style);
+    const slides = [...deck.slides];
+    slides[idx] = updated;
+    persistDeck({ ...deck, slides });
+  }
+
+  function handleDirectCommit(path: string, value: string, style: ElementStyleOverride) {
+    if (!deck) return;
+    let slide = applyTextEdit(deck.slides[idx], path, value);
+    slide = applyStyleEdit(slide, path, style);
+    updateSlide(idx, slide);
+  }
+
+  const next = useCallback(() => { setLiveSlide(null); setIdx((i) => deck ? Math.min(i + 1, deck.slides.length - 1) : 0); }, [deck]);
+  const prev = useCallback(() => { setLiveSlide(null); setIdx((i) => Math.max(i - 1, 0)); }, []);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -82,7 +129,7 @@ export default function DeckPage() {
   }
 
   const t = applyBrand(deck.theme, deck.brand);
-  const slide = deck.slides[idx];
+  const slide = liveSlide ?? deck.slides[idx];
   const scriptEntry = deck.script.find((s) => s.slideIndex === idx + 1);
 
   if (fullscreen) {
@@ -95,9 +142,7 @@ export default function DeckPage() {
   const ExportRoot = (
     <div style={{ position: 'fixed', left: -99999, top: 0, pointerEvents: 'none' }} aria-hidden>
       {deck.slides.map((s, i) => (
-        <div key={i} data-export-slide="1" style={{ width: 1920, height: 1080, marginBottom: 20 }}>
-          <SlideRenderer slide={s} t={t} n={i + 1} total={deck.slides.length} brand={deck.brand} deckTitle={deck.title} />
-        </div>
+        <ExportSlide key={i} slide={s} t={t} n={i + 1} total={deck.slides.length} brand={deck.brand} deckTitle={deck.title} />
       ))}
     </div>
   );
@@ -119,25 +164,22 @@ export default function DeckPage() {
         <ExportMenu deck={deck} />
       </header>
 
-      {editing === 'slide' && (
-        <SlideEditor
-          slide={slide}
-          onClose={() => setEditing(null)}
-          onSave={(next) => { updateSlide(idx, next); setEditing(null); }}
-        />
-      )}
+
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6 p-6 overflow-hidden">
         <div className="flex flex-col gap-4 min-h-0">
           <div className="flex-1 flex items-center justify-center bg-stone-100 rounded-lg overflow-hidden">
-            <SlideStage slide={slide} t={t} idx={idx} total={deck.slides.length} brand={deck.brand} deckTitle={deck.title} />
+            <SlideStage slide={slide} t={t} idx={idx} total={deck.slides.length} brand={deck.brand} deckTitle={deck.title}
+              directEdit={directEdit} onDirectText={handleDirectText} onDirectStyle={handleDirectStyle} onDirectCommit={handleDirectCommit} />
           </div>
           <div className="flex items-center justify-between gap-3">
             <button onClick={prev} disabled={idx === 0} className="px-4 py-2 rounded border disabled:opacity-30">← 上一张</button>
             <div className="flex items-center gap-2">
-              <button onClick={() => setEditing('slide')}
-                className="px-3 py-2 rounded text-xs border border-stone-300 hover:bg-stone-100">
-                ✎ 编辑此页
+              <button
+                onClick={() => setDirectEdit((v) => !v)}
+                className={`px-3 py-2 rounded text-xs border ${directEdit ? 'bg-blue-600 text-white border-blue-600' : 'border-stone-300 hover:bg-stone-100'}`}>
+                {directEdit ? '✓ 直接编辑中' : '✏ 直接编辑'}
               </button>
+
               <div className="text-sm text-stone-600 px-2">
                 {idx + 1} / {deck.slides.length}
               </div>
@@ -146,7 +188,7 @@ export default function DeckPage() {
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2">
             {deck.slides.map((_, i) => (
-              <button key={i} onClick={() => setIdx(i)}
+              <button key={i} onClick={() => { setLiveSlide(null); setIdx(i); }}
                 className={`w-16 h-9 rounded text-xs flex-shrink-0 border ${i === idx ? 'border-stone-900 bg-stone-900 text-white' : 'border-stone-300'}`}>
                 {i + 1}
               </button>
@@ -207,36 +249,79 @@ function Score({ label, v }: { label: string; v: number }) {
   );
 }
 
-function SlideStage({ slide, t, idx, total, brand, deckTitle }: {
+function SlideStage({ slide, t, idx, total, brand, deckTitle, directEdit, onDirectText, onDirectStyle, onDirectCommit }: {
   slide: import('@/lib/types').Slide;
   t: import('@/lib/themes').ThemeTokens;
   idx: number; total: number;
   brand?: import('@/lib/types').BrandOverride;
   deckTitle?: string;
+  directEdit?: boolean;
+  onDirectText?: (path: string, value: string) => void;
+  onDirectStyle?: (path: string, style: import('@/lib/types').ElementStyleOverride) => void;
+  onDirectCommit?: (path: string, value: string, style: import('@/lib/types').ElementStyleOverride) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const slideRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+
   useEffect(() => {
     function recalc() {
       const el = containerRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      const sx = rect.width / 1920;
-      const sy = rect.height / 1080;
-      setScale(Math.min(sx, sy));
+      setScale(Math.min(rect.width / 1920, rect.height / 1080));
     }
     recalc();
     const ro = new ResizeObserver(recalc);
     if (containerRef.current) ro.observe(containerRef.current);
     return () => ro.disconnect();
   }, []);
+
+  // 将 _styles 中的元素级样式覆盖应用到 DOM
+  useEffect(() => {
+    const el = slideRef.current;
+    if (!el) return;
+    const styles = (slide as unknown as Record<string, unknown>)._styles as Record<string, import('@/lib/types').ElementStyleOverride> | undefined;
+    // 先清除所有已应用的覆盖
+    el.querySelectorAll<HTMLElement>('[data-ef]').forEach((node) => {
+      node.style.fontSize = '';
+      node.style.fontFamily = '';
+      node.style.fontWeight = '';
+      node.style.fontStyle = '';
+      node.style.color = '';
+    });
+    if (!styles) return;
+    for (const [path, s] of Object.entries(styles)) {
+      const node = el.querySelector<HTMLElement>(`[data-ef="${path}"]`);
+      if (!node) continue;
+      if (s.fontSize) node.style.fontSize = s.fontSize + 'px';
+      if (s.fontFamily) node.style.fontFamily = s.fontFamily;
+      if (s.fontWeight) node.style.fontWeight = s.fontWeight;
+      if (s.fontStyle) node.style.fontStyle = s.fontStyle;
+      if (s.color) node.style.color = s.color;
+    }
+  }, [slide]);
+
+  const styles = (slide as unknown as Record<string, unknown>)._styles as Record<string, import('@/lib/types').ElementStyleOverride> | undefined;
+
   return (
     <div ref={containerRef} className="relative w-full h-full flex items-center justify-center">
-      <div style={{
+      <div ref={slideRef} style={{
         width: 1920, height: 1080, transform: `scale(${scale})`, transformOrigin: 'center center',
-        flexShrink: 0,
+        flexShrink: 0, position: 'relative',
+        outline: directEdit ? '3px solid #3b82f6' : 'none',
       }}>
         <SlideRenderer slide={slide} t={t} n={idx + 1} total={total} brand={brand} deckTitle={deckTitle} />
+        {directEdit && onDirectText && onDirectStyle && onDirectCommit && (
+          <DirectEditOverlay
+            parentRef={slideRef}
+            scale={scale}
+            onText={onDirectText}
+            onStyle={onDirectStyle}
+            onCommit={onDirectCommit}
+            currentStyles={styles ?? {}}
+          />
+        )}
       </div>
     </div>
   );
@@ -305,6 +390,42 @@ function exportScript(deck: Deck) {
   downloadBlob(blob, `${safeFileName(deck.title)}_讲稿.txt`);
 }
 
+function ExportSlide({ slide, t, n, total, brand, deckTitle }: {
+  slide: Slide; t: import('@/lib/themes').ThemeTokens;
+  n: number; total: number;
+  brand?: import('@/lib/types').BrandOverride;
+  deckTitle?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const styles = (slide as unknown as Record<string, unknown>)._styles as Record<string, ElementStyleOverride> | undefined;
+    el.querySelectorAll<HTMLElement>('[data-ef]').forEach((node) => {
+      node.style.fontSize = '';
+      node.style.fontFamily = '';
+      node.style.fontWeight = '';
+      node.style.fontStyle = '';
+      node.style.color = '';
+    });
+    if (!styles) return;
+    for (const [path, s] of Object.entries(styles)) {
+      const node = el.querySelector<HTMLElement>(`[data-ef="${path}"]`);
+      if (!node) continue;
+      if (s.fontSize) node.style.fontSize = s.fontSize + 'px';
+      if (s.fontFamily) node.style.fontFamily = s.fontFamily;
+      if (s.fontWeight) node.style.fontWeight = s.fontWeight;
+      if (s.fontStyle) node.style.fontStyle = s.fontStyle;
+      if (s.color) node.style.color = s.color;
+    }
+  }, [slide]);
+  return (
+    <div ref={ref} data-export-slide="1" style={{ width: 1920, height: 1080, marginBottom: 20 }}>
+      <SlideRenderer slide={slide} t={t} n={n} total={total} brand={brand} deckTitle={deckTitle} />
+    </div>
+  );
+}
+
 function ExportMenu({ deck }: { deck: Deck }) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
@@ -332,6 +453,18 @@ function ExportMenu({ deck }: { deck: Deck }) {
     }
   }
 
+  async function handlePPTXNative() {
+    setBusy('PPTX可编辑');
+    try {
+      const { exportPPTXNative } = await import('@/lib/pptx');
+      await exportPPTXNative(deck, safeFileName(deck.title));
+    } catch (e) {
+      alert(`可编辑 PPTX 导出失败：${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setBusy(null); setOpen(false);
+    }
+  }
+
   return (
     <div className="relative">
       <button onClick={() => setOpen((v) => !v)} className="px-4 py-2 text-sm rounded border border-stone-300">
@@ -344,6 +477,9 @@ function ExportMenu({ deck }: { deck: Deck }) {
           </button>
           <button onClick={handlePPTX} className="block w-full text-left px-4 py-2 text-sm hover:bg-stone-100">
             🎞 PPTX（图片版）
+          </button>
+          <button onClick={handlePPTXNative} className="block w-full text-left px-4 py-2 text-sm hover:bg-stone-100">
+            📝 PPTX（可编辑版）
           </button>
           <button onClick={() => { exportScript(deck); setOpen(false); }}
             className="block w-full text-left px-4 py-2 text-sm hover:bg-stone-100">
