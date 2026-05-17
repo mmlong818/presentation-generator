@@ -324,11 +324,17 @@ function Statement({ slide, t, n, total }: LayoutProps<StatementSlide>) {
 // ─── 3. Process ──────────────────────────────────────────────────────────────
 function Process({ slide, t, n, total }: LayoutProps<ProcessSlide>) {
   const isTech = t.id === 'tech-utility';
+  const headLines = smartLineBreak(slide.heading, 14, 20);
+  const headFs = Math.min(t.section, headLines.length > 1 ? 68 : 80);
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 data-ef="heading" style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 64px', lineHeight: 1.25, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
-        {slide.heading}
+      <h2 data-ef="heading"
+        ref={forceFontStyle(headFs, 700)}
+        style={{ fontSize: `${headFs}px`, fontWeight: 700, margin: '24px 0 56px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1700 }}>
+        {headLines.map((line, i) => (
+          <span key={i} style={{ display: 'block' }}>{line}</span>
+        ))}
       </h2>
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${slide.steps.length}, 1fr)`, gap: isTech ? 16 : 28, alignItems: 'stretch' }}>
         {slide.steps.map((s, i) => (
@@ -419,11 +425,17 @@ function Compare({ slide, t, n, total }: LayoutProps<CompareSlide>) {
     : t.id === 'editorial-monocle' ? 'transparent'
     : t.id === 'brutalist-mono' ? '#fff'
     : 'rgba(37,99,235,0.06)';
+  const headLines = smartLineBreak(slide.heading, 14, 20);
+  const headFs = Math.min(t.section, headLines.length > 1 ? 68 : 80);
   return (
     <div style={{ ...fillStyle(t), padding: `110px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 56px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
-        {slide.heading}
+      <h2
+        ref={forceFontStyle(headFs, 700)}
+        style={{ fontSize: `${headFs}px`, fontWeight: 700, margin: '24px 0 48px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1700 }}>
+        {headLines.map((line, i) => (
+          <span key={i} style={{ display: 'block' }}>{line}</span>
+        ))}
       </h2>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, flex: 1 }}>
         {([{ data: slide.left, accent: false }, { data: slide.right, accent: true }] as const).map(({ data, accent }, idx) => (
@@ -613,24 +625,45 @@ function Quote({ slide, t, n, total }: LayoutProps<QuoteSlide>) {
 
 // ─── 9. Diagram (placeholder) ────────────────────────────────────────────────
 function Diagram({ slide, t, n, total }: LayoutProps<DiagramSlide>) {
+  const headLines = smartLineBreak(slide.heading, 14, 20);
+  const headFs = Math.min(t.section, headLines.length > 1 ? 68 : 80);
+  // 把 hint 中常见分隔符拆为多个要点显示
+  const hintParts = slide.hint
+    ? slide.hint.split(/[／/、，；;|]\s*|\n+/).map((s) => s.trim()).filter(Boolean)
+    : [];
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 data-ef="heading" style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 60px', lineHeight: 1.25, fontFamily: t.fontDisplay }}>
-        {slide.heading}
+      <h2 data-ef="heading"
+        ref={forceFontStyle(headFs, 700)}
+        style={{ fontSize: `${headFs}px`, fontWeight: 700, margin: '24px 0 48px', lineHeight: 1.3, fontFamily: t.fontDisplay }}>
+        {headLines.map((line, i) => (
+          <span key={i} style={{ display: 'block' }}>{line}</span>
+        ))}
       </h2>
       <div style={{
         flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
         border: `2px dashed ${t.border}`, borderRadius: t.radius,
         background: t.paper, padding: 60,
       }}>
-        <div style={{ textAlign: 'center', maxWidth: 1100 }}>
-          <div style={{ fontSize: 22, color: t.muted, letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: t.fontEyebrowSerif ?? t.fontDisplay }}>
-            DIAGRAM PLACEHOLDER · 待补图示
+        <div style={{ textAlign: 'center', maxWidth: 1300 }}>
+          <div style={{ fontSize: 20, color: t.muted, letterSpacing: '0.18em', textTransform: 'uppercase', fontFamily: t.fontEyebrowSerif ?? t.fontDisplay }}>
+            DIAGRAM · 待补图示
           </div>
-          <p style={{ fontSize: 26, color: t.soft, marginTop: 24, lineHeight: 1.6, fontStyle: 'italic' }}>
-            {slide.hint}
-          </p>
+          {hintParts.length > 1 ? (
+            <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 20, alignItems: 'center' }}>
+              {hintParts.map((p, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: t.accent, color: t.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, fontFamily: t.fontDisplay, flexShrink: 0 }}>{i + 1}</div>
+                  <div style={{ fontSize: 30, color: t.soft, fontFamily: t.fontDisplay, fontWeight: 500 }}>{p}</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p style={{ fontSize: 30, color: t.soft, marginTop: 24, lineHeight: 1.6, fontStyle: 'italic', fontFamily: t.fontDisplay }}>
+              {slide.hint}
+            </p>
+          )}
         </div>
       </div>
       <Footer n={n} total={total} t={t} />
@@ -670,13 +703,19 @@ function CTA({ slide, t, n, total }: LayoutProps<CTASlide>) {
 
 // ─── 11. Checklist ───────────────────────────────────────────────────────────
 function Checklist({ slide, t, n, total }: LayoutProps<ChecklistSlide>) {
+  const headLines = smartLineBreak(slide.heading, 14, 20);
+  const headFs = Math.min(t.section, headLines.length > 1 ? 68 : 80);
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 data-ef="heading" style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 60px', lineHeight: 1.25, fontFamily: t.fontDisplay }}>
-        {slide.heading}
+      <h2 data-ef="heading"
+        ref={forceFontStyle(headFs, 700)}
+        style={{ fontSize: `${headFs}px`, fontWeight: 700, margin: '24px 0 56px', lineHeight: 1.3, fontFamily: t.fontDisplay }}>
+        {headLines.map((line, i) => (
+          <span key={i} style={{ display: 'block' }}>{line}</span>
+        ))}
       </h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 28, maxWidth: 1500 }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', maxWidth: 1500 }}>
         {slide.items.map((item, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 28, fontSize: 36, lineHeight: 1.4 }}>
             <div style={{
