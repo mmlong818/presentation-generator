@@ -381,9 +381,17 @@ function Data({ slide, t, n, total }: LayoutProps<DataSlide>) {
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 data-ef="heading" style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 80px', lineHeight: 1.25, fontFamily: t.fontDisplay }}>
-        {slide.heading}
-      </h2>
+      {(() => {
+        const lines = smartLineBreak(slide.heading, 14, 20);
+        const fs = Math.min(t.section, lines.length > 1 ? 68 : 80);
+        return (
+          <h2 data-ef="heading"
+            ref={forceFontStyle(fs, 700)}
+            style={{ fontSize: `${fs}px`, fontWeight: 700, margin: '24px 0 64px', lineHeight: 1.3, fontFamily: t.fontDisplay }}>
+            {lines.map((line, i) => <span key={i} style={{ display: 'block' }}>{line}</span>)}
+          </h2>
+        );
+      })()}
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${slide.stats.length}, 1fr)`, gap: 60, paddingTop: 32, borderTop: `${t.borderWeight}px solid ${t.rule}` }}>
         {slide.stats.map((s, i) => {
           const isPlaceholder = s.value === '—' || s.value === '-';
@@ -462,11 +470,17 @@ function Compare({ slide, t, n, total }: LayoutProps<CompareSlide>) {
 
 // ─── 6. Timeline ─────────────────────────────────────────────────────────────
 function Timeline({ slide, t, n, total }: LayoutProps<TimelineSlide>) {
+  const headLines = smartLineBreak(slide.heading, 14, 20);
+  const headFs = Math.min(t.section, headLines.length > 1 ? 68 : 80);
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 data-ef="heading" style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 100px', lineHeight: 1.25, fontFamily: t.fontDisplay }}>
-        {slide.heading}
+      <h2 data-ef="heading"
+        ref={forceFontStyle(headFs, 700)}
+        style={{ fontSize: `${headFs}px`, fontWeight: 700, margin: '24px 0 80px', lineHeight: 1.3, fontFamily: t.fontDisplay }}>
+        {headLines.map((line, i) => (
+          <span key={i} style={{ display: 'block' }}>{line}</span>
+        ))}
       </h2>
       <div style={{ position: 'relative', flex: 1 }}>
         <div style={{ position: 'absolute', left: 0, right: 0, top: 60, height: t.borderWeight, background: t.rule }} />
@@ -741,9 +755,17 @@ function Matrix2x2({ slide, t, n, total }: LayoutProps<Matrix2x2Slide>) {
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 style={{ fontSize: Math.min(t.section, 56), fontWeight: 700, margin: '24px 0 56px', lineHeight: 1.25, fontFamily: t.fontDisplay, maxWidth: 1500 }}>
-        {slide.heading}
-      </h2>
+      {(() => {
+        const lines = smartLineBreak(slide.heading, 14, 20);
+        const fs = Math.min(t.section, lines.length > 1 ? 48 : 60);
+        return (
+          <h2
+            ref={forceFontStyle(fs, 700)}
+            style={{ fontSize: `${fs}px`, fontWeight: 700, margin: '24px 0 48px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
+            {lines.map((line, i) => <span key={i} style={{ display: 'block' }}>{line}</span>)}
+          </h2>
+        );
+      })()}
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ position: 'relative', width: 920, height: 560 }}>
           {/* y 轴：左侧外，写在 flex column 里避免 rotate 重叠 */}
@@ -964,9 +986,19 @@ function KpiBoard({ slide, t, n, total }: LayoutProps<KpiBoardSlide>) {
           {slide.period}
         </div>
       </div>
-      <h2 style={{ fontSize: Math.min(t.section, 56), fontWeight: 700, margin: '24px 0 56px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
-        {slide.heading}
-      </h2>
+      {(() => {
+        const headLines = smartLineBreak(slide.heading, 14, 20);
+        const headFs = Math.min(t.section, headLines.length > 1 ? 60 : 72);
+        return (
+          <h2
+            ref={forceFontStyle(headFs, 700)}
+            style={{ fontSize: `${headFs}px`, fontWeight: 700, margin: '24px 0 48px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1700 }}>
+            {headLines.map((line, i) => (
+              <span key={i} style={{ display: 'block' }}>{line}</span>
+            ))}
+          </h2>
+        );
+      })()}
       <div style={{
         flex: 1, display: 'grid',
         gridTemplateColumns: `repeat(${cols}, 1fr)`,
@@ -1083,9 +1115,17 @@ function Roadmap({ slide, t, n, total }: LayoutProps<RoadmapSlide>) {
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 style={{ fontSize: Math.min(t.section, 52), fontWeight: 700, margin: '24px 0 48px', lineHeight: 1.25, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
-        {slide.heading}
-      </h2>
+      {(() => {
+        const lines = smartLineBreak(slide.heading, 14, 20);
+        const fs = Math.min(t.section, lines.length > 1 ? 44 : 56);
+        return (
+          <h2
+            ref={forceFontStyle(fs, 700)}
+            style={{ fontSize: `${fs}px`, fontWeight: 700, margin: '24px 0 40px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1700 }}>
+            {lines.map((line, i) => <span key={i} style={{ display: 'block' }}>{line}</span>)}
+          </h2>
+        );
+      })()}
       {/* 时段表头 */}
       <div style={{
         display: 'grid', gridTemplateColumns: `200px repeat(${periodCount}, 1fr)`,
@@ -1217,11 +1257,17 @@ function TableLayout({ slide, t, n, total }: LayoutProps<TableSlide>) {
           Table {n}. {slide.heading}
         </div>
       )}
-      {!isAcademic && (
-        <h2 style={{ fontSize: Math.min(t.section, 52), fontWeight: 700, margin: '24px 0 48px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
-          {slide.heading}
-        </h2>
-      )}
+      {!isAcademic && (() => {
+        const lines = smartLineBreak(slide.heading, 14, 20);
+        const fs = Math.min(t.section, lines.length > 1 ? 44 : 56);
+        return (
+          <h2
+            ref={forceFontStyle(fs, 700)}
+            style={{ fontSize: `${fs}px`, fontWeight: 700, margin: '24px 0 40px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1700 }}>
+            {lines.map((line, i) => <span key={i} style={{ display: 'block' }}>{line}</span>)}
+          </h2>
+        );
+      })()}
       <div style={{ marginTop: isAcademic ? 32 : 0, borderTop: `${topRuleWeight}px solid ${t.rule}` }}>
         {/* 表头 */}
         <div style={{ display: 'grid', gridTemplateColumns: `repeat(${colCount}, 1fr)`, borderBottom: `${middleRuleWeight}px solid ${t.rule}` }}>
@@ -1461,9 +1507,17 @@ function Quadrant({ slide, t, n, total }: LayoutProps<QuadrantSlide>) {
   return (
     <div style={{ ...fillStyle(t), padding: `100px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 style={{ fontSize: 48, fontWeight: 700, margin: '20px 0 32px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
-        {slide.heading}
-      </h2>
+      {(() => {
+        const lines = smartLineBreak(slide.heading, 14, 20);
+        const fs = lines.length > 1 ? 44 : 56;
+        return (
+          <h2
+            ref={forceFontStyle(fs, 700)}
+            style={{ fontSize: `${fs}px`, fontWeight: 700, margin: '20px 0 32px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1700 }}>
+            {lines.map((line, i) => <span key={i} style={{ display: 'block' }}>{line}</span>)}
+          </h2>
+        );
+      })()}
       <div style={{ flex: 1, position: 'relative', paddingLeft: 80, paddingBottom: 60 }}>
         {/* y 轴标签 */}
         <div style={{ position: 'absolute', left: 0, top: 0, bottom: 60, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-start' }}>
