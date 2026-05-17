@@ -120,6 +120,22 @@ export default function PPTEditor({ parentRef, scale, styles, layouts, onText, o
         else setSel(null);
       }
       if (!sel || editing) return;
+      // Ctrl+B / Ctrl+I：加粗 / 斜体
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
+        const cur = styles[sel.path] ?? {};
+        if (e.key === 'b' || e.key === 'B') {
+          e.preventDefault();
+          const isBold = (cur.fontWeight ?? sel.computed.fontWeight) === '700' || sel.computed.fontWeight === 'bold' || Number(sel.computed.fontWeight) >= 600;
+          onStyle(sel.path, { ...cur, fontWeight: isBold ? '400' : '700' });
+          return;
+        }
+        if (e.key === 'i' || e.key === 'I') {
+          e.preventDefault();
+          const isItalic = (cur.fontStyle ?? sel.computed.fontStyle) === 'italic';
+          onStyle(sel.path, { ...cur, fontStyle: isItalic ? 'normal' : 'italic' });
+          return;
+        }
+      }
       // arrow keys nudge layout
       const step = e.shiftKey ? 20 : 4;
       const cur = layouts[sel.path] ?? {};
@@ -247,15 +263,17 @@ export default function PPTEditor({ parentRef, scale, styles, layouts, onText, o
       onClick={editing ? undefined : handleClick}
       onDoubleClick={handleDoubleClick}
     >
-      {/* Hint when nothing selected */}
+      {/* Hint when nothing selected - 用 fixed 定位避免被 scale 缩成微型 */}
       {!sel && (
         <div style={{
-          position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)',
-          background: 'rgba(0,0,0,0.6)', color: '#fff',
-          fontSize: 14 / scale * 1.4, padding: '6px 14px', borderRadius: 6,
-          pointerEvents: 'none', letterSpacing: '0.04em', fontFamily: 'system-ui',
+          position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)',
+          background: 'rgba(0,0,0,0.75)', color: '#fff',
+          fontSize: 13, padding: '8px 16px', borderRadius: 8,
+          pointerEvents: 'none', letterSpacing: '0.04em', fontFamily: 'system-ui, -apple-system, sans-serif',
+          zIndex: 50,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
         }}>
-          点击文字选中 · 双击编辑 · 拖动移动 · 方向键微调 · R 重置位置 · Esc 退出
+          点击选中 · 双击编辑文字 · 拖动移动 · 拖角缩放 · 方向键微调 (Shift 大步) · Ctrl+B/I 加粗斜体 · R 重置位置 · Esc 退选
         </div>
       )}
 
