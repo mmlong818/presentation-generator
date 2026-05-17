@@ -6,15 +6,19 @@
 3. 编辑模式改成微软 PPT 风格（选中框 + 句柄 + 拖动 + 缩放 + 工具栏）
 4. 5 小时自主迭代到"极度完美"
 
-## 完成的 3 个 commit
+## 完成的 5 个 commit
 
 ```
+f13a9f4 feat(layouts): smart break headings for Timeline/Matrix2x2/KpiBoard/Roadmap/Table/Quadrant
+81e0aaf docs(session): summary of overnight iteration 2026-05-18
 50745f5 feat(ppt-editor): Ctrl+B/I keyboard shortcuts + improved hint UI
 82d07b5 feat(layouts): smart break for Process/Compare/Checklist headings + Diagram parsed steps
 2bb473b feat(deck): PPT-style editor + smart line break + 21 layouts polish
 ```
 
 未 push。.shots/ 目录已加 gitignore，本地保留 100+ 张审查截图。
+
+**pnpm typecheck 通过，0 错误。**
 
 ## 一句话拿走
 
