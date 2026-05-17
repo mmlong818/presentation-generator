@@ -11,7 +11,7 @@ import type {
   RoadmapSlide, CaseStudySlide, TableSlide,
   CausalitySlide, PersonaSlide, QuadrantSlide, QuestionSlide,
 } from '@/lib/types';
-import { Eyebrow, Footer, fillStyle, highlightText, highlightTextMulti, Decoration, BrandLogo, HUDChrome, RisoText, EditorialMasthead } from './shared';
+import { Eyebrow, Footer, fillStyle, highlightText, highlightTextMulti, Decoration, BrandLogo, HUDChrome, RisoText, EditorialMasthead, smartLineBreak, forceFontStyle } from './shared';
 
 interface LayoutProps<S extends Slide> { slide: S; t: ThemeTokens; n: number; total: number; }
 
@@ -119,32 +119,42 @@ function Cover({ slide, t, n, total }: LayoutProps<CoverSlide>) {
 
   // risograph：黑标题 + accent 红色文字 4px 偏移叠印
   if (t.id === 'risograph') {
+    const risoLines = smartLineBreak(slide.title, 12, 16);
+    const risoFs = Math.min(Math.max(t.hero - (risoLines.length > 1 ? 40 : 10), 88), 132);
+    const renderLines = (color: string) => risoLines.map((line, i) => (
+      <span key={i} style={{ display: 'block', color }}>{line}</span>
+    ));
     return (
       <div style={{ ...fillStyle(t), padding: `0 ${t.padding}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         {slide.eyebrow && <div style={{ marginBottom: 32 }}><Eyebrow t={t}>{slide.eyebrow}</Eyebrow></div>}
         <div style={{ position: 'relative' }}>
           {/* 红色偏移层 */}
-          <h1 style={{
-            position: 'absolute', top: 4, left: 4,
-            fontFamily: t.fontDisplay, fontSize: t.hero, fontWeight: 900,
-            lineHeight: 1.1, margin: 0, maxWidth: 1700,
-            color: t.accent, mixBlendMode: 'multiply',
-            pointerEvents: 'none',
-          }}>
-            {slide.title}
+          <h1
+            aria-hidden
+            ref={forceFontStyle(risoFs, 900)}
+            style={{
+              position: 'absolute', top: 4, left: 4,
+              fontFamily: t.fontDisplay, fontSize: `${risoFs}px`, fontWeight: 900,
+              lineHeight: 1.15, margin: 0, maxWidth: 1700,
+              color: t.accent, mixBlendMode: 'multiply',
+              pointerEvents: 'none',
+            }}>
+            {renderLines(t.accent)}
           </h1>
           {/* 主黑色层 */}
-          <h1 data-ef="title" style={{
-            position: 'relative',
-            fontFamily: t.fontDisplay, fontSize: t.hero, fontWeight: 900,
-            lineHeight: 1.1, margin: 0, maxWidth: 1700,
-            color: t.text, letterSpacing: t.letterSpacingTitle,
-          }}>
-            {slide.title}
+          <h1 data-ef="title"
+            ref={forceFontStyle(risoFs, 900)}
+            style={{
+              position: 'relative',
+              fontFamily: t.fontDisplay, fontSize: `${risoFs}px`, fontWeight: 900,
+              lineHeight: 1.15, margin: 0, maxWidth: 1700,
+              color: t.text, letterSpacing: t.letterSpacingTitle,
+            }}>
+            {renderLines(t.text)}
           </h1>
         </div>
         {slide.subtitle && (
-          <p data-ef="subtitle" style={{ fontSize: t.body, color: t.soft, maxWidth: 1200, lineHeight: 1.5, marginTop: 40, fontFamily: t.fontDisplay }}>
+          <p data-ef="subtitle" style={{ fontSize: t.body, color: t.soft, maxWidth: 1200, lineHeight: 1.5, marginTop: 48, fontFamily: t.fontDisplay }}>
             {slide.subtitle}
           </p>
         )}
@@ -174,12 +184,11 @@ function Cover({ slide, t, n, total }: LayoutProps<CoverSlide>) {
     );
   }
 
-  // pop-magazine：220px 大字 + 倾斜色块衬底
+  // pop-magazine：大字 + 倾斜色块衬底，按标点切分多色叠
   if (t.id === 'pop-magazine') {
-    const titleLen = slide.title.length;
-    const half = Math.floor(titleLen / 2);
-    const front = slide.title.slice(0, half);
-    const back = slide.title.slice(half);
+    const popLines = smartLineBreak(slide.title, 8, 11);
+    const popFs = popLines.length > 2 ? 96 : popLines.length > 1 ? 136 : 176;
+    const colors = ['#ffd13a', '#3a8aff', '#ff3a5a', '#2eb56a'];
     return (
       <div style={{ ...fillStyle(t), padding: `0 120px`, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
         {slide.eyebrow && (
@@ -192,24 +201,26 @@ function Cover({ slide, t, n, total }: LayoutProps<CoverSlide>) {
             }}>{slide.eyebrow}</span>
           </div>
         )}
-        <h1 style={{
-          fontFamily: t.fontDisplay, fontSize: 200, fontWeight: 900,
-          lineHeight: 0.95, margin: 0, letterSpacing: '-0.04em', color: t.text,
-        }}>
-          <span style={{
-            background: '#ffd13a', padding: '0 20px', display: 'inline-block',
-            transform: 'rotate(-2deg)',
-          }}>{front}</span>
-          {back && (
-            <span style={{
-              background: '#3a8aff', color: t.bg, padding: '0 20px', display: 'inline-block',
-              transform: 'rotate(2deg)', marginLeft: 16,
-            }}>{back}</span>
-          )}
+        <h1 data-ef="title"
+          ref={forceFontStyle(popFs, 900)}
+          style={{
+            fontFamily: t.fontDisplay, fontSize: `${popFs}px`, fontWeight: 900,
+            lineHeight: 1.18, margin: 0, letterSpacing: '-0.03em', color: t.text,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14,
+          }}>
+          {popLines.map((line, i) => (
+            <span key={i} style={{
+              background: colors[i % colors.length],
+              color: i % 2 === 1 ? t.bg : t.text,
+              padding: '4px 22px', display: 'inline-block',
+              transform: `rotate(${i % 2 === 0 ? -2 : 2}deg)`,
+              whiteSpace: 'nowrap',
+            }}>{line}</span>
+          ))}
         </h1>
         {slide.subtitle && (
-          <p style={{
-            fontSize: 36, fontWeight: 700, marginTop: 48, color: t.text,
+          <p data-ef="subtitle" style={{
+            fontSize: 30, fontWeight: 700, marginTop: 40, color: t.text,
             display: 'inline-block', alignSelf: 'center',
           }}>
             <span style={{ background: '#ffd13a', padding: '4px 12px' }}>{slide.subtitle}</span>
@@ -221,14 +232,22 @@ function Cover({ slide, t, n, total }: LayoutProps<CoverSlide>) {
   }
 
   // 默认实现
+  const titleLines = smartLineBreak(slide.title, 13, 17);
+  const titleFs = Math.min(Math.max(t.hero - (titleLines.length > 1 ? 36 : 16), 84), 120);
   return (
     <div style={{ ...fillStyle(t), padding: `0 ${t.padding}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
       {slide.eyebrow && <div style={{ marginBottom: 36 }}><Eyebrow t={t}>{slide.eyebrow}</Eyebrow></div>}
-      <h1 data-ef="title" style={{
-        fontFamily: t.fontDisplay, fontSize: t.hero, fontWeight: 800,
-        lineHeight: 1.18, margin: 0, maxWidth: 1600, letterSpacing: t.letterSpacingTitle,
-      }}>
-        {highlightText(slide.title, slide.highlight, t)}
+      <h1 data-ef="title"
+        ref={forceFontStyle(titleFs, 800)}
+        style={{
+          fontFamily: t.fontDisplay,
+          fontSize: `${titleFs}px`,
+          fontWeight: 800,
+          lineHeight: 1.22, margin: 0, maxWidth: 1700, letterSpacing: t.letterSpacingTitle,
+        }}>
+        {titleLines.map((line, i) => (
+          <span key={i} style={{ display: 'block' }}>{highlightText(line, slide.highlight, t)}</span>
+        ))}
       </h1>
       {slide.subtitle && (
         <p data-ef="subtitle" style={{ fontSize: t.body, color: t.soft, maxWidth: 1200, lineHeight: 1.5, marginTop: 40, fontFamily: t.fontDisplay }}>
@@ -270,23 +289,32 @@ function Statement({ slide, t, n, total }: LayoutProps<StatementSlide>) {
     );
   }
 
+  const lines = smartLineBreak(slide.title, 13, 17);
+  const fs = lines.length > 1
+    ? Math.min(Math.max(t.hero - 50, 80), 96)
+    : Math.min(Math.max(t.hero - 30, 88), 108);
   return (
     <div style={{
       ...fillStyle(t),
-      padding: `0 ${t.padding * 1.25}px`,
+      padding: `0 ${t.padding}px`,
       display: 'flex',
       alignItems: 'center',
       justifyContent: align === 'center' ? 'center' : 'flex-start',
       textAlign: align,
     }}>
-      <h1 data-ef="title" style={{
-        fontFamily: t.fontDisplay,
-        fontSize: Math.min(t.hero - 20, 110),
-        fontWeight: 700, lineHeight: 1.35, margin: 0,
-        maxWidth: 1500, letterSpacing: t.letterSpacingTitle,
-        ...(align === 'left' ? { borderLeft: `4px solid ${t.accent}`, paddingLeft: 48 } : {}),
-      }}>
-        {highlightTextMulti(slide.title, slide.highlight, t)}
+      <h1 data-ef="title"
+        ref={forceFontStyle(fs, 800)}
+        style={{
+          fontFamily: t.fontDisplay,
+          fontSize: `${fs}px`,
+          fontWeight: 800,
+          lineHeight: 1.3, margin: 0,
+          maxWidth: 1500, letterSpacing: t.letterSpacingTitle,
+          ...(align === 'left' ? { borderLeft: `8px solid ${t.accent}`, paddingLeft: 64 } : {}),
+        }}>
+        {lines.map((line, i) => (
+          <span key={i} style={{ display: 'block' }}>{highlightTextMulti(line, slide.highlight, t)}</span>
+        ))}
       </h1>
       <Footer n={n} total={total} t={t} />
     </div>
@@ -353,16 +381,20 @@ function Data({ slide, t, n, total }: LayoutProps<DataSlide>) {
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${slide.stats.length}, 1fr)`, gap: 60, paddingTop: 32, borderTop: `${t.borderWeight}px solid ${t.rule}` }}>
         {slide.stats.map((s, i) => {
           const isPlaceholder = s.value === '—' || s.value === '-';
+          const fs = Math.min(Math.max(t.hero - 24, 92), 132);
           return (
             <div key={i}>
-              <div style={{
-                fontSize: t.hero,
-                fontWeight: isLuxe ? 400 : 800,
-                color: t.accent, lineHeight: 1,
-                fontFamily: t.fontDisplay,
-                fontVariantNumeric: useOldStyle ? 'tabular-nums oldstyle-nums' : 'tabular-nums',
-                opacity: isPlaceholder ? 0.35 : 1,
-              }}>
+              <div
+                ref={forceFontStyle(fs, isLuxe ? 400 : 800)}
+                style={{
+                  fontSize: `${fs}px`,
+                  fontWeight: isLuxe ? 400 : 800,
+                  color: t.accent, lineHeight: 1.05,
+                  fontFamily: t.fontDisplay,
+                  fontVariantNumeric: useOldStyle ? 'tabular-nums oldstyle-nums' : 'tabular-nums',
+                  opacity: isPlaceholder ? 0.35 : 1,
+                  whiteSpace: 'nowrap',
+                }}>
                 <RisoText t={t} offset={3} color={t.accent}>{s.value}</RisoText>
               </div>
               {/* luxe: 巨数字下加金色 1px 细线 */}
@@ -444,20 +476,32 @@ function Timeline({ slide, t, n, total }: LayoutProps<TimelineSlide>) {
 
 // ─── 7. Argument ─────────────────────────────────────────────────────────────
 function Argument({ slide, t, n, total }: LayoutProps<ArgumentSlide>) {
+  const headLines = smartLineBreak(slide.heading, 14, 20);
+  const headFs = Math.min(t.section, headLines.length > 1 ? 72 : 84);
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 data-ef="heading" style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 56px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1500 }}>
-        {highlightText(slide.heading, slide.highlight, t)}
+      <h2 data-ef="heading"
+        ref={forceFontStyle(headFs, 700)}
+        style={{ fontSize: `${headFs}px`, fontWeight: 700, margin: '24px 0 40px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
+        {headLines.map((line, i) => (
+          <span key={i} style={{ display: 'block' }}>{highlightText(line, slide.highlight, t)}</span>
+        ))}
       </h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 32, maxWidth: 1500, paddingTop: 24, borderTop: `${t.borderWeight}px solid ${t.rule}` }}>
+      <div style={{
+        flex: 1,
+        display: 'flex', flexDirection: 'column',
+        justifyContent: 'space-evenly',
+        maxWidth: 1500, paddingTop: 32,
+        borderTop: `${t.borderWeight}px solid ${t.rule}`,
+      }}>
         {slide.points.map((p, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 28 }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
             <div style={{
-              fontSize: 28, color: t.accent, fontFamily: t.fontEyebrowSerif ?? t.fontDisplay,
-              fontWeight: 700, minWidth: 56, marginTop: 6,
+              fontSize: 56, color: t.accent, fontFamily: t.fontEyebrowSerif ?? t.fontDisplay,
+              fontWeight: 700, minWidth: 96, lineHeight: 1,
             }}>{String(i + 1).padStart(2, '0')}</div>
-            <div data-ef={`points.${i}`} style={{ fontSize: 32, color: t.soft, lineHeight: 1.55, fontFamily: t.fontDisplay }}>{p}</div>
+            <div data-ef={`points.${i}`} style={{ fontSize: 36, color: t.soft, lineHeight: 1.45, fontFamily: t.fontDisplay }}>{p}</div>
           </div>
         ))}
       </div>
@@ -596,20 +640,28 @@ function Diagram({ slide, t, n, total }: LayoutProps<DiagramSlide>) {
 
 // ─── 10. CTA ─────────────────────────────────────────────────────────────────
 function CTA({ slide, t, n, total }: LayoutProps<CTASlide>) {
+  const actionLines = smartLineBreak(slide.newAction, 14, 18);
+  const actionFs = actionLines.length > 1
+    ? Math.min(Math.max(t.hero - 56, 64), 84)
+    : Math.min(Math.max(t.hero - 30, 76), 96);
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
       {slide.eyebrow && <div style={{ marginBottom: 40 }}><Eyebrow t={t}>{slide.eyebrow}</Eyebrow></div>}
       {slide.oldQuestion && (
-        <div style={{ fontSize: 52, color: t.muted, fontFamily: t.fontDisplay, lineHeight: 1.4, fontWeight: 500 }}>
+        <div style={{ fontSize: 44, color: t.muted, fontFamily: t.fontDisplay, lineHeight: 1.4, fontWeight: 500 }}>
           不再问 <span style={{ textDecoration: 'line-through', textDecorationThickness: 2 }}>&ldquo;{slide.oldQuestion}&rdquo;</span>
         </div>
       )}
-      <div data-ef="newAction" style={{
-        fontSize: Math.min(t.hero - 30, 92),
-        color: t.accent, fontFamily: t.fontDisplay, lineHeight: 1.25,
-        margin: '40px 0 0', fontWeight: 800, maxWidth: 1500,
-      }}>
-        {highlightText(slide.newAction, slide.highlight, t)}
+      <div data-ef="newAction"
+        ref={forceFontStyle(actionFs, 800)}
+        style={{
+          fontSize: `${actionFs}px`,
+          color: t.accent, fontFamily: t.fontDisplay, lineHeight: 1.3,
+          margin: '40px 0 0', fontWeight: 800, maxWidth: 1600,
+        }}>
+        {actionLines.map((line, i) => (
+          <span key={i} style={{ display: 'block' }}>{highlightText(line, slide.highlight, t)}</span>
+        ))}
       </div>
       <Footer n={n} total={total} t={t} />
     </div>
@@ -655,18 +707,16 @@ function Matrix2x2({ slide, t, n, total }: LayoutProps<Matrix2x2Slide>) {
       </h2>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ position: 'relative', width: 920, height: 560 }}>
-          {/* y 轴 */}
-          <div style={{ position: 'absolute', left: -60, top: 0, fontSize: 22, color: t.muted, fontFamily: t.fontEyebrowSerif ?? t.fontDisplay, transform: 'rotate(-90deg)', transformOrigin: 'left top', whiteSpace: 'nowrap' }}>
-            ↑ {slide.axes.y.high}
-          </div>
-          <div style={{ position: 'absolute', left: -60, bottom: 0, fontSize: 22, color: t.muted, fontFamily: t.fontEyebrowSerif ?? t.fontDisplay, transform: 'rotate(-90deg)', transformOrigin: 'left bottom', whiteSpace: 'nowrap' }}>
-            {slide.axes.y.low}
+          {/* y 轴：左侧外，写在 flex column 里避免 rotate 重叠 */}
+          <div style={{ position: 'absolute', left: -120, top: 0, bottom: 0, width: 90, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-end', fontSize: 20, color: t.muted, fontFamily: t.fontEyebrowSerif ?? t.fontDisplay, letterSpacing: '0.05em' }}>
+            <div style={{ whiteSpace: 'nowrap' }}>↑ {slide.axes.y.high}</div>
+            <div style={{ whiteSpace: 'nowrap' }}>{slide.axes.y.low}</div>
           </div>
           {/* x 轴 */}
-          <div style={{ position: 'absolute', left: 0, bottom: -36, fontSize: 22, color: t.muted, fontFamily: t.fontEyebrowSerif ?? t.fontDisplay }}>
+          <div style={{ position: 'absolute', left: 0, bottom: -40, fontSize: 20, color: t.muted, fontFamily: t.fontEyebrowSerif ?? t.fontDisplay, letterSpacing: '0.05em' }}>
             {slide.axes.x.low}
           </div>
-          <div style={{ position: 'absolute', right: 0, bottom: -36, fontSize: 22, color: t.muted, fontFamily: t.fontEyebrowSerif ?? t.fontDisplay }}>
+          <div style={{ position: 'absolute', right: 0, bottom: -40, fontSize: 20, color: t.muted, fontFamily: t.fontEyebrowSerif ?? t.fontDisplay, letterSpacing: '0.05em' }}>
             {slide.axes.x.high} →
           </div>
           {/* 4 格 */}
@@ -1200,11 +1250,17 @@ function Causality({ slide, t, n, total }: LayoutProps<CausalitySlide>) {
   const isTech = t.id === 'tech-utility';
   const isBrutalist = t.id === 'brutalist-mono';
   const arrow = isTech ? '─→' : '→';
+  const headLines = smartLineBreak(slide.heading, 14, 20);
+  const headFs = Math.min(t.section, headLines.length > 1 ? 68 : 80);
   return (
     <div style={{ ...fillStyle(t), padding: `120px ${t.padding}px`, display: 'flex', flexDirection: 'column' }}>
       {slide.eyebrow && <Eyebrow t={t}>{slide.eyebrow}</Eyebrow>}
-      <h2 style={{ fontSize: t.section, fontWeight: 700, margin: '24px 0 64px', lineHeight: 1.25, fontFamily: t.fontDisplay, maxWidth: 1600 }}>
-        {slide.heading}
+      <h2
+        ref={forceFontStyle(headFs, 700)}
+        style={{ fontSize: `${headFs}px`, fontWeight: 700, margin: '24px 0 56px', lineHeight: 1.3, fontFamily: t.fontDisplay, maxWidth: 1700 }}>
+        {headLines.map((line, i) => (
+          <span key={i} style={{ display: 'block' }}>{line}</span>
+        ))}
       </h2>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: isTech ? 16 : 32 }}>
         {slide.chain.map((link, i) => {
@@ -1313,9 +1369,12 @@ function Persona({ slide, t, n, total }: LayoutProps<PersonaSlide>) {
             </div>
           )}
           {slide.attributes && slide.attributes.length > 0 && (
-            <div style={{ marginTop: 24, display: 'flex', flexWrap: 'wrap', gap: 8, fontSize: 20, color: t.muted }}>
+            <div style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 8 }}>
               {slide.attributes.map((a, i) => (
-                <span key={i}>{a.label} {a.value}{i < slide.attributes!.length - 1 ? ' ·' : ''}</span>
+                <div key={i} style={{ display: 'flex', gap: 16, fontSize: 22, lineHeight: 1.5, fontFamily: t.fontDisplay }}>
+                  <span style={{ color: t.muted, minWidth: 92, letterSpacing: '0.05em' }}>{a.label}</span>
+                  <span style={{ color: t.text, fontWeight: 600 }}>{a.value}</span>
+                </div>
               ))}
             </div>
           )}
@@ -1427,6 +1486,10 @@ function Quadrant({ slide, t, n, total }: LayoutProps<QuadrantSlide>) {
 
 // ─── 21. Question ────────────────────────────────────────────────────────────
 function Question({ slide, t, n, total }: LayoutProps<QuestionSlide>) {
+  const qLines = smartLineBreak(slide.question, 12, 16);
+  const qFs = qLines.length > 1
+    ? Math.min(Math.max(t.hero - 60, 64), 84)
+    : Math.min(Math.max(t.hero - 40, 76), 96);
   return (
     <div style={{ ...fillStyle(t), padding: `0 ${t.padding * 1.2}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
       {slide.eyebrow && <div style={{ marginBottom: 32 }}><Eyebrow t={t}>{slide.eyebrow}</Eyebrow></div>}
@@ -1437,11 +1500,15 @@ function Question({ slide, t, n, total }: LayoutProps<QuestionSlide>) {
           color: t.accent, opacity: 0.18, fontFamily: t.fontDisplay,
           lineHeight: 1, pointerEvents: 'none',
         }}>?</div>
-        <h1 style={{
-          fontFamily: t.fontDisplay, fontSize: Math.round(t.hero * 0.75), fontWeight: 700,
-          lineHeight: 1.3, margin: 0, position: 'relative',
-        }}>
-          {slide.question}
+        <h1
+          ref={forceFontStyle(qFs, 700)}
+          style={{
+            fontFamily: t.fontDisplay, fontSize: `${qFs}px`, fontWeight: 700,
+            lineHeight: 1.35, margin: 0, position: 'relative',
+          }}>
+          {qLines.map((line, i) => (
+            <span key={i} style={{ display: 'block' }}>{line}</span>
+          ))}
         </h1>
       </div>
       {slide.hints && slide.hints.length > 0 && (

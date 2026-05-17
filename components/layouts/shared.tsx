@@ -113,36 +113,6 @@ export function Eyebrow({ children, t }: { children: ReactNode; t: ThemeTokens }
 export function Footer({ n, total, t }: { n: number; total: number; t: ThemeTokens }) {
   if (!t.showFooter) return null;
 
-  // kraft-paper：圆圈页码（手绘风 SVG 不规则圆 + 打字机字体）
-  if (t.id === 'kraft-paper') {
-    return (
-      <>
-        <div style={{
-          position: 'absolute', left: t.padding * 0.6, bottom: 50,
-          width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <svg width="64" height="64" viewBox="0 0 64 64" style={{ position: 'absolute', inset: 0 }}>
-            {/* 不规则手绘圆：用三段贝塞尔曲线模拟手抖 */}
-            <path
-              d="M 32,4 C 48,5 60,18 60,33 C 59,48 46,60 31,60 C 17,59 5,47 4,32 C 5,17 17,5 32,4 Z"
-              fill="none" stroke={t.text} strokeWidth="1.5" strokeLinecap="round"
-            />
-          </svg>
-          <span style={{
-            fontSize: 22, color: t.text, fontFamily: t.fontMono, fontWeight: 700,
-            position: 'relative',
-          }}>{String(n).padStart(2, '0')}</span>
-        </div>
-        <div style={{
-          position: 'absolute', right: t.padding * 0.6, bottom: 60,
-          fontSize: 18, color: t.muted, fontFamily: t.fontMono, letterSpacing: '0.05em',
-        }}>
-          {String(n)} / {String(total)}
-        </div>
-      </>
-    );
-  }
-
   // brutalist-mono：粗体大号页码
   if (t.id === 'brutalist-mono') {
     return (
@@ -218,8 +188,6 @@ export function Decoration({ t, bgImageDataUrl }: { t: ThemeTokens; bgImageDataU
       </>
     );
   }
-  // ─── minimal-rainbow：极简到底，无装饰图形（仅靠 KPI 顶部彩色边作为唯一色信号）
-
   // ─── pastel-bauhaus：3 个几何拼贴形 ────────────────────────────────────────
   if (t.id === 'pastel-bauhaus') {
     return (
@@ -253,16 +221,6 @@ export function Decoration({ t, bgImageDataUrl }: { t: ThemeTokens; bgImageDataU
     );
   }
 
-  // ─── citrus-grove：3 个柑橘球体 ────────────────────────────────────────────
-  if (t.id === 'citrus-grove' && t.decoration) {
-    return (
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: t.decoration,
-      }} />
-    );
-  }
-
   // ─── pop-magazine：左右两侧 60px 撞色条纹 ─────────────────────────────────
   if (t.id === 'pop-magazine') {
     const stripe = (side: 'left' | 'right') => (
@@ -283,58 +241,14 @@ export function Decoration({ t, bgImageDataUrl }: { t: ThemeTokens; bgImageDataU
     );
   }
 
-  // ─── playground-block：背景大圆色斑 ───────────────────────────────────────
-  if (t.id === 'playground-block') {
-    return (
-      <svg style={{ position: 'absolute', inset: 0, pointerEvents: 'none', width: '100%', height: '100%' }}
-           viewBox="0 0 1920 1080" preserveAspectRatio="none">
-        <circle cx="1700" cy="200" r="160" fill="#ffd83d" stroke="#1a1a18" strokeWidth="4" />
-        <circle cx="180" cy="900" r="140" fill="#2e7aff" stroke="#1a1a18" strokeWidth="4" opacity="0.9" />
-      </svg>
-    );
-  }
-
-  // ─── tea-ceremony：右上朱印（红方印 + 白字） ──────────────────────────────
-  if (t.id === 'tea-ceremony') {
-    return (
-      <svg style={{ position: 'absolute', top: 80, right: 80, width: 100, height: 100, pointerEvents: 'none' }}
-           viewBox="0 0 100 100">
-        <rect x="2" y="2" width="96" height="96" fill="#b8331a" />
-        <rect x="6" y="6" width="88" height="88" fill="none" stroke="#fff" strokeWidth="1" />
-        <text x="50" y="40" textAnchor="middle" fill="#fff" fontSize="22" fontWeight="700" fontFamily='"Noto Serif SC",serif'>茶</text>
-        <text x="50" y="68" textAnchor="middle" fill="#fff" fontSize="22" fontWeight="700" fontFamily='"Noto Serif SC",serif'>席</text>
-      </svg>
-    );
-  }
-
-  // ─── sunrise-gradient：日出球 + 玻璃 ─────────────────────────────────────
-  if (t.id === 'sunrise-gradient' && t.decoration) {
-    return (
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: t.decoration,
-      }} />
-    );
-  }
-
   if (!t.decoration) return null;
-  if (t.id === 'risograph' || t.id === 'riso-pastel') {
+  if (t.id === 'risograph') {
     return (
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         backgroundImage: t.decoration,
         backgroundSize: '14px 14px',
         opacity: 0.6,
-      }} />
-    );
-  }
-  if (t.id === 'kraft-paper') {
-    return (
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        backgroundImage: t.decoration,
-        backgroundSize: '6px 6px',
-        opacity: 0.8,
       }} />
     );
   }
@@ -470,15 +384,50 @@ export function RisoText({ t, children, offset = 4, color }: {
     return <span style={color ? { color } : undefined}>{children}</span>;
   }
   return (
-    <span style={{ position: 'relative', display: 'inline-block' }}>
+    <span style={{ position: 'relative', display: 'inline-block', whiteSpace: 'nowrap' }}>
       <span style={{
         position: 'absolute', left: offset, top: offset,
         color: t.accent2 ?? t.accent, mixBlendMode: 'multiply',
-        pointerEvents: 'none',
+        pointerEvents: 'none', whiteSpace: 'nowrap',
       }}>{children}</span>
-      <span style={{ position: 'relative', color: color ?? t.text }}>{children}</span>
+      <span style={{ position: 'relative', color: color ?? t.text, whiteSpace: 'nowrap' }}>{children}</span>
     </span>
   );
+}
+
+// ─── 中文标题智能断句：在最近的标点（，。：；！？）后强制换行 ──────────────
+// 用于长标题。当一行 chars 数 > softLimit，从软切点（标点）切分。
+const CN_BREAKS = /([，。：；！？、])/;
+export function smartLineBreak(text: string, softLimit = 14, hardLimit = 18): string[] {
+  if (text.length <= softLimit) return [text];
+  const parts = text.split(CN_BREAKS);
+  // 把分隔符回填到前一段
+  const segments: string[] = [];
+  for (let i = 0; i < parts.length; i++) {
+    if (i % 2 === 0) segments.push(parts[i]);
+    else segments[segments.length - 1] = (segments[segments.length - 1] ?? '') + parts[i];
+  }
+  // 贪心合并：在 hardLimit 内尽量塞，超了换行
+  const lines: string[] = [];
+  let cur = '';
+  for (const seg of segments) {
+    if (!seg) continue;
+    if (!cur) { cur = seg; continue; }
+    if ((cur + seg).length <= hardLimit) cur += seg;
+    else { lines.push(cur); cur = seg; }
+  }
+  if (cur) lines.push(cur);
+  // 没有标点可切 → 退回单行靠 CSS wrap
+  return lines.length > 1 ? lines : [text];
+}
+
+// 强力设字号 ref：绕过未知代码剥离 inline style 的 bug
+export function forceFontStyle(fs: number, fw: number | string = 700) {
+  return (el: HTMLElement | null) => {
+    if (!el) return;
+    el.style.setProperty('font-size', `${fs}px`, 'important');
+    el.style.setProperty('font-weight', String(fw), 'important');
+  };
 }
 
 // ─── 高亮辅助 ────────────────────────────────────────────────────────────────

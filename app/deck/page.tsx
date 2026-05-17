@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { THEMES } from '@/lib/themes';
 import { applyBrand } from '@/lib/brand';
 import { SlideRenderer } from '@/components/layouts';
-import DirectEditOverlay from '@/components/DirectEditOverlay';
-import type { Deck, Slide, ElementStyleOverride } from '@/lib/types';
+import PPTEditor from '@/components/PPTEditor';
+import type { Deck, Slide, ElementStyleOverride, ElementLayoutOverride } from '@/lib/types';
 
 function applyTextEdit(slide: Slide, path: string, value: string): Slide {
   const result: Record<string, unknown> = JSON.parse(JSON.stringify(slide));
@@ -28,6 +28,15 @@ function applyStyleEdit(slide: Slide, path: string, style: ElementStyleOverride)
   if (Object.keys(style).length === 0) delete result._styles[path];
   else result._styles[path] = style;
   if (Object.keys(result._styles).length === 0) delete result._styles;
+  return result as unknown as Slide;
+}
+
+function applyLayoutEdit(slide: Slide, path: string, layout: ElementLayoutOverride | null): Slide {
+  const result = JSON.parse(JSON.stringify(slide)) as Record<string, unknown> & { _layout?: Record<string, ElementLayoutOverride> };
+  if (!result._layout) result._layout = {};
+  if (!layout) delete result._layout[path];
+  else result._layout[path] = layout;
+  if (Object.keys(result._layout).length === 0) delete result._layout;
   return result as unknown as Slide;
 }
 
@@ -76,8 +85,35 @@ export default function DeckPage() {
     if (raw) {
       try {
         const d = JSON.parse(raw);
-        setDeck(d);
-        pushToHistory(d);
+        // 清理脏 _styles：DirectEditOverlay 早期把浏览器默认值（h1 → 16px / weight 400）误存为覆盖
+        const cleaned: Deck = {
+          ...d,
+          slides: d.slides.map((s: Record<string, unknown>) => {
+            const styles = s._styles as Record<string, ElementStyleOverride> | undefined;
+            if (!styles) return s;
+            const next: Record<string, ElementStyleOverride> = {};
+            for (const [path, sv] of Object.entries(styles)) {
+              const looksDefault = (
+                (sv.fontSize == null || (typeof sv.fontSize === 'number' && sv.fontSize <= 24)) &&
+                (sv.fontWeight == null || sv.fontWeight === '400' || sv.fontWeight === 'normal') &&
+                (sv.fontStyle == null || sv.fontStyle === 'normal') &&
+                !sv.fontFamily
+              );
+              if (!looksDefault) next[path] = sv;
+            }
+            if (Object.keys(next).length === 0) {
+              const { _styles, ...rest } = s; void _styles;
+              return rest;
+            }
+            return { ...s, _styles: next };
+          }),
+        };
+        setDeck(cleaned);
+        // 同步回 localStorage，避免下次又读到脏数据
+        if (JSON.stringify(cleaned) !== raw) {
+          localStorage.setItem(DECK_STORAGE, JSON.stringify(cleaned));
+        }
+        pushToHistory(cleaned);
       } catch { setDeck(null); }
     }
   }, []);
@@ -96,11 +132,12 @@ export default function DeckPage() {
     persistDeck({ ...deck, slides });
   }
 
-  function handleDirectCommit(path: string, value: string, style: ElementStyleOverride) {
+  function handleDirectLayout(path: string, layout: ElementLayoutOverride | null) {
     if (!deck) return;
-    let slide = applyTextEdit(deck.slides[idx], path, value);
-    slide = applyStyleEdit(slide, path, style);
-    updateSlide(idx, slide);
+    const updated = applyLayoutEdit(deck.slides[idx], path, layout);
+    const slides = [...deck.slides];
+    slides[idx] = updated;
+    persistDeck({ ...deck, slides });
   }
 
   const next = useCallback(() => { setLiveSlide(null); setIdx((i) => deck ? Math.min(i + 1, deck.slides.length - 1) : 0); }, [deck]);
@@ -169,7 +206,7 @@ export default function DeckPage() {
         <div className="flex flex-col gap-4 min-h-0">
           <div className="flex-1 flex items-center justify-center bg-stone-100 rounded-lg overflow-hidden">
             <SlideStage slide={slide} t={t} idx={idx} total={deck.slides.length} brand={deck.brand} deckTitle={deck.title}
-              directEdit={directEdit} onDirectText={handleDirectText} onDirectStyle={handleDirectStyle} onDirectCommit={handleDirectCommit} />
+              directEdit={directEdit} onDirectText={handleDirectText} onDirectStyle={handleDirectStyle} onDirectLayout={handleDirectLayout} />
           </div>
           <div className="flex items-center justify-between gap-3">
             <button onClick={prev} disabled={idx === 0} className="px-4 py-2 rounded border disabled:opacity-30">← 上一张</button>
@@ -249,7 +286,7 @@ function Score({ label, v }: { label: string; v: number }) {
   );
 }
 
-function SlideStage({ slide, t, idx, total, brand, deckTitle, directEdit, onDirectText, onDirectStyle, onDirectCommit }: {
+function SlideStage({ slide, t, idx, total, brand, deckTitle, directEdit, onDirectText, onDirectStyle, onDirectLayout }: {
   slide: import('@/lib/types').Slide;
   t: import('@/lib/themes').ThemeTokens;
   idx: number; total: number;
@@ -258,7 +295,7 @@ function SlideStage({ slide, t, idx, total, brand, deckTitle, directEdit, onDire
   directEdit?: boolean;
   onDirectText?: (path: string, value: string) => void;
   onDirectStyle?: (path: string, style: import('@/lib/types').ElementStyleOverride) => void;
-  onDirectCommit?: (path: string, value: string, style: import('@/lib/types').ElementStyleOverride) => void;
+  onDirectLayout?: (path: string, layout: import('@/lib/types').ElementLayoutOverride | null) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const slideRef = useRef<HTMLDivElement>(null);
@@ -277,32 +314,80 @@ function SlideStage({ slide, t, idx, total, brand, deckTitle, directEdit, onDire
     return () => ro.disconnect();
   }, []);
 
-  // 将 _styles 中的元素级样式覆盖应用到 DOM
+  // 将 _styles 中的元素级样式覆盖应用到 DOM（只动 _styles 命中的属性，不能盲清 JSX inline style）
+  const appliedRef = useRef<Map<string, Set<string>>>(new Map());
   useEffect(() => {
     const el = slideRef.current;
     if (!el) return;
     const styles = (slide as unknown as Record<string, unknown>)._styles as Record<string, import('@/lib/types').ElementStyleOverride> | undefined;
-    // 先清除所有已应用的覆盖
-    el.querySelectorAll<HTMLElement>('[data-ef]').forEach((node) => {
-      node.style.fontSize = '';
-      node.style.fontFamily = '';
-      node.style.fontWeight = '';
-      node.style.fontStyle = '';
-      node.style.color = '';
-    });
-    if (!styles) return;
-    for (const [path, s] of Object.entries(styles)) {
+    const next = new Map<string, Set<string>>();
+    // 清除上一次应用过、但本次不再需要的属性
+    for (const [path, prevKeys] of appliedRef.current) {
       const node = el.querySelector<HTMLElement>(`[data-ef="${path}"]`);
       if (!node) continue;
-      if (s.fontSize) node.style.fontSize = s.fontSize + 'px';
-      if (s.fontFamily) node.style.fontFamily = s.fontFamily;
-      if (s.fontWeight) node.style.fontWeight = s.fontWeight;
-      if (s.fontStyle) node.style.fontStyle = s.fontStyle;
-      if (s.color) node.style.color = s.color;
+      const newKeys = new Set(Object.keys(styles?.[path] ?? {}));
+      for (const k of prevKeys) {
+        if (!newKeys.has(k)) {
+          (node.style as unknown as Record<string, string>)[k] = '';
+        }
+      }
     }
+    if (styles) {
+      for (const [path, s] of Object.entries(styles)) {
+        const node = el.querySelector<HTMLElement>(`[data-ef="${path}"]`);
+        if (!node) continue;
+        const keys = new Set<string>();
+        if (s.fontSize) { node.style.fontSize = s.fontSize + 'px'; keys.add('fontSize'); }
+        if (s.fontFamily) { node.style.fontFamily = s.fontFamily; keys.add('fontFamily'); }
+        if (s.fontWeight) { node.style.fontWeight = s.fontWeight; keys.add('fontWeight'); }
+        if (s.fontStyle) { node.style.fontStyle = s.fontStyle; keys.add('fontStyle'); }
+        if (s.color) { node.style.color = s.color; keys.add('color'); }
+        if (s.textAlign) { node.style.textAlign = s.textAlign; keys.add('textAlign'); }
+        if (keys.size) next.set(path, keys);
+      }
+    }
+    appliedRef.current = next;
   }, [slide]);
 
   const styles = (slide as unknown as Record<string, unknown>)._styles as Record<string, import('@/lib/types').ElementStyleOverride> | undefined;
+  const layouts = (slide as unknown as Record<string, unknown>)._layout as Record<string, import('@/lib/types').ElementLayoutOverride> | undefined;
+
+  // 应用 _layout 覆盖：把指定 path 的 data-ef 元素转为绝对定位
+  const layoutAppliedRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    const el = slideRef.current;
+    if (!el) return;
+    const next = new Set<string>();
+    // 还原上次应用过但本次已移除的
+    for (const path of layoutAppliedRef.current) {
+      if (!layouts?.[path]) {
+        const node = el.querySelector<HTMLElement>(`[data-ef="${path}"]`);
+        if (node) {
+          node.style.position = '';
+          node.style.left = '';
+          node.style.top = '';
+          node.style.width = '';
+          node.style.height = '';
+          node.style.transform = '';
+        }
+      }
+    }
+    if (layouts) {
+      for (const [path, lo] of Object.entries(layouts)) {
+        const node = el.querySelector<HTMLElement>(`[data-ef="${path}"]`);
+        if (!node) continue;
+        node.style.position = 'absolute';
+        if (lo.x != null) node.style.left = `${lo.x}px`;
+        if (lo.y != null) node.style.top = `${lo.y}px`;
+        if (lo.w != null) node.style.width = `${lo.w}px`;
+        if (lo.h != null) node.style.height = `${lo.h}px`;
+        if (lo.rotate) node.style.transform = `rotate(${lo.rotate}deg)`;
+        node.style.maxWidth = 'none';
+        next.add(path);
+      }
+    }
+    layoutAppliedRef.current = next;
+  }, [slide, layouts]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full flex items-center justify-center">
@@ -312,14 +397,15 @@ function SlideStage({ slide, t, idx, total, brand, deckTitle, directEdit, onDire
         outline: directEdit ? '3px solid #3b82f6' : 'none',
       }}>
         <SlideRenderer slide={slide} t={t} n={idx + 1} total={total} brand={brand} deckTitle={deckTitle} />
-        {directEdit && onDirectText && onDirectStyle && onDirectCommit && (
-          <DirectEditOverlay
+        {directEdit && onDirectText && onDirectStyle && onDirectLayout && (
+          <PPTEditor
             parentRef={slideRef}
             scale={scale}
+            styles={styles ?? {}}
+            layouts={layouts ?? {}}
             onText={onDirectText}
             onStyle={onDirectStyle}
-            onCommit={onDirectCommit}
-            currentStyles={styles ?? {}}
+            onLayout={onDirectLayout}
           />
         )}
       </div>
@@ -401,26 +487,35 @@ function ExportSlide({ slide, t, n, total, brand, deckTitle }: {
     const el = ref.current;
     if (!el) return;
     const styles = (slide as unknown as Record<string, unknown>)._styles as Record<string, ElementStyleOverride> | undefined;
-    el.querySelectorAll<HTMLElement>('[data-ef]').forEach((node) => {
-      node.style.fontSize = '';
-      node.style.fontFamily = '';
-      node.style.fontWeight = '';
-      node.style.fontStyle = '';
-      node.style.color = '';
-    });
-    if (!styles) return;
-    for (const [path, s] of Object.entries(styles)) {
-      const node = el.querySelector<HTMLElement>(`[data-ef="${path}"]`);
-      if (!node) continue;
-      if (s.fontSize) node.style.fontSize = s.fontSize + 'px';
-      if (s.fontFamily) node.style.fontFamily = s.fontFamily;
-      if (s.fontWeight) node.style.fontWeight = s.fontWeight;
-      if (s.fontStyle) node.style.fontStyle = s.fontStyle;
-      if (s.color) node.style.color = s.color;
+    if (styles) {
+      for (const [path, s] of Object.entries(styles)) {
+        const node = el.querySelector<HTMLElement>(`[data-ef="${path}"]`);
+        if (!node) continue;
+        if (s.fontSize) node.style.fontSize = s.fontSize + 'px';
+        if (s.fontFamily) node.style.fontFamily = s.fontFamily;
+        if (s.fontWeight) node.style.fontWeight = s.fontWeight;
+        if (s.fontStyle) node.style.fontStyle = s.fontStyle;
+        if (s.color) node.style.color = s.color;
+        if (s.textAlign) node.style.textAlign = s.textAlign;
+      }
+    }
+    const layouts = (slide as unknown as Record<string, unknown>)._layout as Record<string, ElementLayoutOverride> | undefined;
+    if (layouts) {
+      for (const [path, lo] of Object.entries(layouts)) {
+        const node = el.querySelector<HTMLElement>(`[data-ef="${path}"]`);
+        if (!node) continue;
+        node.style.position = 'absolute';
+        if (lo.x != null) node.style.left = `${lo.x}px`;
+        if (lo.y != null) node.style.top = `${lo.y}px`;
+        if (lo.w != null) node.style.width = `${lo.w}px`;
+        if (lo.h != null) node.style.height = `${lo.h}px`;
+        if (lo.rotate) node.style.transform = `rotate(${lo.rotate}deg)`;
+        node.style.maxWidth = 'none';
+      }
     }
   }, [slide]);
   return (
-    <div ref={ref} data-export-slide="1" style={{ width: 1920, height: 1080, marginBottom: 20 }}>
+    <div ref={ref} data-export-slide="1" style={{ width: 1920, height: 1080, marginBottom: 20, position: 'relative' }}>
       <SlideRenderer slide={slide} t={t} n={n} total={total} brand={brand} deckTitle={deckTitle} />
     </div>
   );

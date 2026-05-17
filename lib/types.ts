@@ -2,8 +2,7 @@
 // 所有 layout 都继承 LayoutBase。新增 layout：1) 加 type，2) 实现组件，3) 注册。
 
 export type ThemeId =
-  // v1（10 套）
-  | 'soft-warm'
+  // v1（8 套）
   | 'editorial-monocle'
   | 'modern-minimal'
   | 'tech-utility'
@@ -11,64 +10,28 @@ export type ThemeId =
   | 'academic-paper'
   | 'midnight-luxe'
   | 'risograph'
-  | 'kraft-paper'
   | 'broadcast-hud'
-  // v2（10 套 · 浅色多色）
+  // v2（浅色多色）
   | 'pastel-bauhaus'
   | 'summer-cocktail'
-  | 'riso-pastel'
-  | 'sunrise-gradient'
-  | 'playground-block'
-  | 'tea-ceremony'
-  | 'paper-collage'
-  | 'citrus-grove'
-  | 'minimal-rainbow'
   | 'pop-magazine'
-  // v3（26 套 · html-ppt-skill 移植）
-  | 'arctic-cool'
-  | 'aurora-borealis'
+  // v3（html-ppt-skill 移植）
   | 'blueprint'
-  | 'catppuccin-latte'
-  | 'catppuccin-mocha'
-  | 'corporate-clean'
   | 'cyberpunk-neon'
-  | 'dracula'
-  | 'engineering-whiteprint'
   | 'glassmorphism'
-  | 'gruvbox-dark'
   | 'memphis-pop'
   | 'midcentury'
   | 'minimal-white'
-  | 'nord'
   | 'pitch-deck-vc'
   | 'retro-tv'
-  | 'rose-pine'
-  | 'sharp-mono'
-  | 'soft-pastel'
-  | 'solarized-light'
   | 'swiss-grid'
   | 'tokyo-night'
   | 'vaporwave'
   | 'xiaohongshu'
   | 'y2k-chrome'
-  // v4（9 套 · guizang 系列）
-  | 'guizang-monocle'
-  | 'guizang-indigo'
-  | 'guizang-forest'
-  | 'guizang-dune'
-  | 'guizang-crimson'
-  | 'guizang-slate'
-  | 'guizang-amber'
-  | 'guizang-teal'
-  | 'guizang-night'
-  // v5（4 套 · swiss 变体）
+  // v5（swiss 变体）
   | 'swiss-ikb'
-  | 'swiss-lemon'
-  | 'swiss-neon-green'
-  | 'swiss-orange'
-  // v6（3 套 · open-slide）
-  | 'open-aurora'
-  | 'open-bright-sans'
+  // v6（open-slide）
   | 'open-sticker-pop';
 
 export type LayoutType =
@@ -96,10 +59,53 @@ export type LayoutType =
 
 // ─── 各 layout 的数据形状 ────────────────────────────────────────────────────
 
+/** 单个文字元素的样式覆盖（通过 data-ef 路径索引） */
+export interface ElementStyleOverride {
+  fontSize?: number;       // 实际像素值，如 120
+  fontFamily?: string;
+  fontWeight?: string;     // '400' | '700' | '900'
+  fontStyle?: string;      // 'normal' | 'italic'
+  color?: string;
+  textAlign?: 'left' | 'center' | 'right';
+}
+
+/** PPT 风格的位置/尺寸覆盖（在 1920×1080 坐标系内的像素） */
+export interface ElementLayoutOverride {
+  x?: number;
+  y?: number;
+  w?: number;
+  h?: number;
+  rotate?: number;   // 角度，默认 0
+}
+
+/** 每张幻灯片可单独覆盖的样式属性（叠加在主题 token 之上） */
+export interface SlideStyleOverride {
+  fontDisplay?: string;
+  fontBody?: string;
+  heroScale?: number;     // 倍数，例如 1.2 = 放大 20%
+  sectionScale?: number;
+  bodyScale?: number;
+  captionScale?: number;
+  lineHeight?: number;    // 例如 1.4
+  letterSpacing?: string; // 例如 '0.05em'
+  bg?: string;
+  paper?: string;
+  text?: string;
+  muted?: string;
+  accent?: string;
+  padding?: number;
+}
+
 export interface LayoutBase {
   type: LayoutType;
   /** 章节眉，可选 */
   eyebrow?: string;
+  /** 每个文字元素的样式覆盖，key = data-ef 路径 */
+  _styles?: Record<string, ElementStyleOverride>;
+  /** PPT 风格的位置/尺寸覆盖，key = data-ef 路径，值在 1920×1080 坐标 */
+  _layout?: Record<string, ElementLayoutOverride>;
+  /** 单页样式覆盖（不影响其他页） */
+  _style?: SlideStyleOverride;
 }
 
 export interface CoverSlide extends LayoutBase {

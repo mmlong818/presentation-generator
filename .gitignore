@@ -37,3 +37,9 @@ Thumbs.db
 # claude code
 .claude/
 tsconfig.tsbuildinfo
+
+# Audit screenshots (temporary)
+.shots/
+test_output.pptx
+pptx-service/__pycache__/
+pptx-service/renderers/__pycache__/
