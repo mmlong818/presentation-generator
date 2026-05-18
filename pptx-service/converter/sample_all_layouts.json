@@ -1,0 +1,122 @@
+{
+  "title": "全 21 版式测试",
+  "theme": "modern-minimal",
+  "framework": "duarte",
+  "brief": {"topic": "测试", "audience": "开发", "goal": "验证", "durationMin": 21},
+  "slides": [
+    {"type": "cover", "eyebrow": "测试 01", "title": "21 版式全覆盖测试", "subtitle": "Phase A 验证", "highlight": "全覆盖"},
+    {"type": "statement", "title": "每一个版式都应该看起来还不错", "highlight": ["看起来还不错"], "align": "center"},
+    {"type": "process", "eyebrow": "流程", "heading": "三步法",
+     "steps": [{"title": "第一步", "desc": "观察现状"}, {"title": "第二步", "desc": "提出假设"}, {"title": "第三步", "desc": "验证迭代"}]},
+    {"type": "data", "eyebrow": "数据", "heading": "三个关键指标",
+     "stats": [
+       {"value": "85%", "label": "用户留存", "source": "内部统计"},
+       {"value": "3.2×", "label": "效率提升"},
+       {"value": "¥120万", "label": "年化节省"}
+     ]},
+    {"type": "compare", "eyebrow": "对比", "heading": "旧方式 vs 新方式",
+     "left": {"title": "旧方式", "items": ["人工跟踪", "周级报告", "事后归因"]},
+     "right": {"title": "新方式", "items": ["自动监测", "实时仪表", "因果推断"]}},
+    {"type": "timeline", "eyebrow": "时间线", "heading": "项目里程碑",
+     "events": [
+       {"time": "Q1", "title": "立项", "desc": "确定目标和范围"},
+       {"time": "Q2", "title": "原型", "desc": "MVP 上线"},
+       {"time": "Q3", "title": "扩量", "desc": "用户从 100 增至 10k"},
+       {"time": "Q4", "title": "复盘", "desc": "形成方法论"}
+     ]},
+    {"type": "argument", "eyebrow": "论点", "heading": "为什么现在做",
+     "highlight": "现在",
+     "points": ["市场窗口期短", "技术成熟度刚好", "团队能力匹配"]},
+    {"type": "quote", "quote": "唯一持久的竞争优势,是比对手学习更快的能力。",
+     "source": "Arie de Geus", "highlight": "学习更快"},
+    {"type": "diagram", "eyebrow": "图示", "heading": "系统架构", "hint": "[此处放系统架构图]"},
+    {"type": "cta", "eyebrow": "行动", "oldQuestion": "我们什么时候开始?",
+     "newAction": "下周一启动第一个 Sprint", "highlight": "下周一"},
+    {"type": "checklist", "eyebrow": "清单", "heading": "上线前检查",
+     "items": ["监控配置完成", "回滚方案就绪", "灰度名单确认", "故障预案演练"]},
+    {"type": "matrix-2x2", "eyebrow": "矩阵", "heading": "功能优先级",
+     "axes": {"x": {"low": "影响小", "high": "影响大"}, "y": {"low": "成本高", "high": "成本低"}},
+     "cells": [
+       {"label": "Quick Wins", "desc": "立即做", "emphasis": true},
+       {"label": "Big Bets", "desc": "重点投入"},
+       {"label": "Fill-ins", "desc": "有空再做"},
+       {"label": "Money Pit", "desc": "避免触碰"}
+     ],
+     "takeaway": "优先攻 Quick Wins"},
+    {"type": "chart-bar", "eyebrow": "柱图", "heading": "各渠道转化率", "unit": "%",
+     "bars": [
+       {"label": "搜索", "value": 42, "note": "持续上升"},
+       {"label": "社交", "value": 28},
+       {"label": "邮件", "value": 19},
+       {"label": "直达", "value": 11}
+     ], "highlight": "搜索", "source": "GA4"},
+    {"type": "kpi-board", "eyebrow": "看板", "heading": "Q3 关键指标", "period": "2026 Q3",
+     "kpis": [
+       {"label": "MAU", "value": "12.3M", "delta": "+18%", "deltaTone": "pos"},
+       {"label": "ARPU", "value": "¥38", "delta": "-2%", "deltaTone": "neg"},
+       {"label": "留存", "value": "62%", "delta": "+4pp", "deltaTone": "pos"},
+       {"label": "NPS", "value": "47", "delta": "持平", "deltaTone": "flat"}
+     ], "takeaway": "MAU 增长强劲, ARPU 需关注"},
+    {"type": "roadmap", "eyebrow": "路线", "heading": "2026 产品路线",
+     "periods": ["Q1", "Q2", "Q3", "Q4"],
+     "lanes": [
+       {"name": "增长", "items": [
+         {"period": "Q1", "label": "渠道扩展"},
+         {"period": "Q2", "span": 2, "label": "海外试点", "emphasis": true}
+       ]},
+       {"name": "产品", "items": [
+         {"period": "Q1", "span": 2, "label": "新版编辑器"},
+         {"period": "Q3", "label": "AI 助手"},
+         {"period": "Q4", "label": "协同模式"}
+       ]}
+     ], "legend": "深色块为关键里程碑"},
+    {"type": "case-study", "eyebrow": "案例", "client": "某零售集团", "clientMeta": "门店 800+ / 员工 12k",
+     "context": "线下连锁,2024 年开始数字化转型",
+     "challenge": "POS 数据散落 23 套系统,周报需要 4 个分析师手工合并",
+     "approach": "搭建统一数据平台,接入实时流",
+     "results": [
+       {"metric": "报表交付", "value": "T+0", "delta": "原 T+5"},
+       {"metric": "分析师", "value": "1人", "delta": "原 4人"}
+     ], "quote": "我们终于可以早会上看昨晚数据了。", "quoteAttribution": "CIO 王女士"},
+    {"type": "table", "eyebrow": "表格", "heading": "方案对比",
+     "columns": [
+       {"id": "name", "label": "方案", "align": "left"},
+       {"id": "cost", "label": "成本", "align": "right"},
+       {"id": "time", "label": "周期", "align": "right"},
+       {"id": "risk", "label": "风险", "align": "center"}
+     ],
+     "rows": [
+       {"cells": {"name": "自研", "cost": "¥200万", "time": "6 月", "risk": "高"}},
+       {"cells": {"name": "采购", "cost": "¥80万", "time": "2 月", "risk": "中"}, "emphasis": true},
+       {"cells": {"name": "外包", "cost": "¥150万", "time": "4 月", "risk": "中"}}
+     ], "highlightColumn": "cost", "source": "采购组测算"},
+    {"type": "causality", "eyebrow": "因果", "heading": "用户流失链路",
+     "chain": [
+       {"cause": "首屏加载慢", "because": "图片未压缩"},
+       {"cause": "用户跳出", "because": "3 秒内未见内容"},
+       {"cause": "转化下降", "because": "漏斗顶端漏水"}
+     ], "conclusion": "性能优化是 ROI 最高的增长杠杆"},
+    {"type": "persona", "eyebrow": "画像", "name": "小李", "role": "中型电商运营总监",
+     "attributes": [{"label": "年龄", "value": "32"}, {"label": "城市", "value": "杭州"}, {"label": "团队", "value": "12 人"}],
+     "quote": "我没时间看 30 个仪表盘",
+     "needs": ["一屏看到关键指标", "异常自动告警", "可下钻细节"],
+     "pains": ["数据散落多处", "口径常变", "周会被催数"]},
+    {"type": "quadrant", "eyebrow": "象限", "heading": "竞品定位",
+     "axes": {
+       "x": {"label": "市场占有", "low": "小众", "high": "主流"},
+       "y": {"label": "创新度", "low": "保守", "high": "前沿"}
+     },
+     "points": [
+       {"id": "a", "label": "我们", "gridX": 2, "gridY": 4},
+       {"id": "b", "label": "竞品 A", "gridX": 4, "gridY": 2},
+       {"id": "c", "label": "竞品 B", "gridX": 3, "gridY": 3},
+       {"id": "d", "label": "竞品 C", "gridX": 1, "gridY": 1},
+       {"id": "e", "label": "新晋", "gridX": 0, "gridY": 4}
+     ], "highlight": "a", "source": "2026 H1 行业报告"},
+    {"type": "question", "eyebrow": "提问", "question": "如果只能保留一个指标,你会选哪一个?",
+     "hints": ["从用户视角想", "想三个月后", "不要选虚荣指标"],
+     "invitation": "请在便签上写下你的答案"}
+  ],
+  "script": [],
+  "createdAt": "2026-05-19T00:00:00Z"
+}

@@ -1,0 +1,3634 @@
+{
+  "title": "全 21 版式测试",
+  "width": 1000,
+  "height": 562.5,
+  "theme": {
+    "themeColors": [
+      "#2563eb",
+      "#888888",
+      "#e5e5e5",
+      "#111111",
+      "#ffffff",
+      "#f5f5f3"
+    ],
+    "fontColor": "#111111",
+    "fontName": "Arial",
+    "backgroundColor": "#f5f5f3"
+  },
+  "slides": [
+    {
+      "id": "ANqOJWOn4s",
+      "elements": [
+        {
+          "id": "tkw1KAZPzR",
+          "type": "text",
+          "left": 72.92,
+          "top": 93.75,
+          "width": 854.17,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">测试 01</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "xunIIFNlwB",
+          "type": "text",
+          "left": 72.92,
+          "top": 187.5,
+          "width": 854.17,
+          "height": 187.5,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 62.5px;\">21 版式</span></strong><strong><span style=\"color: #2563eb; font-size: 62.5px;\">全覆盖</span></strong><strong><span style=\"color: #111111; font-size: 62.5px;\">测试</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "2tBVrztPyP",
+          "type": "text",
+          "left": 72.92,
+          "top": 395.83,
+          "width": 854.17,
+          "height": 52.08,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 16.7px;\">Phase A 验证</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.4
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "bqlus0pnfd",
+      "elements": [
+        {
+          "id": "4BE3Ucb3nF",
+          "type": "text",
+          "left": 72.92,
+          "top": 187.5,
+          "width": 854.17,
+          "height": 187.5,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #111111; font-size: 68.8px;\">每一个版式都应该</span></strong><strong><span style=\"color: #2563eb; font-size: 68.8px;\">看起来还不错</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "QaQ65PfaFm",
+      "elements": [
+        {
+          "id": "Fq4W2HniPg",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">流程</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "yT9viN6Wrb",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 72.92,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">三步法</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "EWNFFrrnDX",
+          "type": "shape",
+          "left": 72.92,
+          "top": 156.25,
+          "width": 273.61,
+          "height": 312.5,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "gK2rPZQHzJ",
+          "type": "text",
+          "left": 89.58,
+          "top": 168.75,
+          "width": 240.28,
+          "height": 41.67,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 29.2px;\">01</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1
+        },
+        {
+          "id": "NQ6GTSsSrV",
+          "type": "text",
+          "left": 89.58,
+          "top": 223.96,
+          "width": 240.28,
+          "height": 62.5,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 17.7px;\">第一步</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "NRrZZIoqPb",
+          "type": "text",
+          "left": 89.58,
+          "top": 291.67,
+          "width": 240.28,
+          "height": 93.75,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 11.5px;\">观察现状</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "dAhUO6Z8eW",
+          "type": "shape",
+          "left": 363.19,
+          "top": 156.25,
+          "width": 273.61,
+          "height": 312.5,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "qjmr0qGN5f",
+          "type": "text",
+          "left": 379.86,
+          "top": 168.75,
+          "width": 240.28,
+          "height": 41.67,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 29.2px;\">02</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1
+        },
+        {
+          "id": "NSzTKseci1",
+          "type": "text",
+          "left": 379.86,
+          "top": 223.96,
+          "width": 240.28,
+          "height": 62.5,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 17.7px;\">第二步</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "okbbH6On1B",
+          "type": "text",
+          "left": 379.86,
+          "top": 291.67,
+          "width": 240.28,
+          "height": 93.75,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 11.5px;\">提出假设</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "96KvpZs6fo",
+          "type": "shape",
+          "left": 653.47,
+          "top": 156.25,
+          "width": 273.61,
+          "height": 312.5,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "ko8DqaLbtp",
+          "type": "text",
+          "left": 670.14,
+          "top": 168.75,
+          "width": 240.28,
+          "height": 41.67,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 29.2px;\">03</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1
+        },
+        {
+          "id": "7fIp0ufFHt",
+          "type": "text",
+          "left": 670.14,
+          "top": 223.96,
+          "width": 240.28,
+          "height": 62.5,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 17.7px;\">第三步</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "k3JeaWgdTJ",
+          "type": "text",
+          "left": 670.14,
+          "top": 291.67,
+          "width": 240.28,
+          "height": 93.75,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 11.5px;\">验证迭代</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "43mrk6DPsL",
+      "elements": [
+        {
+          "id": "SOlOaHKd9q",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">数据</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "DRioGgqOrJ",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 93.75,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 41.7px;\">三个关键指标</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "5RoDLekGRy",
+          "type": "text",
+          "left": 72.92,
+          "top": 166.67,
+          "width": 263.89,
+          "height": 93.75,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 62.5px;\">85%</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1.05
+        },
+        {
+          "id": "xfTb0oSKne",
+          "type": "text",
+          "left": 72.92,
+          "top": 270.83,
+          "width": 263.89,
+          "height": 41.67,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 17.7px;\">用户留存</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "GOjgIlrWKQ",
+          "type": "text",
+          "left": 72.92,
+          "top": 322.92,
+          "width": 263.89,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 11.5px;\">内部统计</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "PBdU7o62xg",
+          "type": "text",
+          "left": 368.06,
+          "top": 166.67,
+          "width": 263.89,
+          "height": 93.75,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 62.5px;\">3.2×</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1.05
+        },
+        {
+          "id": "CPAlSIcbyM",
+          "type": "text",
+          "left": 368.06,
+          "top": 270.83,
+          "width": 263.89,
+          "height": 41.67,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 17.7px;\">效率提升</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "f8P1jDdKtS",
+          "type": "text",
+          "left": 663.19,
+          "top": 166.67,
+          "width": 263.89,
+          "height": 93.75,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 62.5px;\">¥120万</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1.05
+        },
+        {
+          "id": "nrVlN8RZtj",
+          "type": "text",
+          "left": 663.19,
+          "top": 270.83,
+          "width": 263.89,
+          "height": 41.67,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 17.7px;\">年化节省</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.5
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "O3QquI9XZG",
+      "elements": [
+        {
+          "id": "C5xb9fOrAJ",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">对比</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "GWane00k4Y",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 72.92,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">旧方式 vs 新方式</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "JSomihYbAy",
+          "type": "shape",
+          "left": 72.92,
+          "top": 145.83,
+          "width": 416.67,
+          "height": 364.58,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "AD9yoBkWb0",
+          "type": "text",
+          "left": 93.75,
+          "top": 166.67,
+          "width": 375.0,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #888888; font-size: 14.6px;\">旧方式</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "N9Nk8ovDQo",
+          "type": "text",
+          "left": 93.75,
+          "top": 208.33,
+          "width": 375.0,
+          "height": 281.25,
+          "rotate": 0,
+          "content": "<p>• 人工跟踪</p><p>• 周级报告</p><p>• 事后归因</p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.7
+        },
+        {
+          "id": "80rbUDR97E",
+          "type": "shape",
+          "left": 510.42,
+          "top": 145.83,
+          "width": 416.67,
+          "height": 364.58,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#2563eb",
+          "opacity": 0.08
+        },
+        {
+          "id": "JaffsKj9kl",
+          "type": "text",
+          "left": 531.25,
+          "top": 166.67,
+          "width": 375.0,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 14.6px;\">新方式</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "9yPwfGzN9B",
+          "type": "text",
+          "left": 531.25,
+          "top": 208.33,
+          "width": 375.0,
+          "height": 281.25,
+          "rotate": 0,
+          "content": "<p>• 自动监测</p><p>• 实时仪表</p><p>• 因果推断</p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.7
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "DSWgH9P7bt",
+      "elements": [
+        {
+          "id": "MJKOVaUWwZ",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">时间线</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "ntTlBrixon",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 72.92,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">项目里程碑</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "PpZchTkthS",
+          "type": "shape",
+          "left": 72.92,
+          "top": 197.92,
+          "width": 854.17,
+          "height": 2.08,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#e5e5e5",
+          "opacity": 1
+        },
+        {
+          "id": "132OxZm0FV",
+          "type": "shape",
+          "left": 168.75,
+          "top": 192.71,
+          "width": 12.5,
+          "height": 12.5,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 100 0 A 100 100 0 1 0 100 200 A 100 100 0 1 0 100 0 Z",
+          "fixedRatio": true,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "Q5H8REnbyu",
+          "type": "text",
+          "left": 72.92,
+          "top": 145.83,
+          "width": 204.17,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #2563eb; font-size: 14.6px;\">Q1</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "o9LlCyAwnV",
+          "type": "text",
+          "left": 72.92,
+          "top": 229.17,
+          "width": 204.17,
+          "height": 52.08,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #111111; font-size: 14.6px;\">立项</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.4
+        },
+        {
+          "id": "wqnjaqIgYJ",
+          "type": "text",
+          "left": 72.92,
+          "top": 291.67,
+          "width": 204.17,
+          "height": 104.17,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><span style=\"color: #888888; font-size: 10.4px;\">确定目标和范围</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "Fk77mgeK0R",
+          "type": "shape",
+          "left": 385.42,
+          "top": 192.71,
+          "width": 12.5,
+          "height": 12.5,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 100 0 A 100 100 0 1 0 100 200 A 100 100 0 1 0 100 0 Z",
+          "fixedRatio": true,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "svf0b1PsVk",
+          "type": "text",
+          "left": 289.58,
+          "top": 145.83,
+          "width": 204.17,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #2563eb; font-size: 14.6px;\">Q2</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "j9XyUESW9n",
+          "type": "text",
+          "left": 289.58,
+          "top": 229.17,
+          "width": 204.17,
+          "height": 52.08,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #111111; font-size: 14.6px;\">原型</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.4
+        },
+        {
+          "id": "IHOYkv1tcO",
+          "type": "text",
+          "left": 289.58,
+          "top": 291.67,
+          "width": 204.17,
+          "height": 104.17,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><span style=\"color: #888888; font-size: 10.4px;\">MVP 上线</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "FGVMt9MrUA",
+          "type": "shape",
+          "left": 602.08,
+          "top": 192.71,
+          "width": 12.5,
+          "height": 12.5,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 100 0 A 100 100 0 1 0 100 200 A 100 100 0 1 0 100 0 Z",
+          "fixedRatio": true,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "kN6dppMvfq",
+          "type": "text",
+          "left": 506.25,
+          "top": 145.83,
+          "width": 204.17,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #2563eb; font-size: 14.6px;\">Q3</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "Uk5KixOexW",
+          "type": "text",
+          "left": 506.25,
+          "top": 229.17,
+          "width": 204.17,
+          "height": 52.08,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #111111; font-size: 14.6px;\">扩量</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.4
+        },
+        {
+          "id": "9H8RdmbEBd",
+          "type": "text",
+          "left": 506.25,
+          "top": 291.67,
+          "width": 204.17,
+          "height": 104.17,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><span style=\"color: #888888; font-size: 10.4px;\">用户从 100 增至 10k</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "2VDQR32ZXy",
+          "type": "shape",
+          "left": 818.75,
+          "top": 192.71,
+          "width": 12.5,
+          "height": 12.5,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 100 0 A 100 100 0 1 0 100 200 A 100 100 0 1 0 100 0 Z",
+          "fixedRatio": true,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "e5WO6ruzlq",
+          "type": "text",
+          "left": 722.92,
+          "top": 145.83,
+          "width": 204.17,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #2563eb; font-size: 14.6px;\">Q4</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "X2eRP3Ckqf",
+          "type": "text",
+          "left": 722.92,
+          "top": 229.17,
+          "width": 204.17,
+          "height": 52.08,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #111111; font-size: 14.6px;\">复盘</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.4
+        },
+        {
+          "id": "1Ey5VkSfhq",
+          "type": "text",
+          "left": 722.92,
+          "top": 291.67,
+          "width": 204.17,
+          "height": 104.17,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><span style=\"color: #888888; font-size: 10.4px;\">形成方法论</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "X2QhvVl9kE",
+      "elements": [
+        {
+          "id": "IKxYFjklW5",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">论点</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "6w11H44XWu",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 104.17,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 41.7px;\">为什么</span></strong><strong><span style=\"color: #2563eb; font-size: 41.7px;\">现在</span></strong><strong><span style=\"color: #111111; font-size: 41.7px;\">做</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "urVIawIwwp",
+          "type": "text",
+          "left": 72.92,
+          "top": 166.67,
+          "width": 854.17,
+          "height": 52.08,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 18.8px;\">市场窗口期短</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "hNVRsViGUf",
+          "type": "text",
+          "left": 72.92,
+          "top": 235.42,
+          "width": 854.17,
+          "height": 52.08,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 18.8px;\">技术成熟度刚好</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "Jxdq8YODjU",
+          "type": "text",
+          "left": 72.92,
+          "top": 304.17,
+          "width": 854.17,
+          "height": 52.08,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 18.8px;\">团队能力匹配</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "bm8WN0hp2x",
+      "elements": [
+        {
+          "id": "ccXH63awfA",
+          "type": "text",
+          "left": 72.92,
+          "top": 114.58,
+          "width": 104.17,
+          "height": 104.17,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 114.6px;\">“</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1
+        },
+        {
+          "id": "52QrLuNuHD",
+          "type": "text",
+          "left": 187.5,
+          "top": 166.67,
+          "width": 739.58,
+          "height": 229.17,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 29.2px;\">唯一持久的竞争优势,是比对手</span><span style=\"color: #2563eb; font-size: 29.2px;\">学习更快</span><span style=\"color: #111111; font-size: 29.2px;\">的能力。</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.4
+        },
+        {
+          "id": "p29VceV4VF",
+          "type": "text",
+          "left": 187.5,
+          "top": 427.08,
+          "width": 739.58,
+          "height": 41.67,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 14.6px;\">— Arie de Geus</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "ZmFjFHIAtY",
+      "elements": [
+        {
+          "id": "1O0SkMGFMH",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">图示</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "FTWmLZxZD7",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 72.92,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">系统架构</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "hvvz7YqTK0",
+          "type": "shape",
+          "left": 72.92,
+          "top": 145.83,
+          "width": 854.17,
+          "height": 354.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "KKzfg7Ujd4",
+          "type": "text",
+          "left": 72.92,
+          "top": 307.29,
+          "width": 854.17,
+          "height": 52.08,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><span style=\"color: #888888; font-size: 16.7px;\">[此处放系统架构图]</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "BVfcSNwQ8Q",
+      "elements": [
+        {
+          "id": "1wxQp0FKMM",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">行动</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "buBpGkKrYb",
+          "type": "text",
+          "left": 72.92,
+          "top": 145.83,
+          "width": 854.17,
+          "height": 62.5,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 22.9px;\">我们什么时候开始?</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.4
+        },
+        {
+          "id": "nf0qOHxQwF",
+          "type": "text",
+          "left": 72.92,
+          "top": 229.17,
+          "width": 854.17,
+          "height": 250.0,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 50.0px;\">下周一</span></strong><strong><span style=\"color: #111111; font-size: 50.0px;\">启动第一个 Sprint</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.25
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "kUA1YEiWXK",
+      "elements": [
+        {
+          "id": "2G5wbc6hkh",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">清单</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "N7AT2qvpS8",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 72.92,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">上线前检查</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "S4pEZM1il0",
+          "type": "shape",
+          "left": 72.92,
+          "top": 166.67,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": true,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "V1ZzFBSVho",
+          "type": "text",
+          "left": 72.92,
+          "top": 166.67,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #f5f5f3; font-size: 20.8px;\">✓</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#f5f5f3",
+          "lineHeight": 1
+        },
+        {
+          "id": "GZ2CSoHaCW",
+          "type": "text",
+          "left": 118.75,
+          "top": 156.25,
+          "width": 808.33,
+          "height": 50.0,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 18.8px;\">监控配置完成</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "b7sYLWsmS5",
+          "type": "shape",
+          "left": 72.92,
+          "top": 229.17,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": true,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "ovWM59AeEG",
+          "type": "text",
+          "left": 72.92,
+          "top": 229.17,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #f5f5f3; font-size: 20.8px;\">✓</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#f5f5f3",
+          "lineHeight": 1
+        },
+        {
+          "id": "8FIzuCDsg5",
+          "type": "text",
+          "left": 118.75,
+          "top": 218.75,
+          "width": 808.33,
+          "height": 50.0,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 18.8px;\">回滚方案就绪</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "AVMzdinj4G",
+          "type": "shape",
+          "left": 72.92,
+          "top": 291.67,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": true,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "og0atGRKwo",
+          "type": "text",
+          "left": 72.92,
+          "top": 291.67,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #f5f5f3; font-size: 20.8px;\">✓</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#f5f5f3",
+          "lineHeight": 1
+        },
+        {
+          "id": "B4aF1SSen8",
+          "type": "text",
+          "left": 118.75,
+          "top": 281.25,
+          "width": 808.33,
+          "height": 50.0,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 18.8px;\">灰度名单确认</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "8jw63GsklX",
+          "type": "shape",
+          "left": 72.92,
+          "top": 354.17,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": true,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "eWHnSDPYYB",
+          "type": "text",
+          "left": 72.92,
+          "top": 354.17,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #f5f5f3; font-size: 20.8px;\">✓</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#f5f5f3",
+          "lineHeight": 1
+        },
+        {
+          "id": "FfFaC1Iew7",
+          "type": "text",
+          "left": 118.75,
+          "top": 343.75,
+          "width": 808.33,
+          "height": 50.0,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 18.8px;\">故障预案演练</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.5
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "5x8yT2LmlK",
+      "elements": [
+        {
+          "id": "0By8QqBj39",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">矩阵</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "stjd7awmbu",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 72.92,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">功能优先级</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "JxFkIzjo0T",
+          "type": "shape",
+          "left": 125.0,
+          "top": 145.83,
+          "width": 386.46,
+          "height": 172.92,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#2563eb",
+          "opacity": 0.15
+        },
+        {
+          "id": "v8D3BhRVNT",
+          "type": "text",
+          "left": 139.58,
+          "top": 158.33,
+          "width": 357.29,
+          "height": 36.46,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 16.7px;\">Quick Wins</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "PoPVvGL5T6",
+          "type": "text",
+          "left": 139.58,
+          "top": 203.13,
+          "width": 357.29,
+          "height": 105.21,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 10.4px;\">立即做</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "qjdklGdD9B",
+          "type": "shape",
+          "left": 519.79,
+          "top": 145.83,
+          "width": 386.46,
+          "height": 172.92,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "NFTo5CE4tw",
+          "type": "text",
+          "left": 534.38,
+          "top": 158.33,
+          "width": 357.29,
+          "height": 36.46,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 16.7px;\">Big Bets</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "JNFr3ODt04",
+          "type": "text",
+          "left": 534.38,
+          "top": 203.13,
+          "width": 357.29,
+          "height": 105.21,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 10.4px;\">重点投入</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "S8FqkJsRz3",
+          "type": "shape",
+          "left": 125.0,
+          "top": 327.08,
+          "width": 386.46,
+          "height": 172.92,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "OP8dFlcpi6",
+          "type": "text",
+          "left": 139.58,
+          "top": 339.58,
+          "width": 357.29,
+          "height": 36.46,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 16.7px;\">Fill-ins</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "IEeQeuJg32",
+          "type": "text",
+          "left": 139.58,
+          "top": 384.38,
+          "width": 357.29,
+          "height": 105.21,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 10.4px;\">有空再做</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "Qs3lryx1Xu",
+          "type": "shape",
+          "left": 519.79,
+          "top": 327.08,
+          "width": 386.46,
+          "height": 172.92,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "8gw7LIVF51",
+          "type": "text",
+          "left": 534.38,
+          "top": 339.58,
+          "width": 357.29,
+          "height": 36.46,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 16.7px;\">Money Pit</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "940cy1DW65",
+          "type": "text",
+          "left": 534.38,
+          "top": 384.38,
+          "width": 357.29,
+          "height": 105.21,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 10.4px;\">避免触碰</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "pqcH1QJoMC",
+          "type": "text",
+          "left": 125.0,
+          "top": 495.83,
+          "width": 390.62,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 10.4px;\">影响小</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "ZF4GhnQuid",
+          "type": "text",
+          "left": 515.62,
+          "top": 495.83,
+          "width": 390.62,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><span style=\"color: #888888; font-size: 10.4px;\">影响大</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "j1MHFPczBO",
+          "type": "text",
+          "left": 31.25,
+          "top": 145.83,
+          "width": 88.54,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><span style=\"color: #888888; font-size: 10.4px;\">成本低</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "dhWRvVEsJb",
+          "type": "text",
+          "left": 31.25,
+          "top": 479.17,
+          "width": 88.54,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><span style=\"color: #888888; font-size: 10.4px;\">成本高</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "hAspEpjhDQ",
+          "type": "text",
+          "left": 72.92,
+          "top": 531.25,
+          "width": 854.17,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">→ 优先攻 Quick Wins</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "QBSKyisrsg",
+      "elements": [
+        {
+          "id": "a3eE6MHzji",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">柱图</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "IWSXYIpIJ1",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 72.92,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">各渠道转化率</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "aWhr41InSd",
+          "type": "text",
+          "left": 72.92,
+          "top": 181.25,
+          "width": 187.5,
+          "height": 33.33,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 14.6px;\">搜索</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "3Rpl4xNeF4",
+          "type": "shape",
+          "left": 270.83,
+          "top": 181.25,
+          "width": 583.33,
+          "height": 33.33,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "Q9eKnHl6Lu",
+          "type": "text",
+          "left": 860.42,
+          "top": 181.25,
+          "width": 66.67,
+          "height": 33.33,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 13.5px;\">42%</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "EXqsh7RfqQ",
+          "type": "text",
+          "left": 270.83,
+          "top": 216.67,
+          "width": 583.33,
+          "height": 14.58,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 8.3px;\">持续上升</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "uGs656h308",
+          "type": "text",
+          "left": 72.92,
+          "top": 275.0,
+          "width": 187.5,
+          "height": 33.33,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 14.6px;\">社交</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "V7SGwqISeG",
+          "type": "shape",
+          "left": 270.83,
+          "top": 275.0,
+          "width": 388.89,
+          "height": 33.33,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#111111",
+          "opacity": 0.6
+        },
+        {
+          "id": "PL15Rf9SuS",
+          "type": "text",
+          "left": 665.97,
+          "top": 275.0,
+          "width": 66.67,
+          "height": 33.33,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 13.5px;\">28%</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "DafoUqZhbk",
+          "type": "text",
+          "left": 72.92,
+          "top": 368.75,
+          "width": 187.5,
+          "height": 33.33,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 14.6px;\">邮件</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "p4YQNGaXzX",
+          "type": "shape",
+          "left": 270.83,
+          "top": 368.75,
+          "width": 263.89,
+          "height": 33.33,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#111111",
+          "opacity": 0.6
+        },
+        {
+          "id": "a2teHgto1u",
+          "type": "text",
+          "left": 540.97,
+          "top": 368.75,
+          "width": 66.67,
+          "height": 33.33,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 13.5px;\">19%</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "Xz7zkezJMY",
+          "type": "text",
+          "left": 72.92,
+          "top": 462.5,
+          "width": 187.5,
+          "height": 33.33,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 14.6px;\">直达</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "waae4FJdBS",
+          "type": "shape",
+          "left": 270.83,
+          "top": 462.5,
+          "width": 152.78,
+          "height": 33.33,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#111111",
+          "opacity": 0.6
+        },
+        {
+          "id": "wHqj9uiKMu",
+          "type": "text",
+          "left": 429.86,
+          "top": 462.5,
+          "width": 66.67,
+          "height": 33.33,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 13.5px;\">11%</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "smkwTv4NBr",
+          "type": "text",
+          "left": 72.92,
+          "top": 531.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 9.4px;\">来源：GA4</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "aUMqOH1ajS",
+      "elements": [
+        {
+          "id": "XKj77NrD9P",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">看板</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "aeni9XC2Tt",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 625.0,
+          "height": 62.5,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 33.3px;\">Q3 关键指标</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "WuKPPZeTnk",
+          "type": "text",
+          "left": 697.92,
+          "top": 83.33,
+          "width": 229.17,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><span style=\"color: #888888; font-size: 14.6px;\">2026 Q3</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "llaXyGAfFC",
+          "type": "shape",
+          "left": 72.92,
+          "top": 156.25,
+          "width": 420.83,
+          "height": 160.42,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "woadzIQNeH",
+          "type": "text",
+          "left": 89.58,
+          "top": 168.75,
+          "width": 387.5,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #888888; font-size: 11.5px;\">MAU</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "gxngux0sUS",
+          "type": "text",
+          "left": 89.58,
+          "top": 203.13,
+          "width": 387.5,
+          "height": 62.5,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">12.3M</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.1
+        },
+        {
+          "id": "stwWqpMEQs",
+          "type": "text",
+          "left": 89.58,
+          "top": 270.83,
+          "width": 387.5,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #22c55e; font-size: 13.5px;\">+18%</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#22c55e"
+        },
+        {
+          "id": "698dXphvyC",
+          "type": "shape",
+          "left": 506.25,
+          "top": 156.25,
+          "width": 420.83,
+          "height": 160.42,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "6WsRWeiV9i",
+          "type": "text",
+          "left": 522.92,
+          "top": 168.75,
+          "width": 387.5,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #888888; font-size: 11.5px;\">ARPU</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "Duze9j7Go5",
+          "type": "text",
+          "left": 522.92,
+          "top": 203.13,
+          "width": 387.5,
+          "height": 62.5,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">¥38</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.1
+        },
+        {
+          "id": "a7Yciyf9f9",
+          "type": "text",
+          "left": 522.92,
+          "top": 270.83,
+          "width": 387.5,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #ef4444; font-size: 13.5px;\">-2%</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#ef4444"
+        },
+        {
+          "id": "BWN4LaWQvU",
+          "type": "shape",
+          "left": 72.92,
+          "top": 329.17,
+          "width": 420.83,
+          "height": 160.42,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "2gC4gCsoVo",
+          "type": "text",
+          "left": 89.58,
+          "top": 341.67,
+          "width": 387.5,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #888888; font-size: 11.5px;\">留存</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "oxhKVbtAmf",
+          "type": "text",
+          "left": 89.58,
+          "top": 376.04,
+          "width": 387.5,
+          "height": 62.5,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">62%</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.1
+        },
+        {
+          "id": "oi9r51JRpf",
+          "type": "text",
+          "left": 89.58,
+          "top": 443.75,
+          "width": 387.5,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #22c55e; font-size: 13.5px;\">+4pp</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#22c55e"
+        },
+        {
+          "id": "lF4sZTL11Y",
+          "type": "shape",
+          "left": 506.25,
+          "top": 329.17,
+          "width": 420.83,
+          "height": 160.42,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "f2iC5XDmck",
+          "type": "text",
+          "left": 522.92,
+          "top": 341.67,
+          "width": 387.5,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #888888; font-size: 11.5px;\">NPS</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "OsQMVkbxiV",
+          "type": "text",
+          "left": 522.92,
+          "top": 376.04,
+          "width": 387.5,
+          "height": 62.5,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">47</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.1
+        },
+        {
+          "id": "7O1McyyjCQ",
+          "type": "text",
+          "left": 522.92,
+          "top": 443.75,
+          "width": 387.5,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #888888; font-size: 13.5px;\">持平</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "9jXe6TTgp5",
+          "type": "text",
+          "left": 72.92,
+          "top": 520.83,
+          "width": 854.17,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 12.5px;\">→ MAU 增长强劲, ARPU 需关注</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "eRhjsOxPdn",
+      "elements": [
+        {
+          "id": "06BbggK9ZX",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">路线</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "hM7W3IRI9G",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 72.92,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">2026 产品路线</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "P044Ohcz8u",
+          "type": "text",
+          "left": 185.42,
+          "top": 152.08,
+          "width": 170.83,
+          "height": 18.75,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #2563eb; font-size: 12.5px;\">Q1</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "gdIZ6tqkF8",
+          "type": "text",
+          "left": 372.92,
+          "top": 152.08,
+          "width": 170.83,
+          "height": 18.75,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #2563eb; font-size: 12.5px;\">Q2</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "aZktPU4rBI",
+          "type": "text",
+          "left": 560.42,
+          "top": 152.08,
+          "width": 170.83,
+          "height": 18.75,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #2563eb; font-size: 12.5px;\">Q3</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "KuCIDRGiYE",
+          "type": "text",
+          "left": 747.92,
+          "top": 152.08,
+          "width": 170.83,
+          "height": 18.75,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #2563eb; font-size: 12.5px;\">Q4</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "ininaQCfLW",
+          "type": "shape",
+          "left": 72.92,
+          "top": 176.04,
+          "width": 854.17,
+          "height": 1.04,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#e5e5e5",
+          "opacity": 1
+        },
+        {
+          "id": "usYY6mes4A",
+          "type": "text",
+          "left": 72.92,
+          "top": 247.4,
+          "width": 95.83,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 12.5px;\">增长</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "3MrghUakHP",
+          "type": "shape",
+          "left": 183.33,
+          "top": 242.19,
+          "width": 175.0,
+          "height": 41.67,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "kNkAUr0UPa",
+          "type": "text",
+          "left": 191.67,
+          "top": 249.48,
+          "width": 158.33,
+          "height": 27.08,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 10.4px;\">渠道扩展</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "uuksltUOP5",
+          "type": "shape",
+          "left": 370.83,
+          "top": 242.19,
+          "width": 362.5,
+          "height": 41.67,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "htYtKhJo6I",
+          "type": "text",
+          "left": 379.17,
+          "top": 249.48,
+          "width": 345.83,
+          "height": 27.08,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #f5f5f3; font-size: 10.4px;\">海外试点</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#f5f5f3",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "PWOPIbPGW1",
+          "type": "text",
+          "left": 72.92,
+          "top": 419.27,
+          "width": 95.83,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 12.5px;\">产品</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "5aPAOpy2yS",
+          "type": "shape",
+          "left": 72.92,
+          "top": 348.96,
+          "width": 854.17,
+          "height": 0.52,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#e5e5e5",
+          "opacity": 0.5
+        },
+        {
+          "id": "MxIjvYllZv",
+          "type": "shape",
+          "left": 183.33,
+          "top": 414.06,
+          "width": 362.5,
+          "height": 41.67,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "oAl6iTK6oW",
+          "type": "text",
+          "left": 191.67,
+          "top": 421.35,
+          "width": 345.83,
+          "height": 27.08,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 10.4px;\">新版编辑器</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "8VYidLMGEZ",
+          "type": "shape",
+          "left": 558.33,
+          "top": 414.06,
+          "width": 175.0,
+          "height": 41.67,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "xCop2g5snL",
+          "type": "text",
+          "left": 566.67,
+          "top": 421.35,
+          "width": 158.33,
+          "height": 27.08,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 10.4px;\">AI 助手</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "AsJej29WYj",
+          "type": "shape",
+          "left": 745.83,
+          "top": 414.06,
+          "width": 175.0,
+          "height": 41.67,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "kUmP9pMtJQ",
+          "type": "text",
+          "left": 754.17,
+          "top": 421.35,
+          "width": 158.33,
+          "height": 27.08,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 10.4px;\">协同模式</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "c6kpjKgDDp",
+          "type": "text",
+          "left": 72.92,
+          "top": 531.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 9.4px;\">深色块为关键里程碑</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "D1utVhsStq",
+      "elements": [
+        {
+          "id": "m0oD2WYiKB",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">案例</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "2yikZdDrMb",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 52.08,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 33.3px;\">某零售集团</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "5GB4n77red",
+          "type": "text",
+          "left": 72.92,
+          "top": 119.79,
+          "width": 854.17,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 12.5px;\">门店 800+ / 员工 12k</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "tCHQ3hU6be",
+          "type": "text",
+          "left": 72.92,
+          "top": 145.83,
+          "width": 510.42,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">Context</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "v01OxXrKrp",
+          "type": "text",
+          "left": 72.92,
+          "top": 171.88,
+          "width": 510.42,
+          "height": 67.71,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 11.5px;\">线下连锁,2024 年开始数字化转型</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.55
+        },
+        {
+          "id": "jDJKUmK8Zn",
+          "type": "text",
+          "left": 72.92,
+          "top": 247.92,
+          "width": 510.42,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">Challenge</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "Wz6kG3ygeQ",
+          "type": "text",
+          "left": 72.92,
+          "top": 273.96,
+          "width": 510.42,
+          "height": 67.71,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 11.5px;\">POS 数据散落 23 套系统,周报需要 4 个分析师手工合并</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.55
+        },
+        {
+          "id": "A2DlXtfx0D",
+          "type": "text",
+          "left": 72.92,
+          "top": 350.0,
+          "width": 510.42,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">Approach</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "lM28okk3PC",
+          "type": "text",
+          "left": 72.92,
+          "top": 376.04,
+          "width": 510.42,
+          "height": 67.71,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 11.5px;\">搭建统一数据平台,接入实时流</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.55
+        },
+        {
+          "id": "jsiVtHMxPD",
+          "type": "shape",
+          "left": 614.58,
+          "top": 145.83,
+          "width": 312.5,
+          "height": 239.58,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#2563eb",
+          "opacity": 0.08
+        },
+        {
+          "id": "OfVGCf0B7i",
+          "type": "text",
+          "left": 631.25,
+          "top": 156.25,
+          "width": 279.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #888888; font-size: 10.4px;\">报表交付</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "94gIpbGLv3",
+          "type": "text",
+          "left": 631.25,
+          "top": 177.08,
+          "width": 279.17,
+          "height": 36.46,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 25.0px;\">T+0</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1.1
+        },
+        {
+          "id": "bG6L0LAlhI",
+          "type": "text",
+          "left": 631.25,
+          "top": 213.54,
+          "width": 279.17,
+          "height": 15.63,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 9.4px;\">原 T+5</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "CUrk33VcNm",
+          "type": "text",
+          "left": 631.25,
+          "top": 265.62,
+          "width": 279.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #888888; font-size: 10.4px;\">分析师</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "O3LTbyg0bi",
+          "type": "text",
+          "left": 631.25,
+          "top": 286.46,
+          "width": 279.17,
+          "height": 36.46,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 25.0px;\">1人</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1.1
+        },
+        {
+          "id": "TSYqWMeCnB",
+          "type": "text",
+          "left": 631.25,
+          "top": 322.92,
+          "width": 279.17,
+          "height": 15.63,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 9.4px;\">原 4人</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "ppudFqagKs",
+          "type": "text",
+          "left": 614.58,
+          "top": 458.33,
+          "width": 312.5,
+          "height": 62.5,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 11.5px;\">“我们终于可以早会上看昨晚数据了。”</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "9J5ieGe9Q7",
+          "type": "text",
+          "left": 614.58,
+          "top": 520.83,
+          "width": 312.5,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 9.4px;\">— CIO 王女士</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "KbkVa2mRrD",
+      "elements": [
+        {
+          "id": "299WwkyTjn",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">表格</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "XNiq2JyHVj",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 72.92,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">方案对比</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "5FkLS9MpMl",
+          "type": "shape",
+          "left": 286.46,
+          "top": 145.83,
+          "width": 213.54,
+          "height": 145.83,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#2563eb",
+          "opacity": 0.08
+        },
+        {
+          "id": "IYEWDV2fWg",
+          "type": "text",
+          "left": 81.25,
+          "top": 154.17,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">方案</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "zLSrdH2jaj",
+          "type": "text",
+          "left": 294.79,
+          "top": 154.17,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><strong><span style=\"color: #2563eb; font-size: 11.5px;\">成本</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "NKknCz2Eo5",
+          "type": "text",
+          "left": 508.33,
+          "top": 154.17,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><strong><span style=\"color: #2563eb; font-size: 11.5px;\">周期</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "lt1yQ5Mhoo",
+          "type": "text",
+          "left": 721.88,
+          "top": 154.17,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #2563eb; font-size: 11.5px;\">风险</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "5zGeel7OM0",
+          "type": "shape",
+          "left": 72.92,
+          "top": 181.25,
+          "width": 854.17,
+          "height": 1.04,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#e5e5e5",
+          "opacity": 1
+        },
+        {
+          "id": "FXS1GlQXX5",
+          "type": "text",
+          "left": 81.25,
+          "top": 188.54,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 11.5px;\">自研</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "wusDHs2efS",
+          "type": "text",
+          "left": 294.79,
+          "top": 188.54,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><span style=\"color: #111111; font-size: 11.5px;\">¥200万</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "ix1CHjKUoI",
+          "type": "text",
+          "left": 508.33,
+          "top": 188.54,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><span style=\"color: #111111; font-size: 11.5px;\">6 月</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "yVN3eh1zZS",
+          "type": "text",
+          "left": 721.88,
+          "top": 188.54,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><span style=\"color: #111111; font-size: 11.5px;\">高</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "742I3pVV0P",
+          "type": "shape",
+          "left": 72.92,
+          "top": 218.23,
+          "width": 854.17,
+          "height": 0.52,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#e5e5e5",
+          "opacity": 0.5
+        },
+        {
+          "id": "6InIOsZx85",
+          "type": "shape",
+          "left": 72.92,
+          "top": 218.75,
+          "width": 854.17,
+          "height": 36.46,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "x8DCmkaEug",
+          "type": "text",
+          "left": 81.25,
+          "top": 225.0,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 11.5px;\">采购</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "4XtOLoMAyr",
+          "type": "text",
+          "left": 294.79,
+          "top": 225.0,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><strong><span style=\"color: #111111; font-size: 11.5px;\">¥80万</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "vBE3njtFcZ",
+          "type": "text",
+          "left": 508.33,
+          "top": 225.0,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><strong><span style=\"color: #111111; font-size: 11.5px;\">2 月</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "RIcBQhPfEv",
+          "type": "text",
+          "left": 721.88,
+          "top": 225.0,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #111111; font-size: 11.5px;\">中</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "pt1mgd9amN",
+          "type": "shape",
+          "left": 72.92,
+          "top": 254.69,
+          "width": 854.17,
+          "height": 0.52,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#e5e5e5",
+          "opacity": 0.5
+        },
+        {
+          "id": "ERKOiNpXRf",
+          "type": "text",
+          "left": 81.25,
+          "top": 261.46,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 11.5px;\">外包</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "3ojS3VFnnZ",
+          "type": "text",
+          "left": 294.79,
+          "top": 261.46,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><span style=\"color: #111111; font-size: 11.5px;\">¥150万</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "HUuuNNZoaB",
+          "type": "text",
+          "left": 508.33,
+          "top": 261.46,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><span style=\"color: #111111; font-size: 11.5px;\">4 月</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "l7ptvagzSU",
+          "type": "text",
+          "left": 721.88,
+          "top": 261.46,
+          "width": 196.88,
+          "height": 23.96,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><span style=\"color: #111111; font-size: 11.5px;\">中</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "IRM5cJZWeY",
+          "type": "text",
+          "left": 72.92,
+          "top": 531.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 9.4px;\">来源：采购组测算</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "XWtmpSFKJ8",
+      "elements": [
+        {
+          "id": "siTUMn71XH",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">因果</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "4JsXBg8VCf",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 72.92,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">用户流失链路</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "5GHxVhi337",
+          "type": "shape",
+          "left": 72.92,
+          "top": 156.25,
+          "width": 263.89,
+          "height": 270.83,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "uk8LTVemDZ",
+          "type": "text",
+          "left": 85.42,
+          "top": 172.92,
+          "width": 238.89,
+          "height": 83.33,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 14.6px;\">首屏加载慢</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.35
+        },
+        {
+          "id": "6o1BTbllrT",
+          "type": "text",
+          "left": 85.42,
+          "top": 265.62,
+          "width": 238.89,
+          "height": 78.12,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 10.4px;\">∵ 图片未压缩</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "pviqzr5KyA",
+          "type": "text",
+          "left": 336.81,
+          "top": 270.83,
+          "width": 31.25,
+          "height": 41.67,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #2563eb; font-size: 31.3px;\">→</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1
+        },
+        {
+          "id": "GfntMXvZKh",
+          "type": "shape",
+          "left": 368.06,
+          "top": 156.25,
+          "width": 263.89,
+          "height": 270.83,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "LdVS25GFtG",
+          "type": "text",
+          "left": 380.56,
+          "top": 172.92,
+          "width": 238.89,
+          "height": 83.33,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 14.6px;\">用户跳出</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.35
+        },
+        {
+          "id": "6SYdjKM7Xv",
+          "type": "text",
+          "left": 380.56,
+          "top": 265.62,
+          "width": 238.89,
+          "height": 78.12,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 10.4px;\">∵ 3 秒内未见内容</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "1WXM9x4DPc",
+          "type": "text",
+          "left": 631.94,
+          "top": 270.83,
+          "width": 31.25,
+          "height": 41.67,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #2563eb; font-size: 31.3px;\">→</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1
+        },
+        {
+          "id": "xk5yQcW5rc",
+          "type": "shape",
+          "left": 663.19,
+          "top": 156.25,
+          "width": 263.89,
+          "height": 270.83,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "fmM1cG2Tcz",
+          "type": "text",
+          "left": 675.69,
+          "top": 172.92,
+          "width": 238.89,
+          "height": 83.33,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 14.6px;\">转化下降</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.35
+        },
+        {
+          "id": "t6wx6IfHS7",
+          "type": "text",
+          "left": 675.69,
+          "top": 265.62,
+          "width": 238.89,
+          "height": 78.12,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 10.4px;\">∵ 漏斗顶端漏水</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "FXjTU3e3ob",
+          "type": "text",
+          "left": 72.92,
+          "top": 447.92,
+          "width": 854.17,
+          "height": 41.67,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 14.6px;\">∴ 性能优化是 ROI 最高的增长杠杆</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1.4
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "D4RQlmWaHf",
+      "elements": [
+        {
+          "id": "3FCxek0Tu6",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">画像</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "iSmBh3QJFg",
+          "type": "shape",
+          "left": 72.92,
+          "top": 83.33,
+          "width": 145.83,
+          "height": 145.83,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 100 0 A 100 100 0 1 0 100 200 A 100 100 0 1 0 100 0 Z",
+          "fixedRatio": true,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "v8daFNrRW5",
+          "type": "text",
+          "left": 72.92,
+          "top": 114.58,
+          "width": 145.83,
+          "height": 83.33,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #f5f5f3; font-size: 72.9px;\">小</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#f5f5f3",
+          "lineHeight": 1
+        },
+        {
+          "id": "cTejlDQHn7",
+          "type": "text",
+          "left": 250.0,
+          "top": 83.33,
+          "width": 677.08,
+          "height": 62.5,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">小李</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.2
+        },
+        {
+          "id": "xzqsqgrCS9",
+          "type": "text",
+          "left": 250.0,
+          "top": 145.83,
+          "width": 677.08,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 14.6px;\">中型电商运营总监</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "IKKbRlhx5R",
+          "type": "text",
+          "left": 250.0,
+          "top": 187.5,
+          "width": 677.08,
+          "height": 93.75,
+          "rotate": 0,
+          "content": "<p><strong>年龄: </strong>32</p><p><strong>城市: </strong>杭州</p><p><strong>团队: </strong>12 人</p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.5
+        },
+        {
+          "id": "IAXg7rh3Rm",
+          "type": "shape",
+          "left": 72.92,
+          "top": 333.33,
+          "width": 416.67,
+          "height": 187.5,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "HQbfoIUcL9",
+          "type": "text",
+          "left": 89.58,
+          "top": 345.83,
+          "width": 383.33,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 12.5px;\">Needs</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "29nZmRWxEs",
+          "type": "text",
+          "left": 89.58,
+          "top": 377.08,
+          "width": 383.33,
+          "height": 135.42,
+          "rotate": 0,
+          "content": "<p>· 一屏看到关键指标</p><p>· 异常自动告警</p><p>· 可下钻细节</p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.6
+        },
+        {
+          "id": "xQwp0tZm1p",
+          "type": "shape",
+          "left": 510.42,
+          "top": 333.33,
+          "width": 416.67,
+          "height": 187.5,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "eotWxCtNYd",
+          "type": "text",
+          "left": 527.08,
+          "top": 345.83,
+          "width": 383.33,
+          "height": 26.04,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #888888; font-size: 12.5px;\">Pains</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "x9HGe4DsHa",
+          "type": "text",
+          "left": 527.08,
+          "top": 377.08,
+          "width": 383.33,
+          "height": 135.42,
+          "rotate": 0,
+          "content": "<p>· 数据散落多处</p><p>· 口径常变</p><p>· 周会被催数</p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.6
+        },
+        {
+          "id": "dW4bLKDxFI",
+          "type": "text",
+          "left": 250.0,
+          "top": 286.46,
+          "width": 677.08,
+          "height": 31.25,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 11.5px;\">“我没时间看 30 个仪表盘”</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "sdtQOR4H9I",
+      "elements": [
+        {
+          "id": "BPQ84binG7",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">象限</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "dlRenUYilr",
+          "type": "text",
+          "left": 72.92,
+          "top": 62.5,
+          "width": 854.17,
+          "height": 72.92,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 37.5px;\">竞品定位</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "1aqfucSJhE",
+          "type": "shape",
+          "left": 145.83,
+          "top": 145.83,
+          "width": 625.0,
+          "height": 354.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#ffffff",
+          "opacity": 1
+        },
+        {
+          "id": "FLqozmsDPM",
+          "type": "shape",
+          "left": 145.83,
+          "top": 322.4,
+          "width": 625.0,
+          "height": 1.04,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#e5e5e5",
+          "opacity": 1
+        },
+        {
+          "id": "2zPPJcj8Ve",
+          "type": "shape",
+          "left": 457.81,
+          "top": 145.83,
+          "width": 1.04,
+          "height": 354.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 0 0 L 200 0 L 200 200 L 0 200 Z",
+          "fixedRatio": false,
+          "fill": "#e5e5e5",
+          "opacity": 1
+        },
+        {
+          "id": "ftWB6EImSA",
+          "type": "text",
+          "left": 145.83,
+          "top": 506.25,
+          "width": 312.5,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 9.4px;\">小众</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "xVENUXZiE4",
+          "type": "text",
+          "left": 458.33,
+          "top": 506.25,
+          "width": 312.5,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p style=\"text-align: right;\"><span style=\"color: #888888; font-size: 9.4px;\">主流</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "xrCVMnv2Ax",
+          "type": "text",
+          "left": 779.17,
+          "top": 145.83,
+          "width": 104.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 9.4px;\">前沿</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "ET4gl4MeHo",
+          "type": "text",
+          "left": 779.17,
+          "top": 479.17,
+          "width": 104.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 9.4px;\">保守</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        },
+        {
+          "id": "keSc0nXFqX",
+          "type": "text",
+          "left": 145.83,
+          "top": 531.25,
+          "width": 625.0,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p style=\"text-align: center;\"><strong><span style=\"color: #111111; font-size: 11.5px;\">市场占有</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "pgNVA3YPC6",
+          "type": "shape",
+          "left": 443.75,
+          "top": 166.67,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 100 0 A 100 100 0 1 0 100 200 A 100 100 0 1 0 100 0 Z",
+          "fixedRatio": true,
+          "fill": "#2563eb",
+          "opacity": 1
+        },
+        {
+          "id": "4oZRB6AiFS",
+          "type": "text",
+          "left": 477.08,
+          "top": 170.83,
+          "width": 114.58,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 9.4px;\">我们</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "mKcNUdmtbr",
+          "type": "shape",
+          "left": 693.75,
+          "top": 308.33,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 100 0 A 100 100 0 1 0 100 200 A 100 100 0 1 0 100 0 Z",
+          "fixedRatio": true,
+          "fill": "#111111",
+          "opacity": 0.7
+        },
+        {
+          "id": "GDSpFQVwec",
+          "type": "text",
+          "left": 727.08,
+          "top": 312.5,
+          "width": 114.58,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 9.4px;\">竞品 A</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "fLrlLKnwDt",
+          "type": "shape",
+          "left": 568.75,
+          "top": 237.5,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 100 0 A 100 100 0 1 0 100 200 A 100 100 0 1 0 100 0 Z",
+          "fixedRatio": true,
+          "fill": "#111111",
+          "opacity": 0.7
+        },
+        {
+          "id": "o8gHkX90i7",
+          "type": "text",
+          "left": 602.08,
+          "top": 241.67,
+          "width": 114.58,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 9.4px;\">竞品 B</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "sjr2o1QT7n",
+          "type": "shape",
+          "left": 318.75,
+          "top": 379.17,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 100 0 A 100 100 0 1 0 100 200 A 100 100 0 1 0 100 0 Z",
+          "fixedRatio": true,
+          "fill": "#111111",
+          "opacity": 0.7
+        },
+        {
+          "id": "mwbMD4vO3n",
+          "type": "text",
+          "left": 352.08,
+          "top": 383.33,
+          "width": 114.58,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 9.4px;\">竞品 C</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "xmtNvYTEY0",
+          "type": "shape",
+          "left": 193.75,
+          "top": 166.67,
+          "width": 29.17,
+          "height": 29.17,
+          "rotate": 0,
+          "viewBox": [
+            200,
+            200
+          ],
+          "path": "M 100 0 A 100 100 0 1 0 100 200 A 100 100 0 1 0 100 0 Z",
+          "fixedRatio": true,
+          "fill": "#111111",
+          "opacity": 0.7
+        },
+        {
+          "id": "y9SZ00Lw0C",
+          "type": "text",
+          "left": 227.08,
+          "top": 170.83,
+          "width": 114.58,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #111111; font-size: 9.4px;\">新晋</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111"
+        },
+        {
+          "id": "Yr07QtS0hO",
+          "type": "text",
+          "left": 72.92,
+          "top": 531.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><span style=\"color: #888888; font-size: 9.4px;\">来源：2026 H1 行业报告</span></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888"
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    },
+    {
+      "id": "E4P2Vcp6Di",
+      "elements": [
+        {
+          "id": "v9VxDtQUum",
+          "type": "text",
+          "left": 72.92,
+          "top": 31.25,
+          "width": 854.17,
+          "height": 20.83,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 11.5px;\">提问</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        },
+        {
+          "id": "GqObU0NvmG",
+          "type": "text",
+          "left": 72.92,
+          "top": 114.58,
+          "width": 208.33,
+          "height": 260.42,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 208.3px;\">?</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb",
+          "lineHeight": 1
+        },
+        {
+          "id": "EwKphNaSF4",
+          "type": "text",
+          "left": 302.08,
+          "top": 145.83,
+          "width": 625.0,
+          "height": 135.42,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #111111; font-size: 31.3px;\">如果只能保留一个指标,你会选哪一个?</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#111111",
+          "lineHeight": 1.3
+        },
+        {
+          "id": "0iA2mTynoH",
+          "type": "text",
+          "left": 302.08,
+          "top": 291.67,
+          "width": 625.0,
+          "height": 145.83,
+          "rotate": 0,
+          "content": "<p>· 从用户视角想</p><p>· 想三个月后</p><p>· 不要选虚荣指标</p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#888888",
+          "lineHeight": 1.6
+        },
+        {
+          "id": "Qgpi0syLtx",
+          "type": "text",
+          "left": 302.08,
+          "top": 458.33,
+          "width": 625.0,
+          "height": 41.67,
+          "rotate": 0,
+          "content": "<p><strong><span style=\"color: #2563eb; font-size: 14.6px;\">请在便签上写下你的答案</span></strong></p>",
+          "defaultFontName": "Arial",
+          "defaultColor": "#2563eb"
+        }
+      ],
+      "background": {
+        "type": "solid",
+        "color": "#f5f5f3"
+      }
+    }
+  ]
+}
