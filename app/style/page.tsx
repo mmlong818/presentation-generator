@@ -22,7 +22,7 @@ export default function StylePage() {
   const [brief, setBrief] = useState<BriefInput | null>(null);
   const [outline, setOutline] = useState<Outline | null>(null);
   const [script, setScript] = useState<ScriptEntry[] | null>(null);
-  const [theme, setTheme] = useState<ThemeId>('soft-warm');
+  const [theme, setTheme] = useState<ThemeId>('modern-minimal');
   const [density, setDensity] = useState<1 | 2>(1);
   const [brand, setBrand] = useState<BrandOverride | undefined>();
   const [brandDialogOpen, setBrandDialogOpen] = useState(false);
@@ -88,7 +88,7 @@ export default function StylePage() {
       }
       const data = await res.json();
       localStorage.setItem(DECK_STORAGE, JSON.stringify(data.deck));
-      router.push('/deck');
+      router.push('/edit');
     } catch (e) {
       setError(e instanceof Error ? e.message : '生成失败');
     } finally { setGenerating(false); }
@@ -122,7 +122,7 @@ export default function StylePage() {
                 className={`text-left p-4 rounded-lg border transition relative overflow-hidden ${active ? 'border-stone-900 ring-2 ring-stone-900' : 'border-stone-200 hover:border-stone-400'}`}
                 style={{ background: th.bg, color: th.text }}>
                 {th.decoration && (
-                  <div style={{ position: 'absolute', inset: 0, background: th.decoration, opacity: 0.6, pointerEvents: 'none', ...(th.id === 'risograph' || th.id === 'riso-pastel' ? { backgroundSize: '14px 14px' } : {}) }} />
+                  <div style={{ position: 'absolute', inset: 0, background: th.decoration, opacity: 0.6, pointerEvents: 'none', ...(th.id === 'risograph' ? { backgroundSize: '14px 14px' } : {}) }} />
                 )}
                 <div className="relative">
                   <div className="text-xs uppercase tracking-wider font-semibold" style={{ color: th.accent }}>{th.id}</div>

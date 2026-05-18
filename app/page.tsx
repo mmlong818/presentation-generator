@@ -17,6 +17,19 @@ interface LLMConfig {
 
 const DEFAULT_LLM: LLMConfig = { presetId: 'anthropic', model: 'claude-sonnet-4-6', apiKey: '', baseURL: '' };
 
+// Map common upstream failure modes to actionable, human language.
+function humanizeError(raw: string): string {
+  const m = raw.match(/HTTP (\d{3})/);
+  const code = m ? Number(m[1]) : null;
+  if (code === 401) return 'API key 似乎失效或写错，请重新打开"模型设置"检查。';
+  if (code === 403) return '权限不足，可能是 key 没开通这个模型。';
+  if (code === 429) return '服务商限流，1 分钟后重试或换 provider。';
+  if (code === 408 || /timeout/i.test(raw)) return '上游响应超时，可换 provider 或稍后再试。';
+  if (code && code >= 500) return '服务商出问题了，建议稍后再试或换 provider。';
+  if (/fetch|network|ECONN|ENOTFOUND/i.test(raw)) return '网络似乎不通，检查梯子 / base URL。';
+  return '可以重试一次，或在"模型设置"换个 provider。';
+}
+
 export default function Home() {
   const router = useRouter();
   const [topic, setTopic] = useState('');
@@ -31,18 +44,26 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<{ preview?: string; hint?: string } | null>(null);
   const [resumeStep, setResumeStep] = useState<'/outline' | '/script' | '/style' | null>(null);
+  const [resumeBrief, setResumeBrief] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem(LLM_STORAGE) : null;
     if (saved) { try { setLlm({ ...DEFAULT_LLM, ...JSON.parse(saved) }); } catch {} }
     fetch('/api/generate').then((r) => r.json()).then((d) => setIsLocal(!!d.local)).catch(() => {});
     // 检测未完成会话
-    const hasBrief = !!localStorage.getItem(BRIEF_STORAGE);
+    const briefRaw = localStorage.getItem(BRIEF_STORAGE);
+    const hasBrief = !!briefRaw;
     const hasOutline = !!localStorage.getItem(OUTLINE_STORAGE);
     const hasScript = !!localStorage.getItem(SCRIPT_STORAGE);
     if (hasBrief && hasOutline && hasScript) setResumeStep('/style');
     else if (hasBrief && hasOutline) setResumeStep('/script');
     else if (hasBrief) setResumeStep('/outline');
+    if (briefRaw) {
+      try {
+        const b = JSON.parse(briefRaw) as BriefInput;
+        if (b?.topic) setResumeBrief(b.topic.slice(0, 80));
+      } catch {}
+    }
   }, []);
 
   function persistLlm(next: LLMConfig) {
@@ -90,10 +111,10 @@ export default function Home() {
         throw new Error(err.error || `HTTP ${res.status}`);
       }
       const data = await res.json();
-      sessionStorage.setItem(BRIEF_STORAGE, JSON.stringify(brief));
-      sessionStorage.setItem(OUTLINE_STORAGE, JSON.stringify(data.outline));
+      localStorage.setItem(BRIEF_STORAGE, JSON.stringify(brief));
+      localStorage.setItem(OUTLINE_STORAGE, JSON.stringify(data.outline));
       // 清掉旧 script，避免老数据干扰
-      sessionStorage.removeItem(SCRIPT_STORAGE);
+      localStorage.removeItem(SCRIPT_STORAGE);
       router.push('/outline');
     } catch (e) {
       setError(e instanceof Error ? e.message : '生成失败');
@@ -103,23 +124,34 @@ export default function Home() {
   return (
     <main className="min-h-screen px-6 py-12 sm:px-12 lg:px-20 max-w-4xl mx-auto w-full">
       {resumeStep && (
-        <div className="mb-6 p-4 rounded-lg border border-amber-300 bg-amber-50 flex items-center justify-between gap-4">
-          <div className="text-sm text-amber-900">
-            <span className="font-semibold">检测到上次未完成的会话</span>
-            <span className="ml-2 text-amber-700">— 从上次中断的步骤继续？</span>
-          </div>
-          <div className="flex gap-2 shrink-0">
-            <Link href={resumeStep} className="text-sm px-4 py-2 rounded bg-amber-900 text-white font-medium hover:bg-amber-800">
-              继续上次
-            </Link>
-            <button onClick={() => {
-              localStorage.removeItem(BRIEF_STORAGE);
-              localStorage.removeItem(OUTLINE_STORAGE);
-              localStorage.removeItem(SCRIPT_STORAGE);
-              setResumeStep(null);
-            }} className="text-sm px-3 py-2 rounded border border-amber-300 text-amber-800 hover:bg-amber-100">
-              放弃
-            </button>
+        <div className="mb-6 p-4 rounded-lg border border-amber-300 bg-amber-50" role="region" aria-label="续会话">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="text-sm text-amber-900 min-w-0 flex-1">
+              <div className="font-semibold">检测到上次未完成的会话</div>
+              {resumeBrief && (
+                <div className="text-xs text-amber-700 mt-1 truncate" title={resumeBrief}>
+                  上次主题：{resumeBrief}
+                </div>
+              )}
+            </div>
+            <div className="flex gap-2 shrink-0">
+              <Link href={resumeStep} className="text-sm px-4 py-2 rounded bg-amber-900 text-white font-medium hover:bg-amber-800">
+                继续上次
+              </Link>
+              <button
+                onClick={() => {
+                  if (!confirm('确定要放弃上次未完成的会话吗？\n这会清除你写过的主题、大纲、讲稿。')) return;
+                  localStorage.removeItem(BRIEF_STORAGE);
+                  localStorage.removeItem(OUTLINE_STORAGE);
+                  localStorage.removeItem(SCRIPT_STORAGE);
+                  setResumeStep(null);
+                  setResumeBrief(null);
+                }}
+                className="text-sm px-3 py-2 rounded border border-amber-300 text-amber-800 hover:bg-amber-100"
+              >
+                放弃
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -130,9 +162,22 @@ export default function Home() {
           <p className="text-stone-600 mt-3 text-lg">先把演讲想清楚 — 大纲 → 讲稿 → 风格 → PPT。每步都可改。</p>
         </div>
         <div className="flex gap-2">
-          <Link href="/quick" className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap">⚡ 快速直出</Link>
-          <Link href="/history" className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap">📚 历史</Link>
-          <Link href="/preview" className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap">🎨 主题画廊</Link>
+          <Link
+            href="/quick"
+            title="跳过大纲/讲稿编辑，AI 一次性出 PPT。适合主题已经想清楚、要快速看到结果。"
+            aria-label="快速直出：跳过中间步骤，AI 一次性生成完整 PPT"
+            className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap"
+          >⚡ 快速直出</Link>
+          <Link
+            href="/history"
+            title="查看你之前生成过的 deck"
+            className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap"
+          >📚 历史</Link>
+          <Link
+            href="/edit"
+            title="打开编辑器查看最近一次的 deck"
+            className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap"
+          >✎ 编辑器</Link>
         </div>
       </header>
 
@@ -140,7 +185,7 @@ export default function Home() {
 
       <section className="space-y-6 mt-10">
         <Field label="主题" hint="一句话概括，越具体越好">
-          <input value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="例：AI 时代教育需要重新出生"
+          <input value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="例：AI 时代教育需要重新出发"
             className="w-full p-3 rounded-md border border-stone-300 bg-white focus:outline-none focus:border-stone-900" />
         </Field>
         <Field label="听众" hint="谁会坐在台下？">
@@ -152,7 +197,16 @@ export default function Home() {
             className="w-full p-3 rounded-md border border-stone-300 bg-white focus:outline-none focus:border-stone-900" />
         </Field>
         <Field label={`时长：${duration} 分钟`}>
-          <input type="range" min={5} max={60} step={5} value={duration} onChange={(e) => setDuration(Number(e.target.value))} className="w-full" />
+          <input
+            type="range" min={5} max={60} step={5}
+            value={duration}
+            onChange={(e) => setDuration(Number(e.target.value))}
+            aria-label={`演讲时长 ${duration} 分钟`}
+            className="w-full"
+          />
+          <div className="flex justify-between text-[10px] text-stone-400 mt-1 px-0.5 select-none" aria-hidden="true">
+            <span>5</span><span>15</span><span>30</span><span>45</span><span>60</span>
+          </div>
         </Field>
         <Field label="补充素材（可选）" hint="你有的故事、数据、引言、立场，AI 优先用真实素材">
           <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4}
@@ -189,9 +243,10 @@ export default function Home() {
       </section>
 
       {error && (
-        <div className="mt-4 p-4 rounded-md border border-red-300 bg-red-50">
+        <div className="mt-4 p-4 rounded-md border border-red-300 bg-red-50" role="alert" aria-live="polite">
           <div className="text-sm text-red-800 font-medium">{error}</div>
           {errorDetails?.hint && <div className="text-xs text-red-700 mt-2">💡 {errorDetails.hint}</div>}
+          <div className="text-xs text-red-700 mt-2">{humanizeError(error)}</div>
           {errorDetails?.preview && (
             <details className="mt-2">
               <summary className="text-xs text-red-700 cursor-pointer underline">查看 AI 返回内容</summary>
@@ -254,6 +309,15 @@ function LLMDialog({ initial, isLocal, onClose, onSave }: {
   const [cfg, setCfg] = useState<LLMConfig>(initial);
   const presets = PROVIDER_PRESETS.filter((p) => isLocal || !p.localOnly);
   const preset = presets.find((p) => p.id === cfg.presetId) ?? presets[0];
+
+  // ESC closes the dialog (keyboard a11y).
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
 
   function pickPreset(id: string) {
     const p = presets.find((x) => x.id === id);

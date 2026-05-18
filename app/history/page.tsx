@@ -22,11 +22,14 @@ export default function HistoryPage() {
   }, []);
 
   function open(item: HistoryItem) {
-    sessionStorage.setItem(DECK_STORAGE, JSON.stringify(item.deck));
-    router.push('/deck');
+    localStorage.setItem(DECK_STORAGE, JSON.stringify(item.deck));
+    router.push('/edit');
   }
 
   function remove(id: string) {
+    const target = items.find((x) => x.id === id);
+    const label = target ? `"${target.deck.title.slice(0, 30)}"` : '这条记录';
+    if (!confirm(`删除 ${label}？此操作不可撤销。`)) return;
     const next = items.filter((x) => x.id !== id);
     setItems(next);
     localStorage.setItem(HISTORY_KEY, JSON.stringify(next));

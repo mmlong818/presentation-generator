@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from .decorations import decorate as _decorate
 from .geometry import PPTIST_H, PPTIST_W
 from .ids import nano
 from .layouts import LAYOUTS
@@ -18,7 +19,8 @@ def deck_to_pptist(deck: dict[str, Any]) -> dict[str, Any]:
     Returns:
         A PPTist-compatible presentation JSON dict.
     """
-    theme = FlatTheme.from_theme_id(deck.get("theme", "modern-minimal"))
+    theme_id = deck.get("theme", "modern-minimal")
+    theme = FlatTheme.from_theme_id(theme_id)
     bg = {"type": "solid", "color": theme.bg}
     slides_in: list[dict] = deck.get("slides", [])
     slides_out: list[dict] = []
@@ -28,10 +30,12 @@ def deck_to_pptist(deck: dict[str, Any]) -> dict[str, Any]:
     for n, s in enumerate(slides_in, start=1):
         layout_type = s.get("type", "")
         fn = LAYOUTS.get(layout_type)
-        elements = fn(s, theme, n, total) if fn else _unknown(s, theme, n, total)
+        content_elements = fn(s, theme, n, total) if fn else _unknown(s, theme, n, total)
+        # Decorations may prepend background shapes AND splice heading echoes.
+        decorated = _decorate(theme_id, layout_type, theme, content_elements, n, total)
         slide: dict[str, Any] = {
             "id": nano(),
-            "elements": elements,
+            "elements": decorated,
             "background": bg,
         }
         if (entry := script_by_index.get(n)) and (text := entry.get("text")):

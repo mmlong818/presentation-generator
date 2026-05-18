@@ -87,7 +87,7 @@ export default function QuickPage() {
       const deck: Deck = data.deck;
       localStorage.setItem(DECK_STORAGE, JSON.stringify(deck));
       pushToHistory(deck);
-      router.push('/deck');
+      router.push('/edit');
     } catch (e) {
       setError(e instanceof Error ? e.message : '生成失败');
     } finally {
