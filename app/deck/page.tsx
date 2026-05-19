@@ -7,14 +7,13 @@ import { useEditorStore } from '@/lib/editor/store'
 import { deckToEditor } from '@/lib/editor/compose'
 import type { Deck } from '@/lib/types'
 
-// Konva needs `window`; lazy-load these client-only.
 const SlideCanvas = dynamic(() => import('@/components/editor/SlideCanvas'), { ssr: false })
 const SlideThumbnail = dynamic(() => import('@/components/editor/SlideThumbnail'), { ssr: false })
+const Inspector = dynamic(() => import('@/components/editor/Inspector'), { ssr: false })
 
 const DECK_STORAGE = 'pg_last_deck'
-const CANVAS_W = 1920
 
-/** Minimal hand-crafted fixtures for testing individual layouts visually. */
+/** Hand-crafted fixtures for visual layout testing (no AI required). */
 function makeFixtureDeck(name: string, themeOverride?: Deck['theme'] | null): Deck {
   const theme: Deck['theme'] = themeOverride ?? 'modern-minimal'
   const base: Omit<Deck, 'slides'> = {
@@ -26,165 +25,122 @@ function makeFixtureDeck(name: string, themeOverride?: Deck['theme'] | null): De
     createdAt: new Date().toISOString(),
   }
   if (name === 'cover') {
-    return {
-      ...base,
-      slides: [{
-        type: 'cover',
-        eyebrow: 'A TALK · 2026',
-        title: '如果 AI 已经会做所有作业，我们为什么还要教孩子做作业？',
-        highlight: '为什么还要',
-        subtitle: '一场关于教育的紧急对话',
-      }],
-    }
+    return { ...base, slides: [{
+      type: 'cover',
+      eyebrow: 'A TALK · 2026',
+      title: '如果 AI 已经会做所有作业，我们为什么还要教孩子做作业？',
+      highlight: '为什么还要',
+      subtitle: '一场关于教育的紧急对话',
+    }] }
   }
   if (name === 'statement') {
-    return {
-      ...base,
-      slides: [{
-        type: 'statement',
-        title: 'AI 不会让孩子失业，会让没学会用 AI 的孩子失业。',
-        highlight: ['失业'],
-        align: 'center',
-      }],
-    }
+    return { ...base, slides: [{
+      type: 'statement',
+      title: 'AI 不会让孩子失业，会让没学会用 AI 的孩子失业。',
+      highlight: ['失业'],
+      align: 'center',
+    }] }
   }
   if (name === 'argument') {
-    return {
-      ...base,
-      slides: [{
-        type: 'argument',
-        eyebrow: '三个事实',
-        heading: '为什么现在必须谈这件事',
-        highlight: '现在',
-        points: [
-          '市场窗口期短，今年错过明年就被锁死',
-          '技术成熟度刚好够用，再等就是落后',
-          '团队能力匹配，现在做最不挣扎',
-        ],
-      }],
-    }
+    return { ...base, slides: [{
+      type: 'argument', eyebrow: '三个事实', heading: '为什么现在必须谈这件事',
+      highlight: '现在',
+      points: [
+        '市场窗口期短，今年错过明年就被锁死',
+        '技术成熟度刚好够用，再等就是落后',
+        '团队能力匹配，现在做最不挣扎',
+      ],
+    }] }
   }
   if (name === 'process') {
-    return {
-      ...base,
-      slides: [{
-        type: 'process',
-        eyebrow: '执行三步',
-        heading: '从想法到落地，只需要三步',
-        steps: [
-          { title: '观察现状', desc: '走出去看真实用户场景，避开自我臆测' },
-          { title: '提出假设', desc: '把直觉写成可验证的命题，限定边界条件' },
-          { title: '验证迭代', desc: '最小可行原型 → 真实反馈 → 决策保留或调整' },
-        ],
-      }],
-    }
+    return { ...base, slides: [{
+      type: 'process', eyebrow: '执行三步', heading: '从想法到落地，只需要三步',
+      steps: [
+        { title: '观察现状', desc: '走出去看真实用户场景，避开自我臆测' },
+        { title: '提出假设', desc: '把直觉写成可验证的命题，限定边界条件' },
+        { title: '验证迭代', desc: '最小可行原型 → 真实反馈 → 决策保留或调整' },
+      ],
+    }] }
   }
   if (name === 'process4') {
-    return {
-      ...base,
-      slides: [{
-        type: 'process',
-        eyebrow: '执行四步',
-        heading: '从想法到落地的完整路径',
-        steps: [
-          { title: '观察', desc: '走出去看用户实际行为' },
-          { title: '提案', desc: '写下可验证的假设和指标' },
-          { title: '原型', desc: '最低成本拼出可触摸版本' },
-          { title: '验证', desc: '真实环境跑数据，做去留决策' },
-        ],
-      }],
-    }
+    return { ...base, slides: [{
+      type: 'process', eyebrow: '执行四步', heading: '从想法到落地的完整路径',
+      steps: [
+        { title: '观察', desc: '走出去看用户实际行为' },
+        { title: '提案', desc: '写下可验证的假设和指标' },
+        { title: '原型', desc: '最低成本拼出可触摸版本' },
+        { title: '验证', desc: '真实环境跑数据，做去留决策' },
+      ],
+    }] }
   }
   if (name === 'quote') {
-    return {
-      ...base,
-      slides: [{
-        type: 'quote',
-        quote: '唯一持久的竞争优势，是比对手学习更快的能力。',
-        source: 'Arie de Geus',
-        highlight: '学习更快',
-      }],
-    }
+    return { ...base, slides: [{
+      type: 'quote',
+      quote: '唯一持久的竞争优势，是比对手学习更快的能力。',
+      source: 'Arie de Geus', highlight: '学习更快',
+    }] }
   }
   if (name === 'compare') {
-    return {
-      ...base,
-      slides: [{
-        type: 'compare',
-        eyebrow: '路径选择',
-        heading: '旧方式 vs 新方式',
-        left: { title: '旧方式', items: ['人工跟踪订单状态', '周级报告，结果滞后', '事后归因，难闭环'] },
-        right: { title: '新方式', items: ['自动监测全链路', '实时仪表盘可见', '因果推断 + 自动 A/B'] },
-      }],
-    }
+    return { ...base, slides: [{
+      type: 'compare', eyebrow: '路径选择', heading: '旧方式 vs 新方式',
+      left: { title: '旧方式', items: ['人工跟踪订单状态', '周级报告，结果滞后', '事后归因，难闭环'] },
+      right: { title: '新方式', items: ['自动监测全链路', '实时仪表盘可见', '因果推断 + 自动 A/B'] },
+    }] }
   }
   if (name === 'data') {
-    return {
-      ...base,
-      slides: [{
-        type: 'data',
-        eyebrow: '关键指标',
-        heading: '三个数字告诉你为什么',
-        stats: [
-          { value: '85%', label: '用户留存率', source: '内部统计 2026 Q1' },
-          { value: '3.2×', label: '效率提升' },
-          { value: '¥120万', label: '年化节省成本', source: '财务模型测算' },
-        ],
-      }],
-    }
+    return { ...base, slides: [{
+      type: 'data', eyebrow: '关键指标', heading: '三个数字告诉你为什么',
+      stats: [
+        { value: '85%', label: '用户留存率', source: '内部统计 2026 Q1' },
+        { value: '3.2×', label: '效率提升' },
+        { value: '¥120万', label: '年化节省成本', source: '财务模型测算' },
+      ],
+    }] }
   }
   if (name === 'argument5') {
-    return {
-      ...base,
-      slides: [{
-        type: 'argument',
-        eyebrow: '五个事实',
-        heading: '为什么现在必须谈这件事',
-        highlight: '现在',
-        points: [
-          '市场窗口期短，今年错过明年就被锁死',
-          '技术成熟度刚好够用，再等就是落后',
-          '团队能力匹配，现在做最不挣扎',
-          '资金成本处于历史低点，机会成本可控',
-          '竞争尚未白热化，先发者拥有差异空间',
-        ],
-      }],
-    }
+    return { ...base, slides: [{
+      type: 'argument', eyebrow: '五个事实', heading: '为什么现在必须谈这件事',
+      highlight: '现在',
+      points: [
+        '市场窗口期短，今年错过明年就被锁死',
+        '技术成熟度刚好够用，再等就是落后',
+        '团队能力匹配，现在做最不挣扎',
+        '资金成本处于历史低点，机会成本可控',
+        '竞争尚未白热化，先发者拥有差异空间',
+      ],
+    }] }
   }
-  // Unknown fixture: return a single statement slide so /deck still renders.
-  return {
-    ...base,
-    slides: [{ type: 'statement', title: `未知 fixture: ${name}` }],
-  }
+  return { ...base, slides: [{ type: 'statement', title: `未知 fixture: ${name}` }] }
 }
 
 export default function DeckPage() {
-  console.log('[deck] component render')
   const presentation = useEditorStore(s => s.presentation)
   const currentSlide = useEditorStore(s => s.currentSlide)
+  const selectedElementId = useEditorStore(s => s.selectedElementId)
   const setPresentation = useEditorStore(s => s.setPresentation)
   const setCurrentSlide = useEditorStore(s => s.setCurrentSlide)
+  const addSlide = useEditorStore(s => s.addSlide)
+  const removeSlide = useEditorStore(s => s.removeSlide)
+  const reorderSlides = useEditorStore(s => s.reorderSlides)
+  const duplicateSlide = useEditorStore(s => s.duplicateSlide)
+  const removeElement = useEditorStore(s => s.removeElement)
+  const selectElement = useEditorStore(s => s.selectElement)
   const undo = useEditorStore(s => s.undo)
   const redo = useEditorStore(s => s.redo)
   const [loadError, setLoadError] = useState<string | null>(null)
   const canvasWrapRef = useRef<HTMLDivElement>(null)
   const [canvasWidth, setCanvasWidth] = useState(960)
+  const [dragFrom, setDragFrom] = useState<number | null>(null)
 
-  // Load deck from localStorage on mount.
-  // Supports ?fixture=cover for layout-by-layout testing without running AI.
   useEffect(() => {
-    console.log('[deck] load effect running, search =', window.location.search)
     try {
       const params = new URLSearchParams(window.location.search)
       const fixture = params.get('fixture')
       const themeOverride = params.get('theme') as Deck['theme'] | null
 
       if (fixture) {
-        console.log('[deck] using fixture', fixture, themeOverride)
         const deck = makeFixtureDeck(fixture, themeOverride)
-        const ep = deckToEditor(deck)
-        console.log('[deck] composed', ep.slides.length, 'slides')
-        setPresentation(ep)
+        setPresentation(deckToEditor(deck))
         return
       }
       const raw = localStorage.getItem(DECK_STORAGE)
@@ -195,13 +151,11 @@ export default function DeckPage() {
       const deck = JSON.parse(raw) as Deck
       if (themeOverride) deck.theme = themeOverride
       setPresentation(deckToEditor(deck))
-    }
-    catch (e) {
+    } catch (e) {
       setLoadError(`deck 解析失败：${e instanceof Error ? e.message : String(e)}`)
     }
   }, [setPresentation])
 
-  // Resize observer for the canvas
   useEffect(() => {
     if (!canvasWrapRef.current) return
     const ro = new ResizeObserver(entries => {
@@ -214,29 +168,43 @@ export default function DeckPage() {
     return () => ro.disconnect()
   }, [])
 
-  // Keyboard shortcuts: Ctrl+Z / Ctrl+Y
+  // Keyboard shortcuts
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      const tag = (e.target as HTMLElement)?.tagName
+      const isFormField = tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable
       const ctrl = e.ctrlKey || e.metaKey
+
       if (ctrl && e.key.toLowerCase() === 'z' && !e.shiftKey) {
+        e.preventDefault(); undo(); return
+      }
+      if ((ctrl && e.key.toLowerCase() === 'y') || (ctrl && e.shiftKey && e.key.toLowerCase() === 'z')) {
+        e.preventDefault(); redo(); return
+      }
+      if (isFormField) return
+
+      if (e.key === 'Escape') { selectElement(null); return }
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedElementId) {
         e.preventDefault()
-        undo()
-      } else if ((ctrl && e.key.toLowerCase() === 'y') || (ctrl && e.shiftKey && e.key.toLowerCase() === 'z')) {
-        e.preventDefault()
-        redo()
+        removeElement(selectedElementId)
+      }
+      if (e.key === 'ArrowDown' && presentation && currentSlide < presentation.slides.length - 1) {
+        e.preventDefault(); setCurrentSlide(currentSlide + 1)
+      }
+      if (e.key === 'ArrowUp' && currentSlide > 0) {
+        e.preventDefault(); setCurrentSlide(currentSlide - 1)
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [undo, redo])
+  }, [undo, redo, selectedElementId, removeElement, selectElement, presentation, currentSlide, setCurrentSlide])
 
   async function handleExport() {
     if (!presentation) return
     try {
       const mod = await import('@/lib/editor/export/pptx')
       await mod.exportPPTX(presentation)
-    }
-    catch (e) {
+    } catch (e) {
       alert(`导出失败：${e instanceof Error ? e.message : String(e)}`)
     }
   }
@@ -251,30 +219,53 @@ export default function DeckPage() {
   }
 
   if (!presentation) {
-    return (
-      <main className="min-h-screen flex items-center justify-center text-stone-500">加载编辑器…</main>
-    )
+    return <main className="min-h-screen flex items-center justify-center text-stone-500">加载编辑器…</main>
   }
 
   return (
     <div className="flex h-screen bg-stone-100">
       {/* Left sidebar: slide list */}
-      <aside className="w-[220px] border-r border-stone-200 bg-white overflow-y-auto flex flex-col">
+      <aside className="w-[230px] border-r border-stone-200 bg-white overflow-y-auto flex flex-col">
         <header className="p-3 border-b border-stone-200 flex items-center gap-2 text-sm">
           <Link href="/" className="text-stone-600 hover:text-stone-900">←</Link>
-          <span className="font-semibold truncate" title={presentation.title}>{presentation.title}</span>
+          <span className="font-semibold truncate flex-1" title={presentation.title}>{presentation.title}</span>
         </header>
+        <div className="p-2 border-b border-stone-200 flex items-center gap-1">
+          <button onClick={() => addSlide()}
+            className="flex-1 text-xs px-2 py-1.5 rounded bg-stone-900 text-white hover:bg-stone-800"
+            title="新增空白 slide">+ 新增</button>
+          <button onClick={() => duplicateSlide(currentSlide)}
+            className="flex-1 text-xs px-2 py-1.5 rounded border border-stone-300 hover:bg-stone-50"
+            title="复制当前 slide">⎘ 复制</button>
+        </div>
         <div className="p-3 flex flex-col gap-2">
           {presentation.slides.map((slide, i) => (
-            <div key={slide.id} className="flex items-center gap-2">
-              <div className="text-xs text-stone-400 w-6 text-right shrink-0">{i + 1}</div>
+            <div
+              key={slide.id}
+              className={`flex items-stretch gap-2 group ${dragFrom === i ? 'opacity-50' : ''}`}
+              draggable
+              onDragStart={() => setDragFrom(i)}
+              onDragOver={(e) => { e.preventDefault() }}
+              onDrop={() => {
+                if (dragFrom !== null && dragFrom !== i) reorderSlides(dragFrom, i)
+                setDragFrom(null)
+              }}
+              onDragEnd={() => setDragFrom(null)}
+            >
+              <div className="text-xs text-stone-400 w-6 text-right shrink-0 pt-2 cursor-grab" title="拖拽重排">{i + 1}</div>
               <div className="flex-1 min-w-0">
                 <SlideThumbnail
                   slide={slide}
-                  width={170}
+                  width={160}
                   isActive={i === currentSlide}
                   onClick={() => setCurrentSlide(i)}
                 />
+              </div>
+              <div className="flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition">
+                <button onClick={() => removeSlide(i)}
+                  disabled={presentation.slides.length <= 1}
+                  className="text-xs w-5 h-5 rounded text-red-600 hover:bg-red-50 disabled:opacity-30 leading-none"
+                  title="删除">✕</button>
               </div>
             </div>
           ))}
@@ -284,26 +275,15 @@ export default function DeckPage() {
       {/* Center: canvas */}
       <main className="flex-1 flex flex-col">
         <header className="px-4 py-2 border-b border-stone-200 bg-white flex items-center gap-3 text-sm">
-          <span className="text-stone-500">
-            {currentSlide + 1} / {presentation.slides.length}
-          </span>
+          <span className="text-stone-500">{currentSlide + 1} / {presentation.slides.length}</span>
           <span className="text-stone-400">·</span>
           <span className="text-stone-500">主题：{presentation.theme}</span>
           <div className="ml-auto flex items-center gap-2">
-            <button
-              onClick={() => undo()}
-              className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
-              title="撤销 (Ctrl+Z)"
-            >↶ 撤销</button>
-            <button
-              onClick={() => redo()}
-              className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
-              title="重做 (Ctrl+Y)"
-            >↷ 重做</button>
-            <button
-              onClick={handleExport}
-              className="px-3 py-1.5 text-xs rounded bg-stone-900 text-white hover:bg-stone-800"
-            >导出 PPTX</button>
+            <button onClick={() => undo()} className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50" title="撤销 (Ctrl+Z)">↶ 撤销</button>
+            <button onClick={() => redo()} className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50" title="重做 (Ctrl+Y)">↷ 重做</button>
+            <Link href={`/present/${encodeURIComponent(presentation.id)}`}
+              className="px-3 py-1.5 text-xs rounded border border-stone-300 hover:bg-stone-50">▶ 演讲</Link>
+            <button onClick={handleExport} className="px-3 py-1.5 text-xs rounded bg-stone-900 text-white hover:bg-stone-800">导出 PPTX</button>
           </div>
         </header>
         <div ref={canvasWrapRef} className="flex-1 flex items-center justify-center p-6 overflow-auto">
@@ -312,6 +292,9 @@ export default function DeckPage() {
           </div>
         </div>
       </main>
+
+      {/* Right: Inspector */}
+      <Inspector />
     </div>
   )
 }

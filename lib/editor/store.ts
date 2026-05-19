@@ -24,9 +24,12 @@ interface EditorState {
   selectElement: (id: ElementId | null) => void
 
   updateElement: (id: ElementId, patch: Partial<SlideElement>) => void
+  removeElement: (id: ElementId) => void
+  addElement: (element: SlideElement) => void
   addSlide: (afterIndex?: number) => void
   removeSlide: (index: number) => void
   reorderSlides: (from: number, to: number) => void
+  duplicateSlide: (index: number) => void
 
   undo: () => void
   redo: () => void
@@ -70,6 +73,30 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     set({ presentation: next })
   },
 
+  removeElement: (id) => {
+    const state = get()
+    if (!state.presentation) return
+    const next = snapshot(state.presentation)
+    const slide = next.slides[state.currentSlide]
+    if (!slide) return
+    const before = slide.elements.length
+    slide.elements = slide.elements.filter(e => e.id !== id)
+    if (slide.elements.length === before) return
+    pushHistory(state, 'removeElement')
+    set({ presentation: next, selectedElementId: null })
+  },
+
+  addElement: (element) => {
+    const state = get()
+    if (!state.presentation) return
+    const next = snapshot(state.presentation)
+    const slide = next.slides[state.currentSlide]
+    if (!slide) return
+    slide.elements.push(element)
+    pushHistory(state, 'addElement')
+    set({ presentation: next, selectedElementId: element.id })
+  },
+
   addSlide: (afterIndex) => {
     const state = get()
     if (!state.presentation) return
@@ -108,6 +135,20 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       presentation: next,
       currentSlide: to,
     })
+  },
+
+  duplicateSlide: (index) => {
+    const state = get()
+    if (!state.presentation) return
+    const src = state.presentation.slides[index]
+    if (!src) return
+    const next = snapshot(state.presentation)
+    const cloned = snapshot({ ...state.presentation, slides: [src] } as EditorPresentation).slides[0]
+    cloned.id = `s_${Date.now()}`
+    cloned.elements = cloned.elements.map(e => ({ ...e, id: `${e.type[0]}_${Math.random().toString(36).slice(2, 9)}` }))
+    next.slides.splice(index + 1, 0, cloned)
+    pushHistory(state, 'duplicateSlide')
+    set({ presentation: next, currentSlide: index + 1 })
   },
 
   undo: () => {

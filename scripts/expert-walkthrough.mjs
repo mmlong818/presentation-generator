@@ -3,7 +3,7 @@ import { chromium } from 'playwright'
 import { mkdirSync, writeFileSync, existsSync, statSync } from 'node:fs'
 import path from 'node:path'
 
-const BASE = 'http://localhost:3001'
+const BASE = process.env.PG_BASE_URL || 'http://localhost:3010'
 const outDir = path.resolve('.realcheck/expert')
 mkdirSync(outDir, { recursive: true })
 
@@ -12,7 +12,7 @@ const fixtures = ['cover', 'statement', 'argument', 'argument5', 'process', 'pro
 const themes = ['modern-minimal', 'editorial-monocle', 'midnight-luxe', 'tech-utility', 'pitch-deck-vc', 'swiss-grid']
 
 const browser = await chromium.launch()
-const ctx = await browser.newContext({ viewport: { width: 1600, height: 1000 }, locale: 'zh-CN' })
+const ctx = await browser.newContext({ viewport: { width: 1600, height: 1000 }, locale: 'zh-CN', proxy: { server: 'http://localhost:7897', bypass: 'localhost,127.0.0.1' } })
 const page = await ctx.newPage()
 
 const pageErrors = []

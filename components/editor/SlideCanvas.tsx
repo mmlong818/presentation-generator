@@ -1,11 +1,11 @@
 'use client'
 
-import { Fragment, useMemo, useRef } from 'react'
-import { Stage, Layer, Rect, Ellipse, Line as KonvaLine } from 'react-konva'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
+import { Stage, Layer, Rect, Ellipse, Line as KonvaLine, Transformer, Image as KonvaImage } from 'react-konva'
 import type Konva from 'konva'
 import { useEditorStore } from '@/lib/editor/store'
 import { CANVAS_H, CANVAS_W } from '@/lib/editor/types'
-import type { EditorSlide, SlideElement, TextElement } from '@/lib/editor/types'
+import type { EditorSlide, ImageElement, SlideElement, TextElement } from '@/lib/editor/types'
 
 interface Props {
   /** Container width in CSS px; height auto via aspect ratio. */
@@ -15,30 +15,26 @@ interface Props {
 }
 
 /**
- * Render a single slide.
- *
- * Hybrid approach:
- * - Konva canvas: shapes (rect / ellipse / line) and the slide background.
- * - HTML overlay: text elements rendered as absolutely-positioned <div>.
- *   This gives us native browser CJK line-breaking (避头尾) and multi-color
- *   highlight spans for free, instead of fighting Konva's single-style Text.
- *
- * Both layers share the same 1920×1080 source coordinate space and the same
- * CSS scale to fit `width`. The PPTX exporter reads the same SlideElement
- * data, so preview and export stay aligned.
+ * Hybrid renderer:
+ * - Konva canvas: shapes / images / background; selection & transform
+ * - HTML overlay: text elements (native CJK line-break + highlight spans)
+ * - Edit mode: textarea overlays on top of selected text element
  */
 export default function SlideCanvas({ width, readOnly = false }: Props) {
   const presentation = useEditorStore(s => s.presentation)
   const currentSlide = useEditorStore(s => s.currentSlide)
   const selectedId = useEditorStore(s => s.selectedElementId)
   const selectElement = useEditorStore(s => s.selectElement)
+  const updateElement = useEditorStore(s => s.updateElement)
   const stageRef = useRef<Konva.Stage>(null)
+  const trRef = useRef<Konva.Transformer>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
 
   const slide = presentation?.slides[currentSlide]
   const scale = width / CANVAS_W
   const height = CANVAS_H * scale
 
-  // Sort elements by z (default 0) so layering is preserved between the
+  // Sort elements by z (default 0) so layering stays consistent across the
   // shape layer (Konva) and the text overlay (HTML).
   const sorted = useMemo(() => {
     if (!slide) return []
@@ -50,6 +46,32 @@ export default function SlideCanvas({ width, readOnly = false }: Props) {
     }).map(p => p.el)
   }, [slide])
 
+  // Attach transformer to the currently selected shape/image node
+  useEffect(() => {
+    if (readOnly) return
+    const stage = stageRef.current
+    const tr = trRef.current
+    if (!stage || !tr) return
+    if (!selectedId) {
+      tr.nodes([])
+      tr.getLayer()?.batchDraw()
+      return
+    }
+    const node = stage.findOne(`#${cssId(selectedId)}`)
+    if (node) {
+      tr.nodes([node])
+      tr.getLayer()?.batchDraw()
+    } else {
+      tr.nodes([])
+      tr.getLayer()?.batchDraw()
+    }
+  }, [selectedId, readOnly, sorted])
+
+  // Clear editing if selection changes
+  useEffect(() => {
+    if (selectedId !== editingId) setEditingId(null)
+  }, [selectedId, editingId])
+
   if (!slide) {
     return (
       <div style={{ width, height, background: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
@@ -58,7 +80,7 @@ export default function SlideCanvas({ width, readOnly = false }: Props) {
     )
   }
 
-  const shapes = sorted.filter(e => e.type !== 'text')
+  const shapes = sorted.filter((e): e is Exclude<SlideElement, TextElement> => e.type !== 'text')
   const texts = sorted.filter((e): e is TextElement => e.type === 'text')
 
   return (
@@ -71,7 +93,10 @@ export default function SlideCanvas({ width, readOnly = false }: Props) {
         scale={{ x: scale, y: scale }}
         onMouseDown={(e) => {
           if (readOnly) return
-          if (e.target === e.target.getStage()) selectElement(null)
+          if (e.target === e.target.getStage()) {
+            selectElement(null)
+            setEditingId(null)
+          }
         }}
       >
         <Layer>
@@ -83,8 +108,25 @@ export default function SlideCanvas({ width, readOnly = false }: Props) {
               isSelected={el.id === selectedId}
               readOnly={readOnly}
               onSelect={selectElement}
+              onTransformEnd={(patch) => updateElement(el.id, patch)}
             />
           ))}
+          {!readOnly && (
+            <Transformer
+              ref={trRef}
+              rotateEnabled
+              keepRatio={false}
+              borderStroke="#2563eb"
+              borderStrokeWidth={2}
+              anchorStroke="#2563eb"
+              anchorFill="#ffffff"
+              anchorSize={10}
+              boundBoxFunc={(_, newBox) => {
+                if (newBox.width < 20 || newBox.height < 20) return _
+                return newBox
+              }}
+            />
+          )}
         </Layer>
       </Stage>
 
@@ -104,8 +146,15 @@ export default function SlideCanvas({ width, readOnly = false }: Props) {
             key={el.id}
             el={el}
             isSelected={el.id === selectedId}
+            isEditing={el.id === editingId}
             readOnly={readOnly}
             onSelect={selectElement}
+            onStartEdit={() => setEditingId(el.id)}
+            onEndEdit={(nextText) => {
+              setEditingId(null)
+              if (nextText !== el.text) updateElement(el.id, { text: nextText })
+            }}
+            onDragEnd={(patch) => updateElement(el.id, patch)}
           />
         ))}
       </div>
@@ -113,35 +162,60 @@ export default function SlideCanvas({ width, readOnly = false }: Props) {
   )
 }
 
+// Konva ids cannot start with a number per CSS selector rules — prefix.
+function cssId(id: string) {
+  return `el_${id.replace(/[^a-zA-Z0-9_-]/g, '_')}`
+}
+
 // ─── Shape nodes ────────────────────────────────────────────────────────────
 
-function ShapeNode({ element, isSelected, readOnly, onSelect }: {
+function ShapeNode({ element, isSelected, readOnly, onSelect, onTransformEnd }: {
   element: Exclude<SlideElement, TextElement>
   isSelected: boolean
   readOnly: boolean
   onSelect: (id: string | null) => void
+  onTransformEnd: (patch: Partial<SlideElement>) => void
 }) {
-  const handleClick = readOnly ? undefined : (e: Konva.KonvaEventObject<MouseEvent>) => {
+  const handleSelect = readOnly ? undefined : (e: Konva.KonvaEventObject<MouseEvent>) => {
     e.cancelBubble = true
     onSelect(element.id)
   }
 
+  const commonDragEnd = (node: Konva.Node) => {
+    onTransformEnd({ x: node.x(), y: node.y() } as Partial<SlideElement>)
+  }
+
+  const commonTransformEnd = (node: Konva.Node) => {
+    const scaleX = node.scaleX()
+    const scaleY = node.scaleY()
+    node.scaleX(1)
+    node.scaleY(1)
+    onTransformEnd({
+      x: node.x(),
+      y: node.y(),
+      w: Math.max(20, node.width() * scaleX),
+      h: Math.max(20, node.height() * scaleY),
+      rotate: node.rotation() || undefined,
+    } as Partial<SlideElement>)
+  }
+
   if (element.type === 'rect') {
     return (
-      <Fragment>
-        <Rect
-          x={element.x} y={element.y}
-          width={element.w} height={element.h}
-          fill={element.fill}
-          stroke={element.stroke}
-          strokeWidth={element.strokeWidth}
-          cornerRadius={element.cornerRadius}
-          opacity={element.opacity ?? 1}
-          rotation={element.rotate ?? 0}
-          onMouseDown={handleClick}
-        />
-        {isSelected && <SelectionFrame x={element.x} y={element.y} w={element.w} h={element.h} />}
-      </Fragment>
+      <Rect
+        id={cssId(element.id)}
+        x={element.x} y={element.y}
+        width={element.w} height={element.h}
+        fill={element.fill}
+        stroke={element.stroke}
+        strokeWidth={element.strokeWidth}
+        cornerRadius={element.cornerRadius}
+        opacity={element.opacity ?? 1}
+        rotation={element.rotate ?? 0}
+        draggable={!readOnly && !element.locked}
+        onMouseDown={handleSelect}
+        onDragEnd={(e) => commonDragEnd(e.target)}
+        onTransformEnd={(e) => commonTransformEnd(e.target)}
+      />
     )
   }
 
@@ -149,58 +223,99 @@ function ShapeNode({ element, isSelected, readOnly, onSelect }: {
     const cx = element.x + element.w / 2
     const cy = element.y + element.h / 2
     return (
-      <Fragment>
-        <Ellipse
-          x={cx} y={cy}
-          radiusX={element.w / 2} radiusY={element.h / 2}
-          fill={element.fill}
-          stroke={element.stroke}
-          strokeWidth={element.strokeWidth}
-          opacity={element.opacity ?? 1}
-          rotation={element.rotate ?? 0}
-          onMouseDown={handleClick}
-        />
-        {isSelected && <SelectionFrame x={element.x} y={element.y} w={element.w} h={element.h} />}
-      </Fragment>
+      <Ellipse
+        id={cssId(element.id)}
+        x={cx} y={cy}
+        radiusX={element.w / 2} radiusY={element.h / 2}
+        fill={element.fill}
+        stroke={element.stroke}
+        strokeWidth={element.strokeWidth}
+        opacity={element.opacity ?? 1}
+        rotation={element.rotate ?? 0}
+        draggable={!readOnly && !element.locked}
+        onMouseDown={handleSelect}
+        onDragEnd={(e) => onTransformEnd({ x: e.target.x() - element.w / 2, y: e.target.y() - element.h / 2 })}
+        onTransformEnd={(e) => {
+          const node = e.target
+          const sx = node.scaleX(), sy = node.scaleY()
+          node.scaleX(1); node.scaleY(1)
+          const newW = Math.max(20, element.w * sx)
+          const newH = Math.max(20, element.h * sy)
+          onTransformEnd({
+            x: node.x() - newW / 2,
+            y: node.y() - newH / 2,
+            w: newW, h: newH,
+            rotate: node.rotation() || undefined,
+          })
+        }}
+      />
     )
   }
 
   if (element.type === 'line') {
     return (
       <KonvaLine
+        id={cssId(element.id)}
         points={[element.x1, element.y1, element.x2, element.y2]}
         stroke={element.stroke}
         strokeWidth={element.strokeWidth}
         opacity={element.opacity ?? 1}
-        onMouseDown={handleClick}
+        onMouseDown={handleSelect}
       />
     )
+  }
+
+  if (element.type === 'image') {
+    return <ImageNode el={element} readOnly={readOnly} onSelect={handleSelect}
+      onDragEnd={(node) => commonDragEnd(node)}
+      onTransformEnd={(node) => commonTransformEnd(node)} />
   }
 
   return null
 }
 
-function SelectionFrame({ x, y, w, h }: { x: number; y: number; w: number; h: number }) {
+function ImageNode({ el, readOnly, onSelect, onDragEnd, onTransformEnd }: {
+  el: ImageElement
+  readOnly: boolean
+  onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void
+  onDragEnd: (node: Konva.Node) => void
+  onTransformEnd: (node: Konva.Node) => void
+}) {
+  const [img, setImg] = useState<HTMLImageElement | null>(null)
+  useEffect(() => {
+    const i = new window.Image()
+    i.crossOrigin = 'anonymous'
+    i.onload = () => setImg(i)
+    i.src = el.src
+  }, [el.src])
+  if (!img) return null
   return (
-    <Rect
-      x={x - 4} y={y - 4}
-      width={w + 8} height={h + 8}
-      stroke="#2563eb"
-      strokeWidth={2}
-      dash={[6, 4]}
-      fill="transparent"
-      listening={false}
+    <KonvaImage
+      id={cssId(el.id)}
+      image={img}
+      x={el.x} y={el.y}
+      width={el.w} height={el.h}
+      opacity={el.opacity ?? 1}
+      rotation={el.rotate ?? 0}
+      draggable={!readOnly && !el.locked}
+      onMouseDown={onSelect}
+      onDragEnd={(e) => onDragEnd(e.target)}
+      onTransformEnd={(e) => onTransformEnd(e.target)}
     />
   )
 }
 
 // ─── Text overlay (HTML, browser-native typography) ─────────────────────────
 
-function TextOverlay({ el, isSelected, readOnly, onSelect }: {
+function TextOverlay({ el, isSelected, isEditing, readOnly, onSelect, onStartEdit, onEndEdit, onDragEnd }: {
   el: TextElement
   isSelected: boolean
+  isEditing: boolean
   readOnly: boolean
   onSelect: (id: string | null) => void
+  onStartEdit: () => void
+  onEndEdit: (nextText: string) => void
+  onDragEnd: (patch: Partial<SlideElement>) => void
 }) {
   const fontWeight = typeof el.fontWeight === 'number'
     ? el.fontWeight
@@ -209,18 +324,89 @@ function TextOverlay({ el, isSelected, readOnly, onSelect }: {
     : 400
   const italic = el.fontStyle === 'italic'
 
-  // Build the inner content: split into 3 spans if a highlight substring exists.
+  const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null)
+  const [dragOffset, setDragOffset] = useState<{ dx: number; dy: number }>({ dx: 0, dy: 0 })
+
+  function onMouseDown(e: React.MouseEvent) {
+    if (readOnly || isEditing) return
+    e.stopPropagation()
+    onSelect(el.id)
+    dragRef.current = { startX: e.clientX, startY: e.clientY, origX: el.x, origY: el.y }
+    const onMove = (ev: MouseEvent) => {
+      if (!dragRef.current) return
+      // Scale screen px → canvas px via parent's transform scale.
+      const parent = (e.currentTarget as HTMLElement)?.parentElement as HTMLElement | null
+      const sm = parent ? getCanvasScale(parent) : 1
+      const dx = (ev.clientX - dragRef.current.startX) / sm
+      const dy = (ev.clientY - dragRef.current.startY) / sm
+      setDragOffset({ dx, dy })
+    }
+    const onUp = (ev: MouseEvent) => {
+      if (!dragRef.current) return
+      const parent = document.querySelector('[aria-label="text-overlay"]') as HTMLElement | null
+      const sm = parent ? getCanvasScale(parent) : 1
+      const dx = (ev.clientX - dragRef.current.startX) / sm
+      const dy = (ev.clientY - dragRef.current.startY) / sm
+      dragRef.current = null
+      setDragOffset({ dx: 0, dy: 0 })
+      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
+        onDragEnd({ x: el.x + dx, y: el.y + dy })
+      }
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onUp)
+    }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+  }
+
+  // Inline edit mode: textarea overlay with same typography
+  if (isEditing) {
+    return (
+      <textarea
+        autoFocus
+        defaultValue={el.text}
+        onBlur={(e) => onEndEdit(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') { e.preventDefault(); onEndEdit(el.text) }
+          if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+            e.preventDefault()
+            onEndEdit((e.target as HTMLTextAreaElement).value)
+          }
+        }}
+        style={{
+          position: 'absolute',
+          left: el.x, top: el.y, width: el.w, height: el.h,
+          fontFamily: el.fontFamily,
+          fontSize: el.fontSize,
+          fontWeight,
+          fontStyle: italic ? 'italic' : 'normal',
+          color: el.color,
+          textAlign: el.align ?? 'left',
+          lineHeight: el.lineHeight ?? 1.2,
+          letterSpacing: el.letterSpacing ? `${el.letterSpacing}em` : undefined,
+          background: 'rgba(255,255,255,0.9)',
+          outline: '2px solid #2563eb',
+          outlineOffset: 0,
+          border: 'none',
+          padding: 0,
+          margin: 0,
+          resize: 'none',
+          overflow: 'hidden',
+          pointerEvents: 'auto',
+        }}
+      />
+    )
+  }
+
   const inner = renderWithHighlight(el)
 
   return (
     <div
-      onMouseDown={readOnly ? undefined : (e) => {
-        e.stopPropagation()
-        onSelect(el.id)
-      }}
+      onMouseDown={onMouseDown}
+      onDoubleClick={readOnly ? undefined : (e) => { e.stopPropagation(); onStartEdit() }}
       style={{
         position: 'absolute',
-        left: el.x, top: el.y, width: el.w, height: el.h,
+        left: el.x + dragOffset.dx, top: el.y + dragOffset.dy, width: el.w, height: el.h,
         fontFamily: el.fontFamily,
         fontSize: el.fontSize,
         fontWeight,
@@ -229,7 +415,6 @@ function TextOverlay({ el, isSelected, readOnly, onSelect }: {
         textAlign: el.align ?? 'left',
         lineHeight: el.lineHeight ?? 1.2,
         letterSpacing: el.letterSpacing ? `${el.letterSpacing}em` : undefined,
-        // Native CJK line-breaking + avoid-leading-punctuation rules.
         lineBreak: 'strict',
         wordBreak: 'normal',
         overflowWrap: 'break-word',
@@ -238,7 +423,7 @@ function TextOverlay({ el, isSelected, readOnly, onSelect }: {
         transform: el.rotate ? `rotate(${el.rotate}deg)` : undefined,
         transformOrigin: el.rotate ? 'center' : undefined,
         pointerEvents: readOnly ? 'none' : 'auto',
-        cursor: readOnly ? 'default' : 'text',
+        cursor: readOnly ? 'default' : 'move',
         userSelect: 'none',
         outline: isSelected ? '2px dashed #2563eb' : undefined,
         outlineOffset: 4,
@@ -247,6 +432,12 @@ function TextOverlay({ el, isSelected, readOnly, onSelect }: {
       {inner}
     </div>
   )
+}
+
+function getCanvasScale(parent: HTMLElement): number {
+  const t = parent.style.transform || ''
+  const m = /scale\(([\d.]+)\)/.exec(t)
+  return m ? parseFloat(m[1]) : 1
 }
 
 function renderWithHighlight(el: TextElement): React.ReactNode {
