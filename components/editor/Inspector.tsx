@@ -1,7 +1,8 @@
 'use client'
 
 import { useEditorStore } from '@/lib/editor/store'
-import type { SlideElement, TextElement } from '@/lib/editor/types'
+import { useState } from 'react'
+import type { ElementAnimationKind, ImageElement, SlideElement, TextElement } from '@/lib/editor/types'
 
 const PRESET_COLORS = ['#0a0a0a', '#525252', '#1f6feb', '#ef4444', '#f59e0b', '#10b981', '#a855f7', '#ec4899', '#ffffff']
 
@@ -55,6 +56,8 @@ export default function Inspector() {
 
       {element.type === 'text' && <TextControls element={element} onChange={(p) => updateElement(element.id, p)} />}
 
+      {element.type === 'image' && <ImageControls element={element} onChange={(p) => updateElement(element.id, p as any)} />}
+
       {(element.type === 'rect' || element.type === 'ellipse') && (
         <Section title="填充 / 描边">
           <ColorPicker label="填充" value={(element as any).fill ?? '#000000'} onChange={(c) => updateElement(element.id, { fill: c } as Partial<SlideElement>)} />
@@ -72,7 +75,90 @@ export default function Inspector() {
           className="w-full" />
         <div className="text-xs text-stone-500 text-right">{Math.round((element.opacity ?? 1) * 100)}%</div>
       </Section>
+
+      <Section title="入场动画 (演讲模式)">
+        <select value={element.animation?.kind ?? 'none'}
+          onChange={(e) => {
+            const kind = e.target.value as ElementAnimationKind
+            if (kind === 'none') updateElement(element.id, { animation: undefined })
+            else updateElement(element.id, { animation: { ...(element.animation ?? {}), kind } })
+          }}
+          className="w-full text-xs px-2 py-1.5 border border-stone-300 rounded">
+          <option value="none">无</option>
+          <option value="fade">淡入</option>
+          <option value="slide-up">上滑</option>
+          <option value="slide-down">下滑</option>
+          <option value="slide-left">左滑</option>
+          <option value="slide-right">右滑</option>
+          <option value="scale">缩放</option>
+          <option value="zoom">放大</option>
+        </select>
+        {element.animation && (
+          <>
+            <NumInput label="延迟ms" value={element.animation.delay ?? 0}
+              onChange={(v) => updateElement(element.id, { animation: { ...element.animation!, delay: v } })} />
+            <NumInput label="时长ms" value={element.animation.duration ?? 400}
+              onChange={(v) => updateElement(element.id, { animation: { ...element.animation!, duration: v } })} />
+          </>
+        )}
+      </Section>
     </aside>
+  )
+}
+
+function ImageControls({ element, onChange }: { element: ImageElement; onChange: (p: Partial<ImageElement>) => void }) {
+  const [prompt, setPrompt] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  async function generate() {
+    setErr(null); setBusy(true)
+    try {
+      // Pull API config saved from /quick or /style.
+      const llmStr = localStorage.getItem('pg_llm_config')
+      const cfg = llmStr ? JSON.parse(llmStr) : null
+      const imgCfgStr = localStorage.getItem('pg_image_config')
+      const imgCfg = imgCfgStr ? JSON.parse(imgCfgStr) : null
+
+      const provider = imgCfg?.provider || (cfg?.presetId === 'openai' ? 'openai' : 'stub')
+      const apiKey = imgCfg?.apiKey || cfg?.apiKey
+      const res = await fetch('/api/imagine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, provider, apiKey }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`)
+      onChange({ src: data.dataUrl })
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e))
+    } finally { setBusy(false) }
+  }
+
+  return (
+    <>
+      <Section title="图片源">
+        <input value={element.src.startsWith('data:') ? '(已嵌入)' : element.src}
+          onChange={(e) => onChange({ src: e.target.value })}
+          placeholder="URL 或 data:..."
+          className="w-full px-2 py-1.5 border border-stone-300 rounded text-xs font-mono" />
+      </Section>
+      <Section title="✨ AI 生成">
+        <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)}
+          placeholder="描述要生成的图片..."
+          rows={2}
+          className="w-full px-2 py-1.5 border border-stone-300 rounded text-xs" />
+        <button onClick={generate} disabled={busy || !prompt.trim()}
+          className="w-full mt-2 text-xs px-2 py-1.5 rounded bg-stone-900 text-white hover:bg-stone-800 disabled:opacity-50">
+          {busy ? '生成中…' : '生成并替换'}
+        </button>
+        {err && <div className="text-xs text-red-600 mt-2">{err}</div>}
+        <div className="text-xs text-stone-400 mt-2 leading-relaxed">
+          provider 默认 stub（占位 SVG）。配置真实 provider：在 localStorage 设
+          <code className="bg-stone-100 px-1">pg_image_config = {'{"provider":"fal","apiKey":"..."}'}</code>
+        </div>
+      </Section>
+    </>
   )
 }
 

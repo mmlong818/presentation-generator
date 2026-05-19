@@ -516,3 +516,30 @@ export const THEMES: Record<ThemeId, ThemeTokens> = {
     paletteRule: 'block-border',
   },
 };
+
+/**
+ * Curated set of 12 themes shown in pickers. Other themes stay in `THEMES`
+ * for backward compatibility with existing decks but are hidden from new UI
+ * to reduce decision fatigue.
+ *
+ * Selection rule: every visible theme has a distinct typographic and color
+ * personality. Themes with high overlap are hidden until they earn back a slot.
+ */
+export const VISIBLE_THEMES: ThemeId[] = [
+  'modern-minimal',
+  'editorial-monocle',
+  'academic-paper',
+  'midnight-luxe',
+  'swiss-grid',
+  'tech-utility',
+  'blueprint',
+  'cyberpunk-neon',
+  'brutalist-mono',
+  'pop-magazine',
+  'risograph',
+  'glassmorphism',
+];
+
+export function visibleThemes() {
+  return VISIBLE_THEMES.map(id => THEMES[id]).filter(Boolean);
+}

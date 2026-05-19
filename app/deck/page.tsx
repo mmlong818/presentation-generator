@@ -12,6 +12,7 @@ const SlideCanvas = dynamic(() => import('@/components/editor/SlideCanvas'), { s
 const SlideThumbnail = dynamic(() => import('@/components/editor/SlideThumbnail'), { ssr: false })
 const Inspector = dynamic(() => import('@/components/editor/Inspector'), { ssr: false })
 const LayoutPicker = dynamic(() => import('@/components/editor/LayoutPicker'), { ssr: false })
+const IconPicker = dynamic(() => import('@/components/editor/IconPicker'), { ssr: false })
 
 const DECK_STORAGE = 'pg_last_deck'
 
@@ -137,6 +138,7 @@ export default function DeckPage() {
   const [canvasWidth, setCanvasWidth] = useState(960)
   const [dragFrom, setDragFrom] = useState<number | null>(null)
   const [pickerMode, setPickerMode] = useState<'insert' | 'change' | null>(null)
+  const [iconPickerOpen, setIconPickerOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -332,6 +334,9 @@ export default function DeckPage() {
           <button onClick={() => fileInputRef.current?.click()}
             className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
             title="插入图片元素">+ 图片</button>
+          <button onClick={() => setIconPickerOpen(true)}
+            className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
+            title="插入图标 (Lucide)">+ 图标</button>
           <input ref={fileInputRef} type="file" accept="image/*" hidden
             onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImageFile(f); e.target.value = '' }} />
           <div className="ml-auto flex items-center gap-2">
@@ -358,6 +363,22 @@ export default function DeckPage() {
 
       {/* Right: Inspector */}
       <Inspector />
+
+      {iconPickerOpen && (
+        <IconPicker
+          open
+          onClose={() => setIconPickerOpen(false)}
+          onPick={(svgDataUrl, name) => {
+            const el: ImageElement = {
+              id: `i_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
+              type: 'image',
+              x: 900, y: 460, w: 160, h: 160,
+              src: svgDataUrl,
+            }
+            addElement(el)
+          }}
+        />
+      )}
 
       {pickerMode && (
         <LayoutPicker

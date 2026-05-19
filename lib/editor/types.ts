@@ -30,6 +30,21 @@ interface BaseElement {
   opacity?: number
   /** When true, locked from selection / editing. */
   locked?: boolean
+  /**
+   * Entry animation played in /present mode when this element first becomes
+   * visible. Static editor preview ignores this.
+   */
+  animation?: ElementAnimation
+}
+
+export type ElementAnimationKind = 'none' | 'fade' | 'slide-up' | 'slide-down' | 'slide-left' | 'slide-right' | 'scale' | 'zoom'
+
+export interface ElementAnimation {
+  kind: ElementAnimationKind
+  /** Delay in ms before starting. Use to choreograph multi-element entrance. */
+  delay?: number
+  /** Duration in ms. Default 400. */
+  duration?: number
 }
 
 export interface TextElement extends BaseElement {

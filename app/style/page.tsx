@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FlowSteps } from '../page';
-import { THEMES } from '@/lib/themes';
+import { THEMES, visibleThemes } from '@/lib/themes';
 import type { ThemeId, BriefInput, BrandOverride, Outline, ScriptEntry } from '@/lib/types';
 
 const BRIEF_STORAGE = 'pg_pending_brief';
@@ -115,7 +115,7 @@ export default function StylePage() {
       <section className="mt-10">
         <h2 className="text-lg font-semibold mb-4">视觉风格</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {Object.values(THEMES).map((th) => {
+          {visibleThemes().map((th) => {
             const active = theme === th.id;
             return (
               <button key={th.id} type="button" onClick={() => persistTheme(th.id)}

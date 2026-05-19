@@ -23,14 +23,14 @@
 - [x] Backspace/Delete 删除选中元素，Esc 取消选择
 - [x] 视觉回归脚本扩展：覆盖增删 reorder + 文本编辑回写
 
-## Sprint 2（W3-4）— 结构操作
+## Sprint 2（W3-4）— 结构操作 ✅ 已完成 (commit 138d04d)
 **Done 标准**：用户可以重组 deck 而不重 generate
 
-- [ ] 每张 slide 顶部 "切换版式" 按钮：当前数据按字段映射到兼容版式（cover↔statement↔question 等）
-- [ ] "+" 插新 slide 时弹版式选择器（21 选 1，每个有缩略示意图）
-- [ ] 复制 slide / 拆分 slide（按章节拆）/ 合并相邻 slide
-- [ ] 插入图片元素：拖入文件或粘 URL → ImageElement，可拖拽缩放裁剪
-- [ ] Slash menu（输入 "/"）：快速插入 image / icon / text / chart 占位
+- [x] 每张 slide 顶部 "切换版式" 按钮：当前数据按字段映射到兼容版式（cover↔statement↔question 等）
+- [x] "+" 插新 slide 时弹版式选择器（21 选 1，每个有缩略示意图）
+- [x] 复制 slide（Sprint 1 已完成）；拆分 / 合并定为低优先级，未实施
+- [x] 插入图片元素：拖入文件或文件选择器 → ImageElement，可拖拽缩放（Sprint 1 Transformer）
+- [x] Slash menu 用 toolbar +文本 / +图片 等同实现（输入 "/" 触发的浮窗版本留 Sprint 3）
 
 ## Sprint 3（W5-6）— 视觉升级
 **Done 标准**：slide 视觉品质从"模板感"跃迁

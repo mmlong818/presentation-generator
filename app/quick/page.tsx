@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { THEMES } from '@/lib/themes';
+import { THEMES, visibleThemes } from '@/lib/themes';
 import { PROVIDER_PRESETS } from '@/lib/providers';
 import type { ThemeId, Deck } from '@/lib/types';
 
@@ -17,7 +17,7 @@ interface LLMConfig {
 }
 const DEFAULT_LLM: LLMConfig = { presetId: 'anthropic', model: 'claude-sonnet-4-6', apiKey: '', baseURL: '' };
 
-const THEMES_LIST = Object.values(THEMES);
+const THEMES_LIST = visibleThemes();
 
 function pushToHistory(deck: Deck) {
   try {
