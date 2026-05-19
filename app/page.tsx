@@ -174,7 +174,7 @@ export default function Home() {
             className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap"
           >📚 历史</Link>
           <Link
-            href="/edit"
+            href="/deck"
             title="打开编辑器查看最近一次的 deck"
             className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap"
           >✎ 编辑器</Link>

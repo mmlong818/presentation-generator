@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": false,
   "description": "把一个想法变成一场可放映的演讲。20 主题 × 21 版式 × 9 LLM provider，AI 生成结构化幻灯片 + 讲稿。",
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "keywords": [
     "ai", "presentation", "slides", "deck", "ppt",
     "claude", "openai", "deepseek", "llm",

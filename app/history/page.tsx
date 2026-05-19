@@ -23,7 +23,7 @@ export default function HistoryPage() {
 
   function open(item: HistoryItem) {
     localStorage.setItem(DECK_STORAGE, JSON.stringify(item.deck));
-    router.push('/edit');
+    router.push('/deck');
   }
 
   function remove(id: string) {

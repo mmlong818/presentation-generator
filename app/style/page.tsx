@@ -88,7 +88,7 @@ export default function StylePage() {
       }
       const data = await res.json();
       localStorage.setItem(DECK_STORAGE, JSON.stringify(data.deck));
-      router.push('/edit');
+      router.push('/deck');
     } catch (e) {
       setError(e instanceof Error ? e.message : '生成失败');
     } finally { setGenerating(false); }
