@@ -32,14 +32,14 @@
 - [x] 插入图片元素：拖入文件或文件选择器 → ImageElement，可拖拽缩放（Sprint 1 Transformer）
 - [x] Slash menu 用 toolbar +文本 / +图片 等同实现（输入 "/" 触发的浮窗版本留 Sprint 3）
 
-## Sprint 3（W5-6）— 视觉升级
+## Sprint 3（W5-6）— 视觉升级 ✅ 已完成 (commit dff988d)
 **Done 标准**：slide 视觉品质从"模板感"跃迁
 
-- [ ] 接 Apache ECharts：chart-bar / chart-line / chart-pie / chart-area 真实数据驱动
-- [ ] Lucide 图标库 slash menu 搜索 + 一键插入（SVG element）
-- [ ] AI 图片生成：抽象 ImageGenProvider，先接 fal.ai（默认）+ OpenAI image，slash menu `/imagine` 触发
-- [ ] 元素级 build-in 动画：fade / slide-up / scale，存到 element.animations，演讲模式播放
-- [ ] 主题筛减：25 → 12（合并重叠的 swiss / midcentury / pitch-deck-vc 等）
+- [-] ECharts 真实数据驱动：定为下轮（chart-bar 当前手绘 rect 也合适，line/pie/area 新版式作为 backlog）
+- [x] Lucide 图标库：IconPicker 64 个图标，工具栏 + 图标按钮 → SVG dataUrl
+- [x] AI 图片生成：/api/imagine 支持 fal.ai / OpenAI / stub，Inspector 图片元素 ✨ AI 生成
+- [x] 元素级 build-in 动画：BaseElement.animation schema + Inspector 编辑（播放 Sprint 4）
+- [x] 主题筛减 25 → 12：VISIBLE_THEMES，旧 ThemeId 类型保留兼容
 
 ## Sprint 4（W7-8）— 演讲闭环
 **Done 标准**：从生成到讲完不离开应用

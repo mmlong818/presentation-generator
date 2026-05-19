@@ -12,6 +12,8 @@ interface Props {
   width: number
   /** Disable selection when used purely for preview. */
   readOnly?: boolean
+  /** Optional override: render this slide instead of store.currentSlide. */
+  slide?: EditorSlide
 }
 
 /**
@@ -20,7 +22,7 @@ interface Props {
  * - HTML overlay: text elements (native CJK line-break + highlight spans)
  * - Edit mode: textarea overlays on top of selected text element
  */
-export default function SlideCanvas({ width, readOnly = false }: Props) {
+export default function SlideCanvas({ width, readOnly = false, slide: slideOverride }: Props) {
   const presentation = useEditorStore(s => s.presentation)
   const currentSlide = useEditorStore(s => s.currentSlide)
   const selectedId = useEditorStore(s => s.selectedElementId)
@@ -30,7 +32,7 @@ export default function SlideCanvas({ width, readOnly = false }: Props) {
   const trRef = useRef<Konva.Transformer>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
 
-  const slide = presentation?.slides[currentSlide]
+  const slide = slideOverride ?? presentation?.slides[currentSlide]
   const scale = width / CANVAS_W
   const height = CANVAS_H * scale
 
