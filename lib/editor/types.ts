@@ -7,7 +7,7 @@
 // 坐标系：源 1920×1080 像素。Konva 渲染时按容器宽度等比缩放；pptxgenjs
 // 导出时按 13.333 × 7.5 英寸映射。位置 / 尺寸 / 字号一切都在 1920×1080 空间内。
 
-import type { ThemeId } from '../types'
+import type { Slide, ThemeId } from '../types'
 
 export type ElementId = string
 
@@ -97,6 +97,13 @@ export interface EditorSlide {
   elements: SlideElement[]
   /** Speaker notes — preserved from deck.script for the matching slide index. */
   notes?: string
+  /**
+   * Original deck slide payload. Kept so layout-swap can re-compose from
+   * structured data instead of inferring from positioned elements. When the
+   * user freely edits text/positions, source becomes a stale snapshot — that's
+   * acceptable for layout-swap (regenerate is expected behavior).
+   */
+  source?: Slide
 }
 
 export interface EditorPresentation {

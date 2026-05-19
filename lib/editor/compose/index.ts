@@ -19,6 +19,7 @@ export function deckToEditor(deck: Deck): EditorPresentation {
     background: theme.bg,
     elements: composeSlide(s, theme, i + 1, total),
     notes: notesByIndex.get(i + 1),
+    source: s,
   }))
 
   return {

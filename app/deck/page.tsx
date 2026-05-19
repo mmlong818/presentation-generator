@@ -5,11 +5,13 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { useEditorStore } from '@/lib/editor/store'
 import { deckToEditor } from '@/lib/editor/compose'
-import type { Deck } from '@/lib/types'
+import type { Deck, LayoutType } from '@/lib/types'
+import type { ImageElement, TextElement } from '@/lib/editor/types'
 
 const SlideCanvas = dynamic(() => import('@/components/editor/SlideCanvas'), { ssr: false })
 const SlideThumbnail = dynamic(() => import('@/components/editor/SlideThumbnail'), { ssr: false })
 const Inspector = dynamic(() => import('@/components/editor/Inspector'), { ssr: false })
+const LayoutPicker = dynamic(() => import('@/components/editor/LayoutPicker'), { ssr: false })
 
 const DECK_STORAGE = 'pg_last_deck'
 
@@ -123,7 +125,10 @@ export default function DeckPage() {
   const removeSlide = useEditorStore(s => s.removeSlide)
   const reorderSlides = useEditorStore(s => s.reorderSlides)
   const duplicateSlide = useEditorStore(s => s.duplicateSlide)
+  const insertSlideOfType = useEditorStore(s => s.insertSlideOfType)
+  const changeSlideLayout = useEditorStore(s => s.changeSlideLayout)
   const removeElement = useEditorStore(s => s.removeElement)
+  const addElement = useEditorStore(s => s.addElement)
   const selectElement = useEditorStore(s => s.selectElement)
   const undo = useEditorStore(s => s.undo)
   const redo = useEditorStore(s => s.redo)
@@ -131,6 +136,8 @@ export default function DeckPage() {
   const canvasWrapRef = useRef<HTMLDivElement>(null)
   const [canvasWidth, setCanvasWidth] = useState(960)
   const [dragFrom, setDragFrom] = useState<number | null>(null)
+  const [pickerMode, setPickerMode] = useState<'insert' | 'change' | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     try {
@@ -199,6 +206,40 @@ export default function DeckPage() {
     return () => window.removeEventListener('keydown', onKey)
   }, [undo, redo, selectedElementId, removeElement, selectElement, presentation, currentSlide, setCurrentSlide])
 
+  function handleImageFile(file: File) {
+    if (!file.type.startsWith('image/')) return
+    if (file.size > 8 * 1024 * 1024) { alert('图片过大（>8MB）'); return }
+    const reader = new FileReader()
+    reader.onload = () => {
+      const src = reader.result as string
+      const el: ImageElement = {
+        id: `i_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
+        type: 'image',
+        x: 200, y: 200, w: 800, h: 600,
+        src,
+      }
+      addElement(el)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  function handleAddText() {
+    const el: TextElement = {
+      id: `t_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
+      type: 'text',
+      x: 240, y: 480, w: 1400, h: 120,
+      text: '点击此处编辑文字',
+      fontSize: 64,
+      fontFamily: '"Inter","PingFang SC",sans-serif',
+      fontWeight: 700,
+      color: '#0a0a0a',
+      align: 'left',
+      lineHeight: 1.25,
+      role: 'body',
+    }
+    addElement(el)
+  }
+
   async function handleExport() {
     if (!presentation) return
     try {
@@ -231,12 +272,15 @@ export default function DeckPage() {
           <span className="font-semibold truncate flex-1" title={presentation.title}>{presentation.title}</span>
         </header>
         <div className="p-2 border-b border-stone-200 flex items-center gap-1">
-          <button onClick={() => addSlide()}
+          <button onClick={() => setPickerMode('insert')}
             className="flex-1 text-xs px-2 py-1.5 rounded bg-stone-900 text-white hover:bg-stone-800"
-            title="新增空白 slide">+ 新增</button>
+            title="选版式新增 slide">+ 版式</button>
+          <button onClick={() => addSlide()}
+            className="text-xs px-2 py-1.5 rounded border border-stone-300 hover:bg-stone-50"
+            title="新增空白 slide">空白</button>
           <button onClick={() => duplicateSlide(currentSlide)}
-            className="flex-1 text-xs px-2 py-1.5 rounded border border-stone-300 hover:bg-stone-50"
-            title="复制当前 slide">⎘ 复制</button>
+            className="text-xs px-2 py-1.5 rounded border border-stone-300 hover:bg-stone-50"
+            title="复制当前 slide">⎘</button>
         </div>
         <div className="p-3 flex flex-col gap-2">
           {presentation.slides.map((slide, i) => (
@@ -278,6 +322,18 @@ export default function DeckPage() {
           <span className="text-stone-500">{currentSlide + 1} / {presentation.slides.length}</span>
           <span className="text-stone-400">·</span>
           <span className="text-stone-500">主题：{presentation.theme}</span>
+          <span className="text-stone-400">·</span>
+          <button onClick={() => setPickerMode('change')}
+            className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
+            title="切换当前 slide 版式">切换版式</button>
+          <button onClick={handleAddText}
+            className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
+            title="新增文本元素">+ 文本</button>
+          <button onClick={() => fileInputRef.current?.click()}
+            className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
+            title="插入图片元素">+ 图片</button>
+          <input ref={fileInputRef} type="file" accept="image/*" hidden
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImageFile(f); e.target.value = '' }} />
           <div className="ml-auto flex items-center gap-2">
             <button onClick={() => undo()} className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50" title="撤销 (Ctrl+Z)">↶ 撤销</button>
             <button onClick={() => redo()} className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50" title="重做 (Ctrl+Y)">↷ 重做</button>
@@ -286,7 +342,14 @@ export default function DeckPage() {
             <button onClick={handleExport} className="px-3 py-1.5 text-xs rounded bg-stone-900 text-white hover:bg-stone-800">导出 PPTX</button>
           </div>
         </header>
-        <div ref={canvasWrapRef} className="flex-1 flex items-center justify-center p-6 overflow-auto">
+        <div ref={canvasWrapRef} className="flex-1 flex items-center justify-center p-6 overflow-auto"
+          onDragOver={(e) => { e.preventDefault() }}
+          onDrop={(e) => {
+            e.preventDefault()
+            const f = e.dataTransfer?.files?.[0]
+            if (f) handleImageFile(f)
+          }}
+        >
           <div style={{ width: Math.min(canvasWidth - 48, 1400), boxShadow: '0 10px 40px rgba(0,0,0,0.08)' }}>
             <SlideCanvas width={Math.min(canvasWidth - 48, 1400)} />
           </div>
@@ -295,6 +358,18 @@ export default function DeckPage() {
 
       {/* Right: Inspector */}
       <Inspector />
+
+      {pickerMode && (
+        <LayoutPicker
+          open
+          mode={pickerMode}
+          onClose={() => setPickerMode(null)}
+          onPick={(type: LayoutType) => {
+            if (pickerMode === 'insert') insertSlideOfType(currentSlide, type)
+            else changeSlideLayout(currentSlide, type)
+          }}
+        />
+      )}
     </div>
   )
 }

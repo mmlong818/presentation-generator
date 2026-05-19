@@ -12,16 +12,16 @@
 
 ---
 
-## Sprint 1（W1-2）— WYSIWYG 编辑核心
+## Sprint 1（W1-2）— WYSIWYG 编辑核心 ✅ 已完成 (commit 036c13d)
 **Done 标准**：用户能像在 PowerPoint 里改 deck
 
-- [ ] 侧栏接 `addSlide / removeSlide / reorderSlides`：每张缩略图旁出 + / − 按钮，缩略图支持 HTML5 drag-reorder
-- [ ] 顶部工具栏：新增 slide 按钮 + 版式选择 modal
-- [ ] 双击文本元素 → 进入 Tiptap 行内编辑 → onBlur 写回 store（保留 highlight 着色）
-- [ ] Konva Transformer：选中元素后显示拖拽柄 + 八向缩放
-- [ ] 右侧 Inspector 面板：选中元素后展示字号/字重/颜色/对齐 + 元素位置/大小
-- [ ] Backspace/Delete 删除选中元素，Esc 取消选择
-- [ ] 视觉回归脚本扩展：覆盖增删 reorder + 文本编辑回写
+- [x] 侧栏接 `addSlide / removeSlide / reorderSlides`：每张缩略图旁出 + / − 按钮，缩略图支持 HTML5 drag-reorder
+- [x] 顶部工具栏：+ 新增 / 复制 按钮（版式选择 modal 留 Sprint 2）
+- [x] 双击文本元素 → 进入 textarea 行内编辑 → onBlur 写回 store（保留 highlight 着色）
+- [x] Konva Transformer：选中形状/图片元素后显示拖拽柄 + 八向缩放
+- [x] 右侧 Inspector 面板：选中元素后展示字号/字重/颜色/对齐 + 元素位置/大小 + 透明度
+- [x] Backspace/Delete 删除选中元素，Esc 取消选择
+- [x] 视觉回归脚本扩展：覆盖增删 reorder + 文本编辑回写
 
 ## Sprint 2（W3-4）— 结构操作
 **Done 标准**：用户可以重组 deck 而不重 generate

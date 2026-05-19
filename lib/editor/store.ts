@@ -5,6 +5,10 @@
 
 import { create } from 'zustand'
 import type { EditorPresentation, ElementId, SlideElement } from './types'
+import type { LayoutType, Slide } from '../types'
+import { defaultSlideForType, migrateSlide } from './layouts-catalog'
+import { composeSlide } from './compose/layouts'
+import { resolveTheme } from './theme'
 
 interface HistoryEntry {
   presentation: EditorPresentation
@@ -30,6 +34,8 @@ interface EditorState {
   removeSlide: (index: number) => void
   reorderSlides: (from: number, to: number) => void
   duplicateSlide: (index: number) => void
+  insertSlideOfType: (afterIndex: number, type: LayoutType) => void
+  changeSlideLayout: (index: number, type: LayoutType) => void
 
   undo: () => void
   redo: () => void
@@ -149,6 +155,40 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     next.slides.splice(index + 1, 0, cloned)
     pushHistory(state, 'duplicateSlide')
     set({ presentation: next, currentSlide: index + 1 })
+  },
+
+  insertSlideOfType: (afterIndex, type) => {
+    const state = get()
+    if (!state.presentation) return
+    const source = defaultSlideForType(type)
+    const theme = resolveTheme(state.presentation.theme)
+    const total = state.presentation.slides.length + 1
+    const slideNo = afterIndex + 2
+    const elements = composeSlide(source, theme, slideNo, total)
+    const next = snapshot(state.presentation)
+    next.slides.splice(afterIndex + 1, 0, {
+      id: `s_${Date.now()}`,
+      background: theme.bg,
+      elements,
+      source,
+    })
+    pushHistory(state, 'insertSlideOfType')
+    set({ presentation: next, currentSlide: afterIndex + 1 })
+  },
+
+  changeSlideLayout: (index, type) => {
+    const state = get()
+    if (!state.presentation) return
+    const cur = state.presentation.slides[index]
+    if (!cur) return
+    const newSource: Slide = cur.source ? migrateSlide(cur.source, type) : defaultSlideForType(type)
+    const theme = resolveTheme(state.presentation.theme)
+    const total = state.presentation.slides.length
+    const elements = composeSlide(newSource, theme, index + 1, total)
+    const next = snapshot(state.presentation)
+    next.slides[index] = { ...next.slides[index], elements, source: newSource }
+    pushHistory(state, 'changeSlideLayout')
+    set({ presentation: next, selectedElementId: null })
   },
 
   undo: () => {
