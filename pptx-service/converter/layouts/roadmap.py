@@ -39,7 +39,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "id": nano(), "type": "text",
             "left": sx(x + 16), "top": sy(grid_top + 12),
             "width": sx(period_col_w - 32), "height": sy(header_h - 24), "rotate": 0,
-            "content": simple(p, color=theme.accent, font_size_px=sfont(24), bold=True, align="center"),
+            "content": simple(p, color=theme.accent, font_size_px=sfont(theme.caption * 1.1), bold=True, align="center"),
             "defaultFontName": theme.font_body, "defaultColor": theme.accent,
         })
     # Header underline
@@ -58,7 +58,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "id": nano(), "type": "text",
             "left": sx(grid_x), "top": sy(ly + lane_h / 2 - 30),
             "width": sx(lane_label_w - 16), "height": sy(60), "rotate": 0,
-            "content": simple(lane.get("name", ""), color=theme.text, font_size_px=sfont(24), bold=True),
+            "content": simple(lane.get("name", ""), color=theme.text, font_size_px=sfont(theme.caption * 1.1), bold=True),
             "defaultFontName": theme.font_body, "defaultColor": theme.text,
             "lineHeight": 1.3,
         })
@@ -92,7 +92,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
                 "content": simple(
                     ms.get("label", ""),
                     color=theme.bg if emph else theme.text,
-                    font_size_px=sfont(20), bold=emph,
+                    font_size_px=sfont(theme.caption * 0.9), bold=emph,
                 ),
                 "defaultFontName": theme.font_body,
                 "defaultColor": theme.bg if emph else theme.text,

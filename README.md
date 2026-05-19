@@ -108,6 +108,32 @@ pnpm start  # 默认 :3000
 
 ## License
 
-[AGPL-3.0](LICENSE) © 2026
+**[AGPL-3.0](LICENSE)** © 2025-PRESENT The Presentation Generator Authors
 
-> AGPL：你可以随便用、改、商用，但**派生版本和云服务部署也必须开源**。如果你想把本项目改造成闭源 SaaS 出售给客户，请先联系作者商讨商业授权。
+This project is licensed under the **GNU Affero General Public License v3.0**.
+
+### What this means
+
+- ✅ **Free to use, modify, and run** (personal, commercial, internal tooling)
+- ✅ **Free to charge for hosted access**（你可以卖订阅）
+- ⚠️ **Strong copyleft**: if you distribute it OR run it as a network service,
+  you MUST release the entire source — including your modifications — under AGPL-3.0
+- ⚠️ **AGPL §13 (network use)**: every user accessing the deployed app has the
+  right to receive the complete corresponding source code. Operators must surface
+  a "Source" link in the running app (footer or About page).
+- ❌ **Closed-source commercial use is NOT permitted** under this license. For
+  a proprietary / closed-source commercial license, contact the maintainer.
+
+### Third-party components
+
+This project bundles **[PPTist](https://github.com/pipipi-pikachu/PPTist)**
+(© pipipi-pikachu, AGPL-3.0) as the embedded WYSIWYG slide editor. See
+[NOTICE](NOTICE) for the full attribution of all bundled / integrated third-party
+components.
+
+### Source link
+
+Operators deploying this app must publish a link to this repository (or their
+modified fork) in the application UI so end-users can comply with AGPL §13. The
+project ships with a "Source" link in the page footer by default — do not
+remove it from production deployments.

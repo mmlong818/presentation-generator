@@ -54,7 +54,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "left": sx(360), "top": sy(820),
             "width": sx(1420), "height": sy(80),
             "rotate": 0,
-            "content": simple(f"— {source}", color=theme.muted, font_size_px=sfont(28)),
+            "content": simple(f"— {source}", color=theme.muted, font_size_px=sfont(theme.caption * 1.3)),
             "defaultFontName": theme.font_body,
             "defaultColor": theme.muted,
         })

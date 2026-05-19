@@ -50,7 +50,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "left": sx(cx + 28), "top": sy(cy + 24),
             "width": sx(cell_w - 56), "height": sy(70),
             "rotate": 0,
-            "content": simple(cell.get("label", ""), color=theme.accent if emph else theme.text, font_size_px=sfont(32), bold=True),
+            "content": simple(cell.get("label", ""), color=theme.accent if emph else theme.text, font_size_px=sfont(theme.body * 0.95), bold=True),
             "defaultFontName": theme.font_body,
             "defaultColor": theme.accent if emph else theme.text,
         })
@@ -61,7 +61,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
                 "left": sx(cx + 28), "top": sy(cy + 110),
                 "width": sx(cell_w - 56), "height": sy(cell_h - 130),
                 "rotate": 0,
-                "content": simple(desc, color=theme.muted, font_size_px=sfont(20)),
+                "content": simple(desc, color=theme.muted, font_size_px=sfont(theme.caption * 0.9)),
                 "defaultFontName": theme.font_body,
                 "defaultColor": theme.muted,
                 "lineHeight": 1.5,
@@ -79,7 +79,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
         "left": sx(grid_x), "top": sy(label_y),
         "width": sx(grid_w / 2), "height": sy(40),
         "rotate": 0,
-        "content": simple(x_ax.get("low", ""), color=theme.muted, font_size_px=sfont(20)),
+        "content": simple(x_ax.get("low", ""), color=theme.muted, font_size_px=sfont(theme.caption * 0.9)),
         "defaultFontName": theme.font_body, "defaultColor": theme.muted,
     })
     elements.append({
@@ -88,7 +88,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
         "left": sx(grid_x + grid_w / 2), "top": sy(label_y),
         "width": sx(grid_w / 2), "height": sy(40),
         "rotate": 0,
-        "content": simple(x_ax.get("high", ""), color=theme.muted, font_size_px=sfont(20), align="right"),
+        "content": simple(x_ax.get("high", ""), color=theme.muted, font_size_px=sfont(theme.caption * 0.9), align="right"),
         "defaultFontName": theme.font_body, "defaultColor": theme.muted,
     })
     # y high (top, left of grid) / y low (bottom, left of grid)
@@ -98,7 +98,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
         "left": sx(60), "top": sy(grid_y),
         "width": sx(170), "height": sy(40),
         "rotate": 0,
-        "content": simple(y_ax.get("high", ""), color=theme.muted, font_size_px=sfont(20), align="right"),
+        "content": simple(y_ax.get("high", ""), color=theme.muted, font_size_px=sfont(theme.caption * 0.9), align="right"),
         "defaultFontName": theme.font_body, "defaultColor": theme.muted,
     })
     elements.append({
@@ -107,7 +107,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
         "left": sx(60), "top": sy(grid_y + grid_h - 40),
         "width": sx(170), "height": sy(40),
         "rotate": 0,
-        "content": simple(y_ax.get("low", ""), color=theme.muted, font_size_px=sfont(20), align="right"),
+        "content": simple(y_ax.get("low", ""), color=theme.muted, font_size_px=sfont(theme.caption * 0.9), align="right"),
         "defaultFontName": theme.font_body, "defaultColor": theme.muted,
     })
 
@@ -118,7 +118,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "left": sx(140), "top": sy(1020),
             "width": sx(1640), "height": sy(50),
             "rotate": 0,
-            "content": simple(f"→ {take}", color=theme.accent, font_size_px=sfont(22), bold=True),
+            "content": simple(f"→ {take}", color=theme.accent, font_size_px=sfont(theme.caption), bold=True),
             "defaultFontName": theme.font_body, "defaultColor": theme.accent,
         })
 

@@ -31,7 +31,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
         "left": sx(140), "top": sy(120),
         "width": sx(1200), "height": sy(120),
         "rotate": 0,
-        "content": simple(slide.get("heading", ""), color=theme.text, font_size_px=sfont(64), bold=True),
+        "content": simple(slide.get("heading", ""), color=theme.text, font_size_px=sfont(theme.section * 0.9), bold=True),
         "defaultFontName": theme.font_display,
         "defaultColor": theme.text,
         "lineHeight": 1.2,
@@ -42,7 +42,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
         "left": sx(1340), "top": sy(160),
         "width": sx(440), "height": sy(60),
         "rotate": 0,
-        "content": simple(slide.get("period", ""), color=theme.muted, font_size_px=sfont(28), align="right"),
+        "content": simple(slide.get("period", ""), color=theme.muted, font_size_px=sfont(theme.caption * 1.3), align="right"),
         "defaultFontName": theme.font_body,
         "defaultColor": theme.muted,
     })
@@ -71,7 +71,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "left": sx(x + 32), "top": sy(y + 24),
             "width": sx(cell_w - 64), "height": sy(50),
             "rotate": 0,
-            "content": simple(kpi.get("label", ""), color=theme.muted, font_size_px=sfont(22), bold=True),
+            "content": simple(kpi.get("label", ""), color=theme.muted, font_size_px=sfont(theme.caption), bold=True),
             "defaultFontName": theme.font_body, "defaultColor": theme.muted,
         })
         # Value (huge)
@@ -81,7 +81,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "left": sx(x + 32), "top": sy(y + 90),
             "width": sx(cell_w - 64), "height": sy(120),
             "rotate": 0,
-            "content": simple(kpi.get("value", ""), color=theme.text, font_size_px=sfont(72), bold=True),
+            "content": simple(kpi.get("value", ""), color=theme.text, font_size_px=sfont(theme.section), bold=True),
             "defaultFontName": theme.font_display, "defaultColor": theme.text,
             "lineHeight": 1.1,
         })
@@ -117,7 +117,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "left": sx(140), "top": sy(1000),
             "width": sx(1640), "height": sy(60),
             "rotate": 0,
-            "content": simple(f"→ {take}", color=theme.accent, font_size_px=sfont(24), bold=True),
+            "content": simple(f"→ {take}", color=theme.accent, font_size_px=sfont(theme.caption * 1.1), bold=True),
             "defaultFontName": theme.font_body, "defaultColor": theme.accent,
         })
 

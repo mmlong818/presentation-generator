@@ -1,0 +1,62 @@
+Presentation Generator
+Copyright (C) 2025-PRESENT The Presentation Generator Authors
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
+License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+================================================================================
+Bundled / integrated third-party components
+================================================================================
+
+This product bundles or integrates the following third-party software. Each
+component is governed by its own license; commercial use of this project must
+comply with every bundled component's license terms.
+
+1. PPTist
+   - Source:    https://github.com/pipipi-pikachu/PPTist
+   - License:   GNU Affero General Public License v3.0 (AGPL-3.0)
+   - Copyright: © 2020-PRESENT pipipi-pikachu
+   - Usage:     Embedded as the WYSIWYG slide editor in public/pptist/.
+                Source modifications are kept in vendor/pptist-patches/
+                (or upstream fork) and are also AGPL-3.0.
+
+2. Next.js
+   - Source:    https://github.com/vercel/next.js
+   - License:   MIT
+
+3. React
+   - Source:    https://github.com/facebook/react
+   - License:   MIT
+
+4. Tailwind CSS
+   - Source:    https://github.com/tailwindlabs/tailwindcss
+   - License:   MIT
+
+5. python-pptx
+   - Source:    https://github.com/scanny/python-pptx
+   - License:   MIT
+   - Usage:     Underlies pptx-service/ native PPTX rendering.
+
+Full license texts for all bundled components are available in the respective
+source repositories and within node_modules / pip packages installed at
+build time.
+
+================================================================================
+AGPL §13 — source availability for network users
+================================================================================
+
+Because this project is licensed under AGPL-3.0 and is intended to run as a
+network-accessible application, every user interacting with it over a network
+has the right to receive the complete corresponding source code. Operators
+deploying this project MUST publish a link to the source from the running
+application (for example, a "Source" link in the page footer or About page).

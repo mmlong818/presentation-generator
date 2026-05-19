@@ -36,7 +36,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "left": sx(x + 24), "top": sy(top + 32),
             "width": sx(node_w - 48), "height": sy(160),
             "rotate": 0,
-            "content": simple(link.get("cause", ""), color=theme.text, font_size_px=sfont(28), bold=True),
+            "content": simple(link.get("cause", ""), color=theme.text, font_size_px=sfont(theme.caption * 1.3), bold=True),
             "defaultFontName": theme.font_body, "defaultColor": theme.text,
             "lineHeight": 1.35,
         })
@@ -47,7 +47,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
                 "left": sx(x + 24), "top": sy(top + 210),
                 "width": sx(node_w - 48), "height": sy(150),
                 "rotate": 0,
-                "content": simple(f"∵ {because}", color=theme.muted, font_size_px=sfont(20)),
+                "content": simple(f"∵ {because}", color=theme.muted, font_size_px=sfont(theme.caption * 0.9)),
                 "defaultFontName": theme.font_body, "defaultColor": theme.muted,
                 "lineHeight": 1.5,
             })
@@ -60,7 +60,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
                 "left": sx(ax), "top": sy(top + node_h / 2 - 40),
                 "width": sx(arrow_w), "height": sy(80),
                 "rotate": 0,
-                "content": simple("→", color=theme.accent, font_size_px=sfont(60), bold=True, align="center"),
+                "content": simple("→", color=theme.accent, font_size_px=sfont(theme.section * 0.85), bold=True, align="center"),
                 "defaultFontName": theme.font_display, "defaultColor": theme.accent,
                 "lineHeight": 1,
             })
@@ -72,7 +72,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "left": sx(140), "top": sy(top + node_h + 40),
             "width": sx(1640), "height": sy(80),
             "rotate": 0,
-            "content": simple(f"∴ {conclusion}", color=theme.accent, font_size_px=sfont(28), bold=True),
+            "content": simple(f"∴ {conclusion}", color=theme.accent, font_size_px=sfont(theme.caption * 1.3), bold=True),
             "defaultFontName": theme.font_body, "defaultColor": theme.accent,
             "lineHeight": 1.4,
         })

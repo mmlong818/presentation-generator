@@ -45,7 +45,7 @@ def _panel(
         "content": simple(
             data.get("title", ""),
             color=theme.accent if accent else theme.muted,
-            font_size_px=sfont(28),
+            font_size_px=sfont(theme.caption * 1.3),
             bold=True,
         ),
         "defaultFontName": theme.font_body,
@@ -81,7 +81,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "left": sx(140), "top": sy(60),
             "width": sx(1640), "height": sy(40),
             "rotate": 0,
-            "content": simple(eyebrow, color=theme.accent, font_size_px=sfont(22), bold=True),
+            "content": simple(eyebrow, color=theme.accent, font_size_px=sfont(theme.caption), bold=True),
             "defaultFontName": theme.font_body,
             "defaultColor": theme.accent,
         })
@@ -93,7 +93,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
         "left": sx(140), "top": sy(120),
         "width": sx(1640), "height": sy(140),
         "rotate": 0,
-        "content": simple(slide.get("heading", ""), color=theme.text, font_size_px=sfont(72), bold=True),
+        "content": simple(slide.get("heading", ""), color=theme.text, font_size_px=sfont(theme.section), bold=True),
         "defaultFontName": theme.font_display,
         "defaultColor": theme.text,
         "lineHeight": 1.3,

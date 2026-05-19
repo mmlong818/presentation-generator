@@ -26,7 +26,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
         "left": sx(140), "top": sy(590),
         "width": sx(1640), "height": sy(100),
         "rotate": 0,
-        "content": simple(slide.get("hint", ""), color=theme.muted, font_size_px=sfont(32), align="center"),
+        "content": simple(slide.get("hint", ""), color=theme.muted, font_size_px=sfont(theme.body * 0.95), align="center"),
         "defaultFontName": theme.font_body,
         "defaultColor": theme.muted,
         "lineHeight": 1.5,

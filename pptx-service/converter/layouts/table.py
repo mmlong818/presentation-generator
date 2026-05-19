@@ -55,7 +55,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "left": sx(table_x + i * col_w + 16), "top": sy(table_top + 16),
             "width": sx(col_w - 32), "height": sy(header_h - 24),
             "rotate": 0,
-            "content": simple(col.get("label", ""), color=theme.accent, font_size_px=sfont(22), bold=True, align=align),
+            "content": simple(col.get("label", ""), color=theme.accent, font_size_px=sfont(theme.caption), bold=True, align=align),
             "defaultFontName": theme.font_body, "defaultColor": theme.accent,
         })
     # Header underline
@@ -77,7 +77,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
                 "left": sx(table_x + i * col_w + 16), "top": sy(ry + 12),
                 "width": sx(col_w - 32), "height": sy(row_h - 24),
                 "rotate": 0,
-                "content": simple(val, color=theme.text, font_size_px=sfont(22), bold=emph, align=align),
+                "content": simple(val, color=theme.text, font_size_px=sfont(theme.caption), bold=emph, align=align),
                 "defaultFontName": theme.font_body, "defaultColor": theme.text,
             })
         # Row separator

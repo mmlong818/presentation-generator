@@ -15,10 +15,13 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
     title: str = slide.get("title", "")
     align = slide.get("align", "center")
     highlights: list[str] = slide.get("highlight") or []
+    pad = theme.padding
+    inner_w = 1920 - 2 * pad
 
     # Build runs honoring multiple highlight substrings (first-match each)
     runs: list[TextRun] = []
-    fs = sfont(132)
+    # Statement is the most emotionally weighted slide — push beyond hero.
+    fs = sfont(theme.hero * 1.05)
     if not highlights:
         runs = [TextRun(title, bold=True, color=theme.text, font_size_px=fs)]
     else:
@@ -37,11 +40,11 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
     return [{
         "id": nano(),
         "type": "text",
-        "left": sx(140), "top": sy(360),
-        "width": sx(1640), "height": sy(360),
+        "left": sx(pad), "top": sy(360),
+        "width": sx(inner_w), "height": sy(360),
         "rotate": 0,
         "content": paragraph(runs, align=align),
         "defaultFontName": theme.font_display,
         "defaultColor": theme.text,
-        "lineHeight": 1.2,
+        "lineHeight": 1.15,
     }]

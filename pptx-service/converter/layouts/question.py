@@ -37,7 +37,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
         "left": sx(580), "top": sy(280),
         "width": sx(1200), "height": sy(260),
         "rotate": 0,
-        "content": simple(slide.get("question", ""), color=theme.text, font_size_px=sfont(60), bold=True),
+        "content": simple(slide.get("question", ""), color=theme.text, font_size_px=sfont(theme.section * 0.85), bold=True),
         "defaultFontName": theme.font_display,
         "defaultColor": theme.text,
         "lineHeight": 1.3,
@@ -67,7 +67,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
             "left": sx(580), "top": sy(880),
             "width": sx(1200), "height": sy(80),
             "rotate": 0,
-            "content": simple(inv, color=theme.accent, font_size_px=sfont(28), bold=True),
+            "content": simple(inv, color=theme.accent, font_size_px=sfont(theme.caption * 1.3), bold=True),
             "defaultFontName": theme.font_body,
             "defaultColor": theme.accent,
         })

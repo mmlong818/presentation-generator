@@ -65,7 +65,7 @@ def build(slide: dict[str, Any], theme, n: int, total: int) -> list[dict]:
         "id": nano(), "type": "text",
         "left": sx(plot_x), "top": sy(plot_y + plot_h + 60),
         "width": sx(plot_w), "height": sy(40), "rotate": 0,
-        "content": simple(x_ax.get("label", ""), color=theme.text, font_size_px=sfont(22), bold=True, align="center"),
+        "content": simple(x_ax.get("label", ""), color=theme.text, font_size_px=sfont(theme.caption), bold=True, align="center"),
         "defaultFontName": theme.font_body, "defaultColor": theme.text,
     })
 

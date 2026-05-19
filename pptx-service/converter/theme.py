@@ -46,6 +46,12 @@ class FlatTheme:
     font_display: str
     font_body: str
     mode: str
+    # Type scale tokens (source 1920×1080 px). Layouts apply `sfont(theme.hero)` etc.
+    hero: float
+    section: float
+    body: float
+    caption: float
+    padding: float
 
     @classmethod
     def from_theme_id(cls, theme_id: str) -> "FlatTheme":
@@ -60,6 +66,11 @@ class FlatTheme:
             font_display=_stack(tc.font_display),
             font_body=_stack(tc.font_body),
             mode=tc.mode,
+            hero=tc.hero,
+            section=tc.section,
+            body=tc.body,
+            caption=tc.caption,
+            padding=tc.padding,
         )
 
     def to_pptist_theme(self) -> dict[str, object]:

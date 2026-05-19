@@ -12,6 +12,18 @@ class ThemeColors:
     font_display: str
     font_body: str
     mode: str
+    # ─── Type scale tokens (1920×1080 source px). Layouts derive sizes from these
+    # so every theme's hierarchy follows its own intent rather than one default.
+    # `hero` is the giant title (cover title, statement, big stat number).
+    # `section` is the page heading (argument, data, compare).
+    # `body` is normal text (bullets, captions of medium importance).
+    # `caption` is the smallest semantic text (eyebrow, source, hint).
+    hero: float = 132
+    section: float = 72
+    body: float = 34
+    caption: float = 22
+    # `padding` is the safe-area inset used on most non-cover layouts (left/right).
+    padding: float = 140
 
 
 def _first_font(css_stack: str) -> str:
@@ -42,17 +54,11 @@ def _first_font(css_stack: str) -> str:
 
 
 THEMES: dict[str, ThemeColors] = {
-    "soft-warm": ThemeColors(
-        bg="#f6f4ef", paper="#fffdf7", text="#2a2620", muted="#857d6e",
-        accent="#c9591f", border="#d6cfbf",
-        font_display=_first_font('"Source Han Serif SC","Noto Serif SC",Georgia,serif'),
-        font_body=_first_font('"PingFang SC","Helvetica Neue","Inter",sans-serif'),
-        mode="light",
-    ),
     "editorial-monocle": ThemeColors(
         bg="#faf8f3", paper="#ffffff", text="#0f0f0e", muted="#5e5b54",
         accent="#8a1c1c", border="#0f0f0e",
         font_display="Georgia", font_body="Georgia", mode="light",
+        hero=140,
     ),
     "modern-minimal": ThemeColors(
         bg="#f5f5f3", paper="#ffffff", text="#111111", muted="#888888",
@@ -68,56 +74,42 @@ THEMES: dict[str, ThemeColors] = {
         bg="#f0ede8", paper="#ffffff", text="#0a0a0a", muted="#555555",
         accent="#0a0a0a", border="#0a0a0a",
         font_display="Arial Black", font_body="Courier New", mode="light",
+        hero=200, section=100, body=36, caption=24, padding=100,
     ),
     "academic-paper": ThemeColors(
         bg="#fdfcf7", paper="#ffffff", text="#1a1a1a", muted="#666666",
         accent="#1a3a5c", border="#cccccc",
         font_display="Georgia", font_body="Georgia", mode="light",
+        hero=116, section=60, body=32, caption=22, padding=160,
     ),
     "midnight-luxe": ThemeColors(
         bg="#0a0a0f", paper="#13131f", text="#f0f0ff", muted="#8888aa",
         accent="#c9a84c", border="#2a2a4a",
         font_display="Georgia", font_body="Arial", mode="dark",
+        hero=156, section=72, padding=160,
     ),
     "risograph": ThemeColors(
         bg="#f5f0e8", paper="#fffef5", text="#1a1a1a", muted="#666644",
         accent="#e84040", border="#cccc88",
         font_display="Arial Black", font_body="Arial", mode="light",
-    ),
-    "kraft-paper": ThemeColors(
-        bg="#c4a882", paper="#d4b896", text="#2c1a0a", muted="#7a5535",
-        accent="#8b2500", border="#a07040",
-        font_display="Georgia", font_body="Georgia", mode="light",
+        hero=156, section=84,
     ),
     "broadcast-hud": ThemeColors(
         bg="#040810", paper="#0a1020", text="#00ff88", muted="#00aa55",
         accent="#ff4400", border="#003322",
         font_display="Courier New", font_body="Courier New", mode="dark",
+        hero=156, section=76, padding=160,
     ),
     "pastel-bauhaus": ThemeColors(
         bg="#f9f7f4", paper="#ffffff", text="#1a1a1a", muted="#888888",
         accent="#e85d26", border="#e0dcd5",
         font_display="Arial", font_body="Arial", mode="light",
+        hero=156, section=80,
     ),
     "summer-cocktail": ThemeColors(
         bg="#fff8ee", paper="#ffffff", text="#1a1a1a", muted="#888866",
         accent="#ff6b35", border="#ffe0b2",
         font_display="Arial", font_body="Arial", mode="light",
-    ),
-    "riso-pastel": ThemeColors(
-        bg="#f8f4ff", paper="#ffffff", text="#1a1a1a", muted="#8866aa",
-        accent="#cc44cc", border="#ddc0ee",
-        font_display="Arial", font_body="Arial", mode="light",
-    ),
-    "sunrise-gradient": ThemeColors(
-        bg="#fff9f0", paper="#ffffff", text="#1a1a1a", muted="#aa7744",
-        accent="#ff6600", border="#ffd0a0",
-        font_display="Arial", font_body="Arial", mode="light",
-    ),
-    "playground-block": ThemeColors(
-        bg="#f0f8ff", paper="#ffffff", text="#111111", muted="#4466aa",
-        accent="#0044ff", border="#aaccee",
-        font_display="Arial Black", font_body="Arial", mode="light",
     ),
     "tea-ceremony": ThemeColors(
         bg="#f5f2ec", paper="#faf8f3", text="#2a2419", muted="#7a6e5f",
@@ -129,20 +121,16 @@ THEMES: dict[str, ThemeColors] = {
         accent="#cc5544", border="#e0d0c0",
         font_display="Georgia", font_body="Arial", mode="light",
     ),
-    "citrus-grove": ThemeColors(
-        bg="#f8fff0", paper="#ffffff", text="#1a2a0a", muted="#668844",
-        accent="#88cc00", border="#c8e890",
-        font_display="Arial", font_body="Arial", mode="light",
-    ),
     "minimal-rainbow": ThemeColors(
         bg="#ffffff", paper="#f8f8f8", text="#111111", muted="#666666",
         accent="#4444ff", border="#eeeeee",
         font_display="Arial", font_body="Arial", mode="light",
     ),
     "pop-magazine": ThemeColors(
-        bg="#ffee00", paper="#ffffff", text="#0a0a0a", muted="#444400",
-        accent="#ff0055", border="#0a0a0a",
+        bg="#f0e8d4", paper="#ffffff", text="#1a1a1a", muted="#5a5550",
+        accent="#ff3a5a", border="#1a1a1a",
         font_display="Arial Black", font_body="Arial", mode="light",
+        hero=220, section=96, body=36, caption=24, padding=160,
     ),
 
     # ── html-ppt-skill ────────────────────────────────────────────────────────
@@ -160,6 +148,7 @@ THEMES: dict[str, ThemeColors] = {
         bg="#0b3a6f", paper="#0a3260", text="#e8f3ff", muted="#7da8cf",
         accent="#ffffff", border="#3a6090",
         font_display="Courier New", font_body="Courier New", mode="dark",
+        hero=120, section=60, body=30, caption=20,
     ),
     "catppuccin-latte": ThemeColors(
         bg="#eff1f5", paper="#ffffff", text="#4c4f69", muted="#9ca0b0",
@@ -180,6 +169,7 @@ THEMES: dict[str, ThemeColors] = {
         bg="#000000", paper="#0f0f1a", text="#f5f7ff", muted="#6b6e8a",
         accent="#ff2bd6", border="#1a0a20",
         font_display="Courier New", font_body="Arial", mode="dark",
+        hero=144,
     ),
     "dracula": ThemeColors(
         bg="#282a36", paper="#343746", text="#f8f8f2", muted="#6272a4",
@@ -195,6 +185,7 @@ THEMES: dict[str, ThemeColors] = {
         bg="#0b1024", paper="#0e1530", text="#f2f4ff", muted="#8287a8",
         accent="#7dd3fc", border="#1a2040",
         font_display="Arial", font_body="Arial", mode="dark",
+        hero=144,
     ),
     "gruvbox-dark": ThemeColors(
         bg="#282828", paper="#3c3836", text="#ebdbb2", muted="#928374",
@@ -205,6 +196,7 @@ THEMES: dict[str, ThemeColors] = {
         bg="#fef6e8", paper="#ffffff", text="#111111", muted="#666666",
         accent="#ff3d8b", border="#111111",
         font_display="Arial Black", font_body="Arial", mode="light",
+        hero=156, section=80,
     ),
     "midcentury": ThemeColors(
         bg="#f3ead8", paper="#f9f2e0", text="#201810", muted="#9a8868",
@@ -215,6 +207,7 @@ THEMES: dict[str, ThemeColors] = {
         bg="#ffffff", paper="#fafafa", text="#0c0d10", muted="#9ca1b0",
         accent="#111216", border="#e0e0e2",
         font_display="Arial", font_body="Arial", mode="light",
+        hero=132, section=64, body=36, padding=160,
     ),
     "nord": ThemeColors(
         bg="#2e3440", paper="#3b4252", text="#eceff4", muted="#7b8394",
@@ -225,6 +218,7 @@ THEMES: dict[str, ThemeColors] = {
         bg="#ffffff", paper="#fafbfc", text="#0b0d12", muted="#8b93a8",
         accent="#0070f3", border="#e0e4eb",
         font_display="Arial", font_body="Arial", mode="light",
+        hero=144, body=36,
     ),
     "retro-tv": ThemeColors(
         bg="#f5ecd7", paper="#fbf5e2", text="#2a1a08", muted="#a68656",
@@ -255,6 +249,7 @@ THEMES: dict[str, ThemeColors] = {
         bg="#ffffff", paper="#f4f4f4", text="#111111", muted="#888888",
         accent="#d6001c", border="#111111",
         font_display="Arial", font_body="Arial", mode="light",
+        hero=144,
     ),
     "tokyo-night": ThemeColors(
         bg="#1a1b26", paper="#24283b", text="#c0caf5", muted="#565f89",
@@ -265,6 +260,7 @@ THEMES: dict[str, ThemeColors] = {
         bg="#1a0938", paper="#261050", text="#fdf0ff", muted="#8a6ba8",
         accent="#ff6ec7", border="#2a1050",
         font_display="Arial", font_body="Arial", mode="dark",
+        hero=144,
     ),
     "xiaohongshu": ThemeColors(
         bg="#fffdfb", paper="#ffffff", text="#1a1210", muted="#a08d85",
@@ -279,21 +275,6 @@ THEMES: dict[str, ThemeColors] = {
     ),
 
     # ── guizang-ppt-skill (电子杂志 × 电子墨水) ───────────────────────────────
-    "guizang-monocle": ThemeColors(
-        bg="#f1efea", paper="#faf8f3", text="#0a0a0b", muted="#5a5850",
-        accent="#0a0a0b", border="#c8c4ba",
-        font_display="Georgia", font_body="Georgia", mode="light",
-    ),
-    "guizang-indigo": ThemeColors(
-        bg="#f1f3f5", paper="#ffffff", text="#0a1f3d", muted="#6080a0",
-        accent="#0a1f3d", border="#c0c8d0",
-        font_display="Georgia", font_body="Georgia", mode="light",
-    ),
-    "guizang-forest": ThemeColors(
-        bg="#f5f1e8", paper="#faf8f0", text="#1a2e1f", muted="#607060",
-        accent="#1a2e1f", border="#c8c4b0",
-        font_display="Georgia", font_body="Georgia", mode="light",
-    ),
     "guizang-dune": ThemeColors(
         bg="#f0e6d2", paper="#f8f0e0", text="#1f1a14", muted="#706050",
         accent="#1f1a14", border="#c8baa8",
@@ -303,28 +284,27 @@ THEMES: dict[str, ThemeColors] = {
         bg="#fafaf8", paper="#ffffff", text="#0a0a0a", muted="#737373",
         accent="#002FA7", border="#d4d4d2",
         font_display="Arial", font_body="Arial", mode="light",
+        hero=144,
     ),
     "swiss-lemon": ThemeColors(
         bg="#fafaf8", paper="#ffffff", text="#0a0a0a", muted="#737373",
         accent="#FFD500", border="#d4d4d2",
         font_display="Arial", font_body="Arial", mode="light",
+        hero=144,
     ),
     "swiss-neon-green": ThemeColors(
         bg="#fafaf8", paper="#ffffff", text="#0a0a0a", muted="#737373",
         accent="#C5E803", border="#d4d4d2",
         font_display="Arial", font_body="Arial", mode="light",
+        hero=144,
     ),
     "swiss-orange": ThemeColors(
         bg="#fafaf8", paper="#ffffff", text="#0a0a0a", muted="#737373",
         accent="#FF6B35", border="#d4d4d2",
         font_display="Arial", font_body="Arial", mode="light",
+        hero=144,
     ),
 
-    "guizang-crimson": ThemeColors(
-        bg="#1a0a0a", paper="#2a1010", text="#f5e6e6", muted="#a07070",
-        accent="#e63946", border="#3d1515",
-        font_display="Georgia", font_body="Arial", mode="dark",
-    ),
     "guizang-slate": ThemeColors(
         bg="#f0f2f4", paper="#e4e8ec", text="#1c2330", muted="#6b7a8d",
         accent="#4a6fa5", border="#c8d0da",
@@ -339,11 +319,6 @@ THEMES: dict[str, ThemeColors] = {
         bg="#f0f6f5", paper="#e0eeec", text="#0d2b28", muted="#5a8a85",
         accent="#00897b", border="#b8d8d5",
         font_display="Georgia", font_body="Arial", mode="light",
-    ),
-    "guizang-night": ThemeColors(
-        bg="#0a0a0f", paper="#12121a", text="#e8e8f0", muted="#6060a0",
-        accent="#7c7cff", border="#1e1e30",
-        font_display="Georgia", font_body="Arial", mode="dark",
     ),
 
     # ── open-slide ────────────────────────────────────────────────────────────
@@ -361,6 +336,7 @@ THEMES: dict[str, ThemeColors] = {
         bg="#fff2e8", paper="#ffe6d3", text="#2d1b4e", muted="#9a8aa8",
         accent="#ff4d8d", border="#2d1b4e",
         font_display="Arial Black", font_body="Arial", mode="light",
+        hero=156, section=80, padding=120,
     ),
 }
 

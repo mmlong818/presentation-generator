@@ -9,13 +9,14 @@ from ..text import simple
 
 
 def eyebrow_el(text: str, theme) -> dict[str, Any]:
+    pad = theme.padding
     return {
         "id": nano(),
         "type": "text",
-        "left": sx(140), "top": sy(60),
-        "width": sx(1640), "height": sy(40),
+        "left": sx(pad), "top": sy(60),
+        "width": sx(1920 - 2 * pad), "height": sy(40),
         "rotate": 0,
-        "content": simple(text, color=theme.accent, font_size_px=sfont(22), bold=True),
+        "content": simple(text, color=theme.accent, font_size_px=sfont(theme.caption), bold=True),
         "defaultFontName": theme.font_body,
         "defaultColor": theme.accent,
     }
@@ -26,19 +27,23 @@ def heading_el(
     theme,
     *,
     y: float = 120,
-    h: float = 140,
-    size: float = 72,
+    h: float | None = None,
+    size: float | None = None,
 ) -> dict[str, Any]:
+    """Page heading. Size defaults to `theme.section`, height auto-sized to ~2x line."""
+    pad = theme.padding
+    actual_size = size if size is not None else theme.section
+    actual_h = h if h is not None else max(140, actual_size * 1.5)
     return {
         "id": nano(),
         "type": "text",
-        "left": sx(140), "top": sy(y),
-        "width": sx(1640), "height": sy(h),
+        "left": sx(pad), "top": sy(y),
+        "width": sx(1920 - 2 * pad), "height": sy(actual_h),
         "rotate": 0,
-        "content": simple(text, color=theme.text, font_size_px=sfont(size), bold=True),
+        "content": simple(text, color=theme.text, font_size_px=sfont(actual_size), bold=True),
         "defaultFontName": theme.font_display,
         "defaultColor": theme.text,
-        "lineHeight": 1.3,
+        "lineHeight": 1.25,
     }
 
 

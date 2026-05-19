@@ -38,29 +38,13 @@ from . import (
 
 DecorateFn = Callable[..., list[dict[str, Any]]]
 
-DECORATIONS: dict[str, DecorateFn] = {
-    "blueprint": blueprint.decorate,
-    "broadcast-hud": broadcast_hud.decorate,
-    "brutalist-mono": brutalist_mono.decorate,
-    "cyberpunk-neon": cyberpunk_neon.decorate,
-    "glassmorphism": glassmorphism.decorate,
-    "memphis-pop": memphis_pop.decorate,
-    "midcentury": midcentury.decorate,
-    "midnight-luxe": midnight_luxe.decorate,
-    "open-sticker-pop": open_sticker_pop.decorate,
-    "pastel-bauhaus": pastel_bauhaus.decorate,
-    "pop-magazine": pop_magazine.decorate,
-    "retro-tv": retro_tv.decorate,
-    "risograph": risograph.decorate,
-    "summer-cocktail": summer_cocktail.decorate,
-    "swiss-grid": swiss_grid.decorate,
-    "swiss-ikb": swiss_ikb.decorate,
-    "tech-utility": tech_utility.decorate,
-    "tokyo-night": tokyo_night.decorate,
-    "vaporwave": vaporwave.decorate,
-    "xiaohongshu": xiaohongshu.decorate,
-    "y2k-chrome": y2k_chrome.decorate,
-}
+# Decorations are intentionally disabled. The earlier overlay approach (random
+# corner shapes, scan lines, halftone dots) didn't produce coherent theming —
+# real "21-theme distinctness" requires layout-aware decoration which doesn't
+# fit the converter's one-shot shape-prepend model. We focus on type-scale and
+# palette tokens for now; decoration modules remain available below for future
+# per-layout integration but the registry returns no entries.
+DECORATIONS: dict[str, DecorateFn] = {}
 
 
 def decorate(
