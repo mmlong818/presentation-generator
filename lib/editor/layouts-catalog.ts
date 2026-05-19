@@ -121,7 +121,8 @@ export function defaultSlideForType(type: LayoutType): Slide {
 export function migrateSlide(from: Slide, toType: LayoutType): Slide {
   const next = defaultSlideForType(toType) as any
   const src = from as any
-  if ('eyebrow' in next && src.eyebrow) next.eyebrow = src.eyebrow
+  // eyebrow lives in LayoutBase so always allow copying.
+  if (src.eyebrow) next.eyebrow = src.eyebrow
   if ('heading' in next && (src.heading || src.title)) next.heading = src.heading ?? src.title
   if ('title' in next && (src.title || src.heading)) next.title = src.title ?? src.heading
   // highlight has incompatible types across slides (string vs string[]). Only

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { useEditorStore } from '@/lib/editor/store'
 import { deckToEditor } from '@/lib/editor/compose'
+import { useT } from '@/lib/i18n'
 import type { Deck, LayoutType } from '@/lib/types'
 import type { ImageElement, TextElement } from '@/lib/editor/types'
 
@@ -140,6 +141,7 @@ export default function DeckPage() {
   const [pickerMode, setPickerMode] = useState<'insert' | 'change' | null>(null)
   const [iconPickerOpen, setIconPickerOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { t, locale, setLocale } = useT()
 
   useEffect(() => {
     try {
@@ -282,21 +284,28 @@ export default function DeckPage() {
       {/* Left sidebar: slide list */}
       <aside className="w-[230px] border-r border-stone-200 bg-white overflow-y-auto flex flex-col">
         <header className="p-3 border-b border-stone-200 flex items-center gap-2 text-sm">
-          <Link href="/" className="text-stone-600 hover:text-stone-900">←</Link>
+          <Link href="/" className="text-stone-600 hover:text-stone-900" aria-label={t('common.back')}>←</Link>
           <span className="font-semibold truncate flex-1" title={presentation.title}>{presentation.title}</span>
+          <button onClick={() => setLocale(locale === 'zh' ? 'en' : 'zh')}
+            className="text-[10px] uppercase text-stone-500 hover:text-stone-900 border border-stone-200 rounded px-1.5 py-0.5"
+            aria-label="Toggle language"
+            title="语言 / Language">{locale === 'zh' ? 'EN' : '中'}</button>
         </header>
-        <div className="p-2 border-b border-stone-200 flex items-center gap-1">
+        <div className="p-2 border-b border-stone-200 flex items-center gap-1" role="toolbar" aria-label="Slide management">
           <button onClick={() => setPickerMode('insert')}
             className="flex-1 text-xs px-2 py-1.5 rounded bg-stone-900 text-white hover:bg-stone-800"
-            title="选版式新增 slide">+ 版式</button>
+            aria-label={t('deck.new_layout')}
+            title="选版式新增 slide">+ {t('deck.new_layout')}</button>
           <button onClick={() => addSlide()}
             className="text-xs px-2 py-1.5 rounded border border-stone-300 hover:bg-stone-50"
-            title="新增空白 slide">空白</button>
+            aria-label={t('deck.blank')}
+            title="新增空白 slide">{t('deck.blank')}</button>
           <button onClick={() => duplicateSlide(currentSlide)}
             className="text-xs px-2 py-1.5 rounded border border-stone-300 hover:bg-stone-50"
+            aria-label={t('deck.duplicate')}
             title="复制当前 slide">⎘</button>
         </div>
-        <div className="p-3 flex flex-col gap-2">
+        <div className="p-3 flex flex-col gap-2" role="listbox" aria-label="Slides">
           {presentation.slides.map((slide, i) => (
             <div
               key={slide.id}

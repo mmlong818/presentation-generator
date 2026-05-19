@@ -41,13 +41,13 @@
 - [x] 元素级 build-in 动画：BaseElement.animation schema + Inspector 编辑（播放 Sprint 4）
 - [x] 主题筛减 25 → 12：VISIBLE_THEMES，旧 ThemeId 类型保留兼容
 
-## Sprint 4（W7-8）— 演讲闭环
+## Sprint 4（W7-8）— 演讲闭环 ✅ 已完成
 **Done 标准**：从生成到讲完不离开应用
 
-- [ ] `/present/[deckId]` 路由：全屏、方向键翻页、Esc 退出、ProgressBar
-- [ ] 演讲者视图：当前 + 下一张预览 + 备注 + 时间计时器
-- [ ] HTML 自包含导出：单 .html 文件，含所有图片 base64 + 演讲模式 JS
-- [ ] PDF 导出：headless puppeteer 渲染 /present/[id] → PDF，端到端验证
+- [x] `/present/[deckId]` 路由：全屏、方向键翻页、Esc 退出、ProgressBar
+- [x] 演讲者视图：当前 + 下一张预览 + 备注 + 时间计时器
+- [x] HTML 自包含导出：单 .html 文件，含所有图片 base64 + 键盘导航 + 7 种动画
+- [x] PDF 导出：浏览器原生 print 流水线 + @page CSS（替代 puppeteer，零服务依赖）
 
 ## Sprint 5（W9-10）— 质量与国际化
 **Done 标准**：海外用户可用、CI 守门
