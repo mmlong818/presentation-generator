@@ -116,7 +116,7 @@ export const THEMES: Record<ThemeId, ThemeTokens> = {
   // 3. ────────────────────────────────────────────────────────────────────────
   'modern-minimal': {
     id: 'modern-minimal',
-    name: '瑞士网格',
+    name: '现代极简',
     description: '中性通用 · 蓝 accent · 产品 review、跨部门汇报、通用兜底',
     mode: 'light',
     bg: '#ffffff',

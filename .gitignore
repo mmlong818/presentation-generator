@@ -40,6 +40,8 @@ tsconfig.tsbuildinfo
 
 # Audit screenshots (temporary)
 .shots/
+.realcheck/
+.dev.log
 test_output.pptx
 pptx-service/__pycache__/
 pptx-service/renderers/__pycache__/

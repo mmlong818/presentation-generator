@@ -43,7 +43,7 @@ export default function ScriptPage() {
     return <main className="min-h-screen flex items-center justify-center text-stone-500">加载中…</main>;
   }
 
-  const totalSec = script.reduce((s, e) => s + e.durationSec, 0);
+  const totalSec = script.reduce((s, e) => s + (Number(e.durationSec) || 0), 0);
 
   return (
     <main className="min-h-screen px-6 py-10 sm:px-12 lg:px-16 max-w-4xl mx-auto pb-24">

@@ -104,7 +104,7 @@ export default function OutlinePage() {
     return <main className="min-h-screen flex items-center justify-center text-stone-500">加载中…</main>;
   }
 
-  const totalSec = outline.sections.reduce((s, x) => s + x.durationSec, 0);
+  const totalSec = outline.sections.reduce((s, x) => s + (Number(x.durationSec) || 0), 0);
   const targetSec = brief ? brief.durationMin * 60 : 0;
   const drift = totalSec - targetSec;
 
@@ -173,10 +173,10 @@ export default function OutlinePage() {
                 <input value={s.title} onChange={(e) => updateSection(i, { title: e.target.value })}
                   placeholder="章节标题（观点句）"
                   className="flex-1 px-2 py-1.5 border-b border-transparent focus:border-stone-400 hover:border-stone-300 text-base font-bold focus:outline-none bg-transparent" />
-                <input type="number" value={s.durationSec}
+                <input type="number" value={s.durationSec ?? 0}
                   onChange={(e) => updateSection(i, { durationSec: Number(e.target.value) || 0 })}
                   title="时长（秒）"
-                  className="w-12 px-1.5 py-1 border border-stone-200 rounded text-sm text-center focus:border-stone-400" />
+                  className="w-16 px-1.5 py-1 border border-stone-200 rounded text-sm text-center focus:border-stone-400" />
                 <span className="text-xs text-stone-400">秒</span>
 
                 <div className="flex items-center gap-0.5 flex-shrink-0 opacity-40 group-hover:opacity-100 transition-opacity">
