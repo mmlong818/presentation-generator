@@ -14,10 +14,14 @@
 
 - **设计阶段嵌入演讲方法论** —— 6 套主流框架（Winston / 金字塔 / SCQA / Duarte / StoryBrand / SUCCESs）按场景自动路由
 - **AI 不写代码，只填结构化数据** —— 21 种版式预定义，AI 只填 JSON。结果：永远视觉一致 / 安全 / 可编辑
-- **26 套视觉主题，按字号 token 分级** —— 每套主题有自己的 hero/section/body 大小、padding、字体栈
-- **可编辑 PPTX 原生导出** —— 基于 pptxgenjs（MIT），输出真文本 / 形状 / 表格，**可在 PowerPoint / Keynote 中继续编辑**（非图片版）
+- **12 套精选视觉主题，按字号 token 分级** —— 每套主题有自己的 hero/section/body 大小、padding、字体栈
+- **真 WYSIWYG 编辑器** —— Konva 画布 + HTML 文字层，双击改文字、拖拽移动、八向缩放、Inspector 编辑字号/颜色/动画
+- **可编辑 PPTX 原生导出** —— 基于 pptxgenjs（MIT），可在 PowerPoint / Keynote 中继续编辑
+- **全屏演讲模式** —— `/present/[id]` 全屏 + 方向键 + 演讲者视图 + 备注 + 计时器 + 元素入场动画
+- **多格式导出** —— PPTX · HTML 自包含单文件 · PDF（浏览器打印）
+- **CLI / HTTP API** —— `npx presgen render talk.md` 或 `POST /api/render`，无 UI 也能用
+- **11 种 LLM provider** —— Claude / GPT / Gemini / DeepSeek / Kimi / 智谱 / Qwen / xAI / Mistral / OpenRouter / 自定义 / Claude CLI 订阅复用
 - **诚信底线硬编码** —— 拒绝编造数据、空洞排比、伪装故事、emoji 装饰
-- **5 维自检透明** —— 哲学一致性 / 信息层级 / 执行精度 / 具体性 / 克制度 全部展示给用户
 
 ---
 
@@ -25,13 +29,15 @@
 
 | | |
 |---|---|
-| **25 套主题** | editorial-monocle / modern-minimal / tech-utility / brutalist-mono / academic-paper / midnight-luxe / risograph / broadcast-hud / pastel-bauhaus / summer-cocktail / pop-magazine / blueprint / cyberpunk-neon / glassmorphism / memphis-pop / midcentury / minimal-white / pitch-deck-vc / retro-tv / swiss-grid / swiss-ikb / tokyo-night / vaporwave / xiaohongshu / open-sticker-pop |
-| **21 种版式** | 封面、单句冲击、流程、数据、对比、时间轴、论点、引言、KPI 看板、矩阵、柱状图、案例研究、人物画像、象限、提问、清单、行动号召、表格、因果链、路线、图示 |
-| **9 种 LLM** | Claude / GPT / DeepSeek / Kimi / 智谱 / Qwen / OpenRouter / 自定义 baseURL / 本地 Claude CLI 订阅 |
-| **应用内编辑** | `/deck` 页 PPT 风格编辑器，文本/字号/颜色直接改，全程不离站 |
-| **品牌定制** | 上传 Logo / 底图 / 自定义主色，叠加在任意基础主题上 |
-| **PPT 密度** | 每分钟 1 张（深度型）或 2 张（发布型）—— 直接影响 AI 输出张数与讲稿节奏 |
-| **导出** | 可编辑 PPTX（pptxgenjs）· PDF · 讲稿 TXT · JSON |
+| **12 套精选主题** | modern-minimal / editorial-monocle / academic-paper / midnight-luxe / swiss-grid / tech-utility / blueprint / cyberpunk-neon / brutalist-mono / pop-magazine / risograph / glassmorphism |
+| **21 种版式** | 封面、单句冲击、流程、数据、对比、时间轴、论点、引言、KPI 看板、2×2 矩阵、柱状图、案例研究、人物画像、象限、提问、清单、行动号召、表格、因果链、路线图、示意图 |
+| **11 种 LLM** | Claude / GPT / Gemini / DeepSeek / Kimi / 智谱 / Qwen / xAI / Mistral / OpenRouter / 自定义 baseURL / 本地 Claude CLI 订阅 |
+| **WYSIWYG 编辑** | `/deck` 双击文本编辑、拖拽缩放、版式切换、+ 文本/图片/图标、Inspector 改字号颜色动画 |
+| **演讲模式** | `/present/[id]` 全屏 + ←→ 翻页 + F 演讲者视图 + 备注 + 计时器 + 元素动画 |
+| **CLI** | `npx presgen render talk.md --theme=editorial-monocle --out=deck.pptx` |
+| **HTTP API** | `POST /api/render`，body `{ markdown / deck, format: pptx/html/json }` |
+| **品牌定制** | Logo / 底图 / 自定义主色叠加；`.brandkit.json` 跨 deck 复用 |
+| **导出** | PPTX（可编辑）· HTML 自包含 · PDF（浏览器打印）· JSON |
 
 ---
 
@@ -50,6 +56,30 @@ pnpm dev
 ```
 
 打开 http://localhost:3000 → 配置 API key（存在浏览器 localStorage，不会上传任何服务器，除目标 LLM）→ 写需求 → 生成大纲 → 改讲稿 → 选风格 → 进入 `/deck` 编辑器 → 导出 PPTX。
+
+### 不想跑 LLM？
+
+```bash
+# Markdown → PPTX，跳过 AI 全流程
+echo "# 团队应该用 AI
+
+## 为什么是现在
+- 市场窗口期短
+- 技术成熟度刚好够用
+- 团队能力匹配" > talk.md
+
+pnpm dev &      # 起服务
+node bin/presgen.mjs render talk.md --theme=editorial-monocle --out=talk.pptx
+```
+
+### HTTP API
+
+```bash
+curl -X POST http://localhost:3000/api/render \
+  -H 'Content-Type: application/json' \
+  -d '{"markdown": "# Hi\n\n## Why\n- one\n- two\n- three", "theme": "modern-minimal"}' \
+  -o deck.pptx
+```
 
 ---
 

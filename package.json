@@ -26,6 +26,9 @@
   "bugs": {
     "url": "https://github.com/mmlong818/presentation-generator/issues"
   },
+  "bin": {
+    "presgen": "./bin/presgen.mjs"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

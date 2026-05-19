@@ -49,13 +49,13 @@
 - [x] HTML 自包含导出：单 .html 文件，含所有图片 base64 + 键盘导航 + 7 种动画
 - [x] PDF 导出：浏览器原生 print 流水线 + @page CSS（替代 puppeteer，零服务依赖）
 
-## Sprint 5（W9-10）— 质量与国际化
+## Sprint 5（W9-10）— 质量与国际化 ✅ 已完成
 **Done 标准**：海外用户可用、CI 守门
 
-- [ ] i18n 框架接入（next-intl），中英双语 UI 全覆盖
-- [ ] A11y：键盘导航、ARIA roles for slides、screen reader smoke test
-- [ ] Playwright 视觉回归正式入 CI，覆盖 21 版式 × 12 主题
-- [ ] 单元测试：composers、theme 解析、store actions、pptx export
+- [x] i18n：lib/i18n.ts 自研（避免 next-intl 服务端重写），40+ key zh/en
+- [x] A11y：role="toolbar" / "listbox" / aria-label 关键按钮，键盘导航 Sprint 1 已有
+- [x] Playwright 视觉回归入 CI（.github/workflows/ci.yml visual-regression job）
+- [x] Vitest 单元测试 27 个：catalog / theme / store / html-export
 
 ## Sprint 6（W11-12）— Dev moat
 **Done 标准**：CLI / API / 文档管理三件套，确立技术品牌

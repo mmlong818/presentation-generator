@@ -32,7 +32,12 @@ function hex(color: string): string {
   return m ? m[1] : '000000'
 }
 
-export async function exportPPTX(presentation: EditorPresentation): Promise<void> {
+/**
+ * Build a pptxgenjs instance from the editor presentation.
+ * Exposed separately from `exportPPTX` so server-side code can stream the
+ * buffer instead of writing a browser file.
+ */
+export async function buildPptxInstance(presentation: EditorPresentation): Promise<any> {
   const PptxGenJS = (await import('pptxgenjs')).default
   const pptx = new PptxGenJS()
   pptx.defineLayout({ name: 'PG_HD', width: SLIDE_W, height: SLIDE_H })
@@ -44,7 +49,6 @@ export async function exportPPTX(presentation: EditorPresentation): Promise<void
     pslide.background = { color: hex(slide.background) }
     if (slide.notes) pslide.addNotes(slide.notes)
 
-    // Sort by z so layering is preserved
     const sorted = [...slide.elements].map((el, idx) => ({ el, idx })).sort((a, b) => {
       const za = a.el.z ?? 0
       const zb = b.el.z ?? 0
@@ -57,6 +61,11 @@ export async function exportPPTX(presentation: EditorPresentation): Promise<void
     }
   }
 
+  return pptx
+}
+
+export async function exportPPTX(presentation: EditorPresentation): Promise<void> {
+  const pptx = await buildPptxInstance(presentation)
   await pptx.writeFile({ fileName: `${presentation.title || 'presentation'}.pptx` })
 }
 
