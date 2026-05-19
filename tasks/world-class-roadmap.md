@@ -57,14 +57,14 @@
 - [x] Playwright 视觉回归入 CI（.github/workflows/ci.yml visual-regression job）
 - [x] Vitest 单元测试 27 个：catalog / theme / store / html-export
 
-## Sprint 6（W11-12）— Dev moat
+## Sprint 6（W11-12）— Dev moat ✅ 已完成
 **Done 标准**：CLI / API / 文档管理三件套，确立技术品牌
 
-- [ ] Markdown deck 导入：`# Title` / `## Section` / `- bullet` → Deck JSON
-- [ ] HTTP API `POST /api/render`：BYOK header + deck JSON → PPTX 字节
-- [ ] CLI：`npx presgen "...prompt..." --theme=... --out=deck.pptx`
-- [ ] `.brandkit` 文件格式：JSON schema，导入/导出/分享
-- [ ] README 重写：突出 CLI / API / 11 provider / 方法论 / WYSIWYG
+- [x] Markdown deck 导入：lib/markdown-deck.ts，启发式版式推断
+- [x] HTTP API `POST /api/render`：pptx/html/json + markdown 直送，self-describing GET
+- [x] CLI：`bin/presgen.mjs`，server 模式 / offline 模式 / stdin
+- [x] `.brandkit` 文件格式：JSON schema v1，build/parse/serialize/download
+- [x] README 重写：突出 WYSIWYG / 演讲 / CLI / API / 11 provider
 
 ---
 

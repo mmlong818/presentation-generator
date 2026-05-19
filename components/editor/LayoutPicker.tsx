@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LAYOUTS } from '@/lib/editor/layouts-catalog'
 import type { LayoutType } from '@/lib/types'
 
@@ -15,6 +15,14 @@ const CATEGORIES: Array<'叙事' | '结构' | '对比' | '数据' | '流程'> = 
 
 export default function LayoutPicker({ open, mode, onClose, onPick }: Props) {
   const [filter, setFilter] = useState<string>('')
+  useEffect(() => {
+    if (!open) return
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') { e.preventDefault(); onClose() }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open, onClose])
   if (!open) return null
   const lower = filter.toLowerCase()
   const grouped = CATEGORIES.map(cat => ({

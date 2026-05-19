@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   ArrowRight, ArrowUp, ArrowDown, Check, X, Plus, Minus, Star, Heart, Zap,
   TrendingUp, TrendingDown, AlertTriangle, Info, Lightbulb, Target, Award,
@@ -96,6 +96,14 @@ export default function IconPicker({ open, onClose, onPick }: Props) {
     const lower = q.toLowerCase()
     return ICONS.filter(i => !lower || i.name.includes(lower) || i.cn.includes(q))
   }, [q])
+  useEffect(() => {
+    if (!open) return
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') { e.preventDefault(); onClose() }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open, onClose])
   if (!open) return null
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-6" onMouseDown={onClose}>
