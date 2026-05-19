@@ -43,3 +43,9 @@ tsconfig.tsbuildinfo
 test_output.pptx
 pptx-service/__pycache__/
 pptx-service/renderers/__pycache__/
+pptx-service/converter/__pycache__/
+pptx-service/converter/**/__pycache__/
+**/__pycache__/
+*.pyc
+pptx-service/converter/cli.err
+.pptist-head.html
