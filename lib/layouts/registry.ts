@@ -2,10 +2,11 @@
 //
 // 扩展新版式 = 三步：
 //   1. 在 lib/types.ts 加 LayoutType 与 Slide 接口
-//   2. 在 components/layouts/<Name>.tsx 实现 React 组件，props: { slide, theme }
-//   3. 在本文件 LAYOUTS 注册
+//   2. 在 pptx-service/converter/layouts/<name>.py 实现转换器（输出 PPTist 元素）
+//   3. 在本文件 LAYOUTS 注册元数据（AI prompt 用）
 //
 // AI 系统提示词会读取 LAYOUT_SCHEMAS（自动同步），所以新版式立刻可被 AI 选用。
+// 渲染由 PPTist iframe 接管，前端不再实现版式组件。
 
 import type { LayoutType } from '../types';
 

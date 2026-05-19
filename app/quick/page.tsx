@@ -105,9 +105,6 @@ export default function QuickPage() {
           <h1 className="text-4xl sm:text-5xl font-bold mt-3 tracking-tight">快速直出</h1>
           <p className="text-stone-600 mt-2 text-lg">写好描述，一键生成 PPT。跳过大纲和讲稿。</p>
         </div>
-        <Link href="/preview" className="text-sm px-4 py-2 rounded border border-stone-300 hover:bg-stone-100 whitespace-nowrap self-start mt-6">
-          🎨 主题画廊
-        </Link>
       </header>
 
       <section className="space-y-6">

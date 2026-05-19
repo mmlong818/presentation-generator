@@ -132,15 +132,13 @@ ${layoutSchemasForPrompt()}
 }
 
 function themeVibe(theme: ThemeId): string {
-  return theme === 'soft-warm' ? '人文叙事气质：多用故事、共鸣、克制；标题用感性观点句' :
-    theme === 'editorial-monocle' ? '杂志编辑气质：多用论证、引用、章节眉；像写一篇深度长文' :
+  return theme === 'editorial-monocle' ? '杂志编辑气质：多用论证、引用、章节眉；像写一篇深度长文' :
     theme === 'modern-minimal' ? '商业专业气质：多用数据、清晰判断、可执行结论' :
     theme === 'tech-utility' ? '工程师气质：多用具体技术细节、量化指标、严谨术语' :
     theme === 'brutalist-mono' ? '挑衅 manifesto 气质：多用立场、反差、不留情面的判断' :
     theme === 'academic-paper' ? '学术气质：标题用 Title Case，正文严谨引用，数据必有出处；可在 quote 用块引格式' :
     theme === 'midnight-luxe' ? '高端私享气质：克制低调、衬线大字、品牌叙事、避免过度激情' :
     theme === 'risograph' ? '设计师手作气质：俏皮、双关、反套路；可在 statement 用诗化短句' :
-    theme === 'kraft-paper' ? '工坊手作气质：温度感、生活化用词、教学式语气；适合餐饮/教育/亲子，避免技术术语' :
     theme === 'broadcast-hud' ? '直播节奏气质：短句、明确数字、强动作动词；像在做产品发布会' :
     '通用专业气质';
 }
