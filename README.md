@@ -19,7 +19,7 @@
 - **可编辑 PPTX 原生导出** — 基于 pptxgenjs（MIT），可在 PowerPoint / Keynote 中继续编辑（不是图片版）
 - **全屏演讲模式** — `/present/[id]` 全屏 + 方向键 + 演讲者视图 + 备注 + 计时器 + 元素入场动画
 - **多格式导出** — PPTX · HTML 自包含单文件 · PDF（浏览器打印）· JSON
-- **CLI / HTTP API** — `npx presgen render talk.md` 或 `POST /api/render`，无 UI 也能用
+- **CLI / HTTP API** — `node bin/presgen.mjs render talk.md` 或 `POST /api/render`，无 UI 也能用（CLI 走本机 dev server）
 - **11 种 LLM provider** — Claude / GPT / Gemini / DeepSeek / Kimi / 智谱 / Qwen / xAI / Mistral / OpenRouter / 自定义 baseURL / 本地 Claude CLI 订阅复用
 - **局部 LLM 重写** — 编辑器内 ✨ 重写本张 slide，10 秒生成不重做整 deck
 - **自动保存 + 历史** — 编辑实时落本地浏览器，刷新不丢；50 条历史 dedupe by createdAt
@@ -38,7 +38,7 @@
 | **AI 工具** | ✨ 重写本张 slide（局部 LLM）· ✨ 图片生成（fal.ai / OpenAI）· 整 deck 重生成 |
 | **演讲模式** | `/present/[id]` 全屏 + ←→/Space/PgUp/PgDn 翻页 + F 演讲者视图 + 备注 + 计时器 + 7 种元素入场动画 |
 | **存储** | 编辑器 debounce 1.5s 自动保存 · 50 条历史 dedupe · localStorage 本地优先 |
-| **CLI** | `npx presgen render talk.md --theme=editorial-monocle --out=deck.pptx` |
+| **CLI** | `node bin/presgen.mjs render talk.md --theme=editorial-monocle --out=deck.pptx`（需先启 dev server）|
 | **HTTP API** | `POST /api/render`（pptx / html / json）· `POST /api/imagine`（AI 图片）· `POST /api/rewrite-slide`（局部重写） |
 | **品牌定制** | Logo / 底图 / 自定义主色叠加；`.brandkit.json` 跨 deck 复用 |
 | **导出** | PPTX（可编辑）· HTML 自包含单文件 · PDF（浏览器打印）· JSON |
@@ -64,25 +64,35 @@ pnpm dev
 
 打开 http://localhost:3000 → 配置 API key（存浏览器 localStorage，不上传任何服务器，除目标 LLM）→ 写需求 → 生成大纲 → 改讲稿 → 选风格 → 进入 `/deck` 编辑器 → 导出 PPTX。
 
-### 不想跑 LLM？
+### 已有 markdown 大纲，直接出 PPT
+
+适用场景：
+- 你的演讲稿是用 Notion / Obsidian / VSCode 写好的 markdown，不想再贴回 web UI
+- 想把 GitHub README 一键转成技术分享 PPT
+- 用 CI 自动化生成报告 PPT（git 跟踪 markdown 而不是 binary PPTX）
+
+启动一个 dev server（在另一个 terminal）：
 
 ```bash
-# Markdown → PPTX，跳过 AI 全流程
-cat > talk.md <<'EOF'
-# 团队应该用 AI
+pnpm dev
+```
 
-## 为什么是现在
-- 市场窗口期短
-- 技术成熟度刚好够用
-- 团队能力匹配
+然后 CLI 转 PPTX（不走 LLM，靠 markdown 启发式解析版式）：
 
-## 引言
-> 唯一持久的竞争优势，是比对手学习更快的能力。
-EOF
-
-pnpm dev &      # 起服务
+```bash
 node bin/presgen.mjs render talk.md --theme=editorial-monocle --out=talk.pptx
 ```
+
+CLI 会 POST 到本机 `/api/render`，默认端口 3000。dev server 不在 3000 时加 `--remote=http://localhost:<port>`。
+
+Markdown 约定：
+- `# 标题` = deck 总标题
+- `## 章节` = 一张 slide
+- `- 项` = bullet（2-5 条自动选 argument 版式；6+ 选 checklist）
+- `> 引言` = quote 版式
+- `---` = 强制开新 slide
+
+`npx presgen` 待 npm 发布后启用；当前用 `node bin/presgen.mjs`。
 
 ### HTTP API
 
