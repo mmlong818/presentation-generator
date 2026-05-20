@@ -19,14 +19,7 @@ const DEFAULT_LLM: LLMConfig = { presetId: 'anthropic', model: 'claude-sonnet-4-
 
 const THEMES_LIST = visibleThemes();
 
-function pushToHistory(deck: Deck) {
-  try {
-    const list: { id: string; deck: Deck }[] = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? '[]');
-    const filtered = list.filter((x) => x.deck.createdAt !== deck.createdAt);
-    filtered.unshift({ id: crypto.randomUUID(), deck });
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(filtered.slice(0, HISTORY_MAX)));
-  } catch {}
-}
+// pushToHistory moved to lib/deck-storage.ts (shared with /style and /deck auto-save)
 
 export default function QuickPage() {
   const router = useRouter();
@@ -85,8 +78,10 @@ export default function QuickPage() {
       }
 
       const deck: Deck = data.deck;
-      localStorage.setItem(DECK_STORAGE, JSON.stringify(deck));
-      pushToHistory(deck);
+      const { saveLastDeck, pushDeckToHistory, clearEditorPresentation } = await import('@/lib/deck-storage');
+      saveLastDeck(deck);
+      pushDeckToHistory(deck);
+      clearEditorPresentation();
       router.push('/deck');
     } catch (e) {
       setError(e instanceof Error ? e.message : '生成失败');

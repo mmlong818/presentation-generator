@@ -87,9 +87,13 @@ export default function StylePage() {
         throw new Error(err.error || `HTTP ${res.status}`);
       }
       const data = await res.json();
-      localStorage.setItem(DECK_STORAGE, JSON.stringify(data.deck));
+      // Persist + push to history (so /history shows it too)
+      const { saveLastDeck, pushDeckToHistory, clearEditorPresentation } = await import('@/lib/deck-storage');
+      saveLastDeck(data.deck);
+      pushDeckToHistory(data.deck);
+      // Fresh deck → start editor with clean state, no stale element edits
+      clearEditorPresentation();
       // Clear wizard draft so the home page doesn't show "未完成会话" next visit.
-      // 已生成的 deck 在 DECK_STORAGE 里，不动。
       localStorage.removeItem(BRIEF_STORAGE);
       localStorage.removeItem(OUTLINE_STORAGE);
       localStorage.removeItem(SCRIPT_STORAGE);

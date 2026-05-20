@@ -9,20 +9,28 @@ import type { Deck } from '@/lib/types';
 const HISTORY_KEY = 'pg_deck_history';
 const DECK_STORAGE = 'pg_last_deck';
 
-interface HistoryItem { id: string; deck: Deck; }
+interface HistoryItem { id: string; deck: Deck; savedAt?: string }
 
 export default function HistoryPage() {
   const router = useRouter();
   const [items, setItems] = useState<HistoryItem[]>([]);
 
   useEffect(() => {
-    try {
-      setItems(JSON.parse(localStorage.getItem(HISTORY_KEY) ?? '[]'));
-    } catch { setItems([]); }
+    function load() {
+      try {
+        setItems(JSON.parse(localStorage.getItem(HISTORY_KEY) ?? '[]'));
+      } catch { setItems([]); }
+    }
+    load();
+    // Re-read on focus so auto-saves from /deck reflect when user comes back
+    window.addEventListener('focus', load);
+    return () => window.removeEventListener('focus', load);
   }, []);
 
   function open(item: HistoryItem) {
     localStorage.setItem(DECK_STORAGE, JSON.stringify(item.deck));
+    // 切换历史 deck 必须清掉旧的编辑器快照，否则 /deck 会误读上次未保存的草稿
+    localStorage.removeItem('pg_editor_presentation');
     router.push('/deck');
   }
 
@@ -81,8 +89,13 @@ export default function HistoryPage() {
                 <div className="flex-1 min-w-0">
                   <div className="font-bold truncate">{item.deck.title}</div>
                   <div className="text-xs text-stone-500 mt-1">
-                    {t.name} · {item.deck.framework} · {item.deck.slides.length} 张 ·
-                    {' '}{new Date(item.deck.createdAt).toLocaleString('zh-CN')}
+                    {t.name} · {item.deck.framework} · {item.deck.slides.length} 张
+                  </div>
+                  <div className="text-xs text-stone-400 mt-0.5">
+                    创建 {new Date(item.deck.createdAt).toLocaleString('zh-CN')}
+                    {item.savedAt && item.savedAt !== item.deck.createdAt && (
+                      <span> · 最后编辑 {new Date(item.savedAt).toLocaleString('zh-CN')}</span>
+                    )}
                   </div>
                 </div>
                 <button onClick={(e) => { e.stopPropagation(); remove(item.id); }}

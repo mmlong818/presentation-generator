@@ -220,6 +220,18 @@ export default function DeckPage() {
         setPresentation(deckToEditor(deck))
         return
       }
+      // Prefer the high-fidelity EditorPresentation snapshot (captures
+      // element-level edits like move / text change). Fall back to Deck.
+      const editorRaw = localStorage.getItem('pg_editor_presentation')
+      if (editorRaw && !themeOverride) {
+        try {
+          const p = JSON.parse(editorRaw)
+          if (p?.slides?.length) {
+            setPresentation(p)
+            return
+          }
+        } catch {/* fall through */}
+      }
       const raw = localStorage.getItem(DECK_STORAGE)
       if (!raw) {
         setLoadError('还没有生成 deck。回主页填写需求生成一份，或试 ?fixture=cover / ?fx=cover.long / ?fxAll=normal 查看示例。')
@@ -232,6 +244,41 @@ export default function DeckPage() {
       setLoadError(`deck 解析失败：${e instanceof Error ? e.message : String(e)}`)
     }
   }, [setPresentation])
+
+  // Auto-save editor state + sync to history. Debounced 1.5s.
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
+  useEffect(() => {
+    if (!presentation) return
+    // Skip the first render (presentation set from load); subsequent changes save.
+    const isFixture = typeof window !== 'undefined' && /[?&]f(x|ixture|xAll)=/.test(window.location.search)
+    if (isFixture) return  // never persist fixture browsing as user work
+    setSaveStatus('saving')
+    const t = setTimeout(async () => {
+      try {
+        const { saveEditorPresentation, saveLastDeck, pushDeckToHistory, editorToDeck, loadLastDeck } = await import('@/lib/deck-storage')
+        saveEditorPresentation(presentation)
+        // Reuse original deck context (brief/framework/createdAt) for Deck reconstruction.
+        const prevDeck = loadLastDeck()
+        const deck = editorToDeck(presentation, {
+          framework: prevDeck?.framework,
+          brief: prevDeck?.brief,
+          script: prevDeck?.script,
+          brand: prevDeck?.brand,
+          createdAt: prevDeck?.createdAt,
+          selfReview: prevDeck?.selfReview,
+        })
+        saveLastDeck(deck)
+        pushDeckToHistory(deck)
+        setSaveStatus('saved')
+        // Clear "saved" badge after 2s
+        setTimeout(() => setSaveStatus('idle'), 2000)
+      } catch (e) {
+        console.warn('autosave failed', e)
+        setSaveStatus('idle')
+      }
+    }, 1500)
+    return () => clearTimeout(t)
+  }, [presentation])
 
   useEffect(() => {
     if (!canvasWrapRef.current) return
@@ -431,6 +478,12 @@ export default function DeckPage() {
           <span className="text-stone-500">{currentSlide + 1} / {presentation.slides.length}</span>
           <span className="text-stone-400">·</span>
           <span className="text-stone-500">主题：{presentation.theme}</span>
+          {saveStatus !== 'idle' && (
+            <span className={`text-[10px] uppercase tracking-wider ${saveStatus === 'saving' ? 'text-stone-400' : 'text-emerald-600'}`}
+              title="编辑会自动保存到本地浏览器，无需手动操作">
+              {saveStatus === 'saving' ? '保存中…' : '✓ 已保存'}
+            </span>
+          )}
           <span className="text-stone-400">·</span>
           <button onClick={() => setRewriteOpen(true)}
             className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
