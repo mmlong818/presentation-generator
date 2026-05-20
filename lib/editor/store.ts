@@ -51,6 +51,11 @@ interface EditorState {
   duplicateSlide: (index: number) => void
   insertSlideOfType: (afterIndex: number, type: LayoutType) => void
   changeSlideLayout: (index: number, type: LayoutType) => void
+  /**
+   * Replace a slide's structural source (e.g. after LLM rewrite returns a new
+   * Slide payload) and re-compose its elements. Preserves notes.
+   */
+  replaceSlideSource: (index: number, newSource: Slide) => void
 
   undo: () => void
   redo: () => void
@@ -319,6 +324,20 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const next = snapshot(state.presentation)
     next.slides[index] = { ...next.slides[index], elements, source: newSource }
     pushHistory(state, 'changeSlideLayout')
+    set({ presentation: next, selectedElementIds: [], selectedElementId: null })
+  },
+
+  replaceSlideSource: (index, newSource) => {
+    const state = get()
+    if (!state.presentation) return
+    const cur = state.presentation.slides[index]
+    if (!cur) return
+    const theme = resolveTheme(state.presentation.theme)
+    const total = state.presentation.slides.length
+    const elements = composeSlide(newSource, theme, index + 1, total)
+    const next = snapshot(state.presentation)
+    next.slides[index] = { ...next.slides[index], elements, source: newSource }
+    pushHistory(state, 'replaceSlideSource')
     set({ presentation: next, selectedElementIds: [], selectedElementId: null })
   },
 

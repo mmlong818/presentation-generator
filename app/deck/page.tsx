@@ -15,6 +15,7 @@ const SlideThumbnail = dynamic(() => import('@/components/editor/SlideThumbnail'
 const Inspector = dynamic(() => import('@/components/editor/Inspector'), { ssr: false })
 const LayoutPicker = dynamic(() => import('@/components/editor/LayoutPicker'), { ssr: false })
 const IconPicker = dynamic(() => import('@/components/editor/IconPicker'), { ssr: false })
+const RewriteSlideModal = dynamic(() => import('@/components/editor/RewriteSlideModal'), { ssr: false })
 
 const DECK_STORAGE = 'pg_last_deck'
 
@@ -130,6 +131,7 @@ export default function DeckPage() {
   const duplicateSlide = useEditorStore(s => s.duplicateSlide)
   const insertSlideOfType = useEditorStore(s => s.insertSlideOfType)
   const changeSlideLayout = useEditorStore(s => s.changeSlideLayout)
+  const replaceSlideSource = useEditorStore(s => s.replaceSlideSource)
   const removeElement = useEditorStore(s => s.removeElement)
   const removeSelected = useEditorStore(s => s.removeSelected)
   const nudgeSelected = useEditorStore(s => s.nudgeSelected)
@@ -146,6 +148,7 @@ export default function DeckPage() {
   const [dragFrom, setDragFrom] = useState<number | null>(null)
   const [pickerMode, setPickerMode] = useState<'insert' | 'change' | null>(null)
   const [iconPickerOpen, setIconPickerOpen] = useState(false)
+  const [rewriteOpen, setRewriteOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { t, locale, setLocale } = useT()
 
@@ -413,6 +416,9 @@ export default function DeckPage() {
           <button onClick={() => setPickerMode('change')}
             className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
             title="切换当前 slide 版式">切换版式</button>
+          <button onClick={() => setRewriteOpen(true)}
+            className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
+            title="LLM 重写本张 slide">✨ 重写</button>
           <button onClick={handleAddText}
             className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
             title="新增文本元素">+ 文本</button>
@@ -483,6 +489,28 @@ export default function DeckPage() {
           }}
         />
       )}
+
+      {rewriteOpen && presentation && (() => {
+        // Reconstruct a Deck shape from the editor state so the API has full context.
+        const deckShape = {
+          title: presentation.title,
+          theme: presentation.theme,
+          framework: 'duarte' as const,
+          brief: { topic: presentation.title, audience: '', goal: '', durationMin: presentation.slides.length },
+          script: [],
+          createdAt: new Date().toISOString(),
+          slides: presentation.slides.map(s => s.source).filter(Boolean),
+        } as any
+        return (
+          <RewriteSlideModal
+            open
+            deck={deckShape}
+            slideIndex={currentSlide}
+            onClose={() => setRewriteOpen(false)}
+            onApply={(newSlide) => replaceSlideSource(currentSlide, newSlide)}
+          />
+        )
+      })()}
     </div>
   )
 }
