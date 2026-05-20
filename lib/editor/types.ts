@@ -65,6 +65,8 @@ export interface TextElement extends BaseElement {
   highlightColor?: string
   /** Optional semantic role — used by export to map text into PPT outline structure. */
   role?: 'heading' | 'body' | 'caption' | 'hero'
+  /** When true, text never wraps (overflows on overflow). Useful for compact numeric labels. */
+  nowrap?: boolean
 }
 
 export interface RectElement extends BaseElement {

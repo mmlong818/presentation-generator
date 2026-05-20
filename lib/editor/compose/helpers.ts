@@ -42,6 +42,7 @@ export interface TextOpts {
   role?: TextElement['role']
   z?: number
   rotate?: number
+  nowrap?: boolean
 }
 
 export function text(o: TextOpts): TextElement {
@@ -63,6 +64,7 @@ export function text(o: TextOpts): TextElement {
     role: o.role,
     z: o.z,
     rotate: o.rotate,
+    nowrap: o.nowrap,
   }
 }
 

@@ -41,7 +41,11 @@ interface EditorState {
   redo: () => void
 }
 
-const MAX_HISTORY = 50
+// Bump from 50: real users add/delete dozens of elements during editing and
+// expect to be able to walk back the whole session. PPT editors (Keynote /
+// PowerPoint) typically retain hundreds of steps. 250 covers a long session
+// while keeping the snapshot cost bounded (each entry is a deck JSON copy).
+const MAX_HISTORY = 250
 
 function snapshot(p: EditorPresentation): EditorPresentation {
   return JSON.parse(JSON.stringify(p)) as EditorPresentation

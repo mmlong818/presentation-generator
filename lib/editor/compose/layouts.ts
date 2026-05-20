@@ -1001,8 +1001,13 @@ function composeChartBar(s: ChartBarSlide, theme: ResolvedTheme, n: number, tota
   const top = afterHeading(s.heading, theme, 130)
   const bot = s.source ? 960 : 1000
   const chartH = bot - top
-  const labelW = 280
-  const valW = 160
+  // Auto-size label column to longest label, value column to longest value.
+  // Was hard-coded 280 / 160 which clipped long labels and wrapped long values.
+  const longestLabel = bars.reduce((a, b) => Math.max(a, b.label.length), 0)
+  const longestValue = bars.reduce((a, b) => Math.max(a, `${b.value}${s.unit ?? ''}`.length), 0)
+  // Conservative px-per-char estimate for CJK + ASCII mixed (theme.body ≈ 34px)
+  const labelW = Math.max(280, Math.min(520, longestLabel * theme.body * 0.9))
+  const valW = Math.max(160, Math.min(280, longestValue * theme.body * 0.55 + 24))
   const barAreaX = theme.padding + labelW + 20
   const barAreaW = CANVAS_W - theme.padding - barAreaX - valW - 12
   const max = Math.max(...bars.map(b => b.value), 1)
@@ -1032,6 +1037,9 @@ function composeChartBar(s: ChartBarSlide, theme: ResolvedTheme, n: number, tota
       opacity: emph ? 1 : 0.7,
       cornerRadius: 2,
     }))
+    // U+00A0 between value and unit prevents browser from splitting them onto
+    // separate lines when the available width is borderline.
+    const unitStr = s.unit ? ` ${s.unit}` : ''
     out.push(text({
       text: `${b.value}${s.unit ?? ''}`,
       x: barAreaX + bw + 12, y: by,
@@ -1042,6 +1050,7 @@ function composeChartBar(s: ChartBarSlide, theme: ResolvedTheme, n: number, tota
       fontWeight: 700,
       lineHeight: 1.2,
       role: 'body',
+      nowrap: true,
     }))
   })
 
@@ -1652,6 +1661,26 @@ function composePersona(s: PersonaSlide, theme: ResolvedTheme): SlideElement[] {
   if (s.needs && s.needs.length) renderCol(theme.padding, 'Needs', s.needs, theme.accent)
   if (s.pains && s.pains.length) renderCol(theme.padding + colW + 40, 'Pains', s.pains, theme.muted)
 
+  // Pull quote attributed to this persona — placed in the gap between
+  // attributes (which end around y=560 for typical themes) and the
+  // needs/pains panels at y=640. Narrow window, so single-line italic.
+  if (s.quote) {
+    const quoteY = bottomTop - 70
+    const quoteX = theme.padding
+    const quoteW = inner(theme)
+    out.push(text({
+      text: `"${s.quote}"`,
+      x: quoteX, y: quoteY, w: quoteW, h: 60,
+      fontSize: theme.body * 0.95,
+      fontFamily: displayFont(theme),
+      color: theme.muted,
+      fontStyle: 'italic',
+      lineHeight: 1.3,
+      align: 'center',
+      role: 'caption',
+    }))
+  }
+
   return out
 }
 
@@ -1711,6 +1740,35 @@ function composeQuadrant(s: QuadrantSlide, theme: ResolvedTheme, n: number, tota
     color: theme.muted,
     role: 'caption',
   }))
+
+  // Axis titles (the field that was being silently dropped)
+  if (s.axes.x.label) {
+    out.push(text({
+      text: s.axes.x.label,
+      x: plotX, y: plotY + plotH + 56, w: plotW, h: 40,
+      fontSize: theme.caption,
+      fontFamily: bodyFont(theme),
+      color: theme.text,
+      fontWeight: 700,
+      align: 'center',
+      letterSpacing: 0.04,
+      role: 'caption',
+    }))
+  }
+  if (s.axes.y.label) {
+    // Vertical-ish: place at left of the plot, rotated 90° counter-clockwise.
+    out.push(text({
+      text: s.axes.y.label,
+      x: plotX - 220, y: plotY + plotH / 2 - 20, w: 200, h: 40,
+      fontSize: theme.caption,
+      fontFamily: bodyFont(theme),
+      color: theme.text,
+      fontWeight: 700,
+      letterSpacing: 0.04,
+      align: 'right',
+      role: 'caption',
+    }))
+  }
 
   // Points
   const cellW = plotW / 5

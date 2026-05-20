@@ -6,7 +6,8 @@ import dynamic from 'next/dynamic'
 import { useEditorStore } from '@/lib/editor/store'
 import { deckToEditor } from '@/lib/editor/compose'
 import { useT } from '@/lib/i18n'
-import type { Deck, LayoutType } from '@/lib/types'
+import { FIXTURES, fixtureByKey } from '@/lib/editor/test-fixtures'
+import type { Deck, LayoutType, Slide } from '@/lib/types'
 import type { ImageElement, TextElement } from '@/lib/editor/types'
 
 const SlideCanvas = dynamic(() => import('@/components/editor/SlideCanvas'), { ssr: false })
@@ -147,7 +148,45 @@ export default function DeckPage() {
     try {
       const params = new URLSearchParams(window.location.search)
       const fixture = params.get('fixture')
+      const fx = params.get('fx')           // new: rich named fixture
+      const fxAll = params.get('fxAll')     // new: all 21 layouts as one deck
       const themeOverride = params.get('theme') as Deck['theme'] | null
+
+      // ?fx=cover.long&theme=midnight-luxe → single-slide rich fixture
+      if (fx) {
+        const meta = fixtureByKey(fx)
+        if (!meta) { setLoadError(`未知 fixture key: ${fx}`); return }
+        const deck: Deck = {
+          title: meta.label, theme: themeOverride ?? 'modern-minimal', framework: 'duarte',
+          brief: { topic: meta.label, audience: 'test', goal: 'visual', durationMin: 1 },
+          script: [], createdAt: new Date().toISOString(),
+          slides: [meta.slide],
+        }
+        setPresentation(deckToEditor(deck))
+        return
+      }
+
+      // ?fxAll=normal → all 21 layouts (normal category) as one deck
+      if (fxAll) {
+        const cat = fxAll as 'normal' | 'stress' | 'edge' | 'all'
+        const picked = FIXTURES.filter(f => cat === 'all' || f.category === cat)
+        // ensure one per layout when cat=='normal'
+        const seen = new Set<Slide['type']>()
+        const slides: Slide[] = []
+        for (const f of picked) {
+          if (cat === 'normal' && seen.has(f.layoutType)) continue
+          seen.add(f.layoutType)
+          slides.push(f.slide)
+        }
+        const deck: Deck = {
+          title: `Matrix · ${cat}`, theme: themeOverride ?? 'modern-minimal', framework: 'duarte',
+          brief: { topic: 'matrix', audience: 'test', goal: 'visual', durationMin: 30 },
+          script: [], createdAt: new Date().toISOString(),
+          slides,
+        }
+        setPresentation(deckToEditor(deck))
+        return
+      }
 
       if (fixture) {
         const deck = makeFixtureDeck(fixture, themeOverride)
@@ -156,7 +195,7 @@ export default function DeckPage() {
       }
       const raw = localStorage.getItem(DECK_STORAGE)
       if (!raw) {
-        setLoadError('还没有生成 deck。回主页填写需求生成一份，或试 ?fixture=cover 查看示例。')
+        setLoadError('还没有生成 deck。回主页填写需求生成一份，或试 ?fixture=cover / ?fx=cover.long / ?fxAll=normal 查看示例。')
         return
       }
       const deck = JSON.parse(raw) as Deck
