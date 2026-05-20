@@ -45,6 +45,8 @@ export default function Home() {
   const [errorDetails, setErrorDetails] = useState<{ preview?: string; hint?: string } | null>(null);
   const [resumeStep, setResumeStep] = useState<'/outline' | '/script' | '/style' | null>(null);
   const [resumeBrief, setResumeBrief] = useState<string | null>(null);
+  // 已生成完成的 deck（与 wizard 未完成状态独立）
+  const [savedDeckTitle, setSavedDeckTitle] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem(LLM_STORAGE) : null;
@@ -64,6 +66,14 @@ export default function Home() {
         if (b?.topic) setResumeBrief(b.topic.slice(0, 80));
       } catch {}
     }
+    // 检测已生成的 deck（即使关掉编辑器，回主页仍能看到入口）
+    try {
+      const lastDeckRaw = localStorage.getItem('pg_last_deck');
+      if (lastDeckRaw) {
+        const d = JSON.parse(lastDeckRaw);
+        if (d?.title) setSavedDeckTitle(d.title);
+      }
+    } catch {}
   }, []);
 
   function persistLlm(next: LLMConfig) {
@@ -123,6 +133,26 @@ export default function Home() {
 
   return (
     <main className="min-h-screen px-6 py-12 sm:px-12 lg:px-20 max-w-4xl mx-auto w-full">
+      {savedDeckTitle && (
+        <div className="mb-4 p-4 rounded-lg border border-stone-300 bg-white" role="region" aria-label="已生成 deck">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="text-sm text-stone-800 min-w-0 flex-1">
+              <div className="font-semibold">你刚才生成的 deck 还在</div>
+              <div className="text-xs text-stone-500 mt-1 truncate" title={savedDeckTitle}>
+                {savedDeckTitle}
+              </div>
+            </div>
+            <div className="flex gap-2 shrink-0">
+              <Link href="/deck" className="text-sm px-4 py-2 rounded bg-stone-900 text-white font-medium hover:bg-stone-800">
+                打开编辑器
+              </Link>
+              <Link href="/history" className="text-sm px-3 py-2 rounded border border-stone-300 text-stone-700 hover:bg-stone-50">
+                历史
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
       {resumeStep && (
         <div className="mb-6 p-4 rounded-lg border border-amber-300 bg-amber-50" role="region" aria-label="续会话">
           <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -140,7 +170,7 @@ export default function Home() {
               </Link>
               <button
                 onClick={() => {
-                  if (!confirm('确定要放弃上次未完成的会话吗？\n这会清除你写过的主题、大纲、讲稿。')) return;
+                  if (!confirm('清除未完成的 wizard 草稿？\n（只清主题/大纲/讲稿草稿；已生成的 deck 不受影响）')) return;
                   localStorage.removeItem(BRIEF_STORAGE);
                   localStorage.removeItem(OUTLINE_STORAGE);
                   localStorage.removeItem(SCRIPT_STORAGE);
@@ -148,8 +178,9 @@ export default function Home() {
                   setResumeBrief(null);
                 }}
                 className="text-sm px-3 py-2 rounded border border-amber-300 text-amber-800 hover:bg-amber-100"
+                title="只清除草稿，不会删除已生成的 deck"
               >
-                放弃
+                清草稿
               </button>
             </div>
           </div>

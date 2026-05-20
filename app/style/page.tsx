@@ -88,6 +88,14 @@ export default function StylePage() {
       }
       const data = await res.json();
       localStorage.setItem(DECK_STORAGE, JSON.stringify(data.deck));
+      // Clear wizard draft so the home page doesn't show "未完成会话" next visit.
+      // 已生成的 deck 在 DECK_STORAGE 里，不动。
+      localStorage.removeItem(BRIEF_STORAGE);
+      localStorage.removeItem(OUTLINE_STORAGE);
+      localStorage.removeItem(SCRIPT_STORAGE);
+      localStorage.removeItem(BRAND_STORAGE);
+      localStorage.removeItem(THEME_STORAGE);
+      localStorage.removeItem(DENSITY_STORAGE);
       router.push('/deck');
     } catch (e) {
       setError(e instanceof Error ? e.message : '生成失败');

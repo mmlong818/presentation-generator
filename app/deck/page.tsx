@@ -149,6 +149,25 @@ export default function DeckPage() {
   const [pickerMode, setPickerMode] = useState<'insert' | 'change' | null>(null)
   const [iconPickerOpen, setIconPickerOpen] = useState(false)
   const [rewriteOpen, setRewriteOpen] = useState(false)
+  const [exportOpen, setExportOpen] = useState(false)
+  const exportMenuRef = useRef<HTMLDivElement>(null)
+
+  // Click outside closes the export dropdown
+  useEffect(() => {
+    if (!exportOpen) return
+    function onDocClick(e: MouseEvent) {
+      if (!exportMenuRef.current?.contains(e.target as Node)) setExportOpen(false)
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setExportOpen(false)
+    }
+    document.addEventListener('mousedown', onDocClick)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDocClick)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [exportOpen])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { t, locale, setLocale } = useT()
 
@@ -413,9 +432,6 @@ export default function DeckPage() {
           <span className="text-stone-400">·</span>
           <span className="text-stone-500">主题：{presentation.theme}</span>
           <span className="text-stone-400">·</span>
-          <button onClick={() => setPickerMode('change')}
-            className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
-            title="切换当前 slide 版式">切换版式</button>
           <button onClick={() => setRewriteOpen(true)}
             className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50"
             title="LLM 重写本张 slide">✨ 重写</button>
@@ -435,13 +451,26 @@ export default function DeckPage() {
             <button onClick={() => redo()} className="px-2.5 py-1 text-xs rounded border border-stone-300 hover:bg-stone-50" title="重做 (Ctrl+Y)">↷ 重做</button>
             <Link href={`/present/${encodeURIComponent(presentation.id)}`}
               className="px-3 py-1.5 text-xs rounded border border-stone-300 hover:bg-stone-50">▶ 演讲</Link>
-            <div className="relative group">
-              <button className="px-3 py-1.5 text-xs rounded bg-stone-900 text-white hover:bg-stone-800">导出 ▾</button>
-              <div className="absolute right-0 top-full mt-1 bg-white border border-stone-200 rounded shadow-lg hidden group-hover:block z-50 min-w-[120px]">
-                <button onClick={handleExport} className="block w-full text-left px-3 py-2 text-xs hover:bg-stone-50">PPTX</button>
-                <button onClick={handleExportHTML} className="block w-full text-left px-3 py-2 text-xs hover:bg-stone-50">HTML 自包含</button>
-                <button onClick={handleExportPDF} className="block w-full text-left px-3 py-2 text-xs hover:bg-stone-50">PDF (浏览器打印)</button>
-              </div>
+            <div ref={exportMenuRef} className="relative">
+              <button
+                onClick={() => setExportOpen(v => !v)}
+                aria-haspopup="menu"
+                aria-expanded={exportOpen}
+                className="px-3 py-1.5 text-xs rounded bg-stone-900 text-white hover:bg-stone-800"
+              >导出 {exportOpen ? '▴' : '▾'}</button>
+              {exportOpen && (
+                <div role="menu" className="absolute right-0 top-full bg-white border border-stone-200 rounded shadow-lg z-50 min-w-[160px] py-1">
+                  <button onClick={() => { setExportOpen(false); handleExport() }}
+                    role="menuitem"
+                    className="block w-full text-left px-3 py-2 text-xs hover:bg-stone-50">PPTX</button>
+                  <button onClick={() => { setExportOpen(false); handleExportHTML() }}
+                    role="menuitem"
+                    className="block w-full text-left px-3 py-2 text-xs hover:bg-stone-50">HTML 自包含</button>
+                  <button onClick={() => { setExportOpen(false); handleExportPDF() }}
+                    role="menuitem"
+                    className="block w-full text-left px-3 py-2 text-xs hover:bg-stone-50">PDF (浏览器打印)</button>
+                </div>
+              )}
             </div>
           </div>
         </header>
