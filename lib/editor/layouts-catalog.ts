@@ -70,6 +70,29 @@ export const LAYOUTS: LayoutMeta[] = [
     default: { type: 'chart-bar', heading: '渠道贡献', unit: '万元',
       bars: [{ label: '渠道 A', value: 40 }, { label: '渠道 B', value: 28 }, { label: '渠道 C', value: 12 }] } },
 
+  { type: 'chart-line', name: '折线图', category: '数据', hint: '趋势 / 时间序列',
+    default: { type: 'chart-line', heading: '4 个季度 GMV 趋势', unit: '万元',
+      xLabels: ['Q1', 'Q2', 'Q3', 'Q4'],
+      series: [{ name: '主线', values: [120, 180, 240, 320] }] } },
+
+  { type: 'chart-pie', name: '饼图', category: '数据', hint: '构成比例',
+    default: { type: 'chart-pie', heading: '收入构成',
+      slices: [
+        { label: '订阅', value: 60 },
+        { label: '广告', value: 25 },
+        { label: '服务', value: 15 },
+      ],
+      centerLabel: '100%' } },
+
+  { type: 'chart-area', name: '面积图', category: '数据', hint: '堆叠累计趋势',
+    default: { type: 'chart-area', heading: '用户来源结构', unit: '万人',
+      xLabels: ['Q1', 'Q2', 'Q3', 'Q4'],
+      series: [
+        { name: '直营', values: [12, 18, 22, 28] },
+        { name: '搜索', values: [8, 10, 14, 18] },
+        { name: '推荐', values: [4, 6, 9, 12] },
+      ] } },
+
   { type: 'table', name: '表格', category: '数据', hint: '多列对照',
     default: { type: 'table', heading: '对照表',
       columns: [{ id: 'k', label: '维度' }, { id: 'v', label: '值' }],

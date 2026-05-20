@@ -141,7 +141,15 @@ function renderElement(pslide: any, el: SlideElement): void {
     return
   }
 
-  // image: not yet supported in editor; would map to addImage here.
+  if (el.type === 'image') {
+    pslide.addImage({
+      data: el.src,
+      x: pxToInW(el.x),
+      y: pxToInH(el.y),
+      w: pxToInW(el.w),
+      h: pxToInH(el.h),
+    })
+  }
 }
 
 /** Extract first font face from a CSS font stack so PowerPoint receives a real name. */

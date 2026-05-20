@@ -114,6 +114,27 @@ export const LAYOUTS: Record<LayoutType, LayoutDefinition> = {
     fieldsDoc: 'eyebrow?, heading, unit (string), bars (4-8 个 { label, value:number, note? }), highlight? (要强调的 label), source?',
     example: `{ "type": "chart-bar", "heading": "华东独大，西南增速最快", "unit": "万元", "bars": [{"label":"华东","value":5610,"note":"+18% YoY"},{"label":"华北","value":4820,"note":"+9%"},{"label":"华南","value":3150,"note":"+12%"},{"label":"西南","value":1720,"note":"+47%"},{"label":"东北","value":2940,"note":"-3%"}], "highlight":"西南", "source":"需引用：[内部 BI]" }`,
   },
+  'chart-line': {
+    type: 'chart-line',
+    label: '折线图',
+    whenToUse: '时间序列 / 趋势演变（3-12 个时间点，1-3 条 series）；单点数字对比用 data，构成比例用 chart-pie',
+    fieldsDoc: 'eyebrow?, heading, xLabels (3-12 个时间标签), series (1-3 个 { name, values: number[] }), unit?, highlight? (要强调的 series.name), source?',
+    example: `{ "type": "chart-line", "heading": "我们的复购率正在脱离行业均线", "unit": "%", "xLabels": ["1月","2月","3月","4月","5月","6月"], "series": [{"name":"我们","values":[62,65,68,72,76,81]},{"name":"行业","values":[58,58,59,59,60,61]}], "highlight":"我们", "source":"内部统计 vs 行业报告" }`,
+  },
+  'chart-pie': {
+    type: 'chart-pie',
+    label: '饼图',
+    whenToUse: '2-6 个部分的构成比例（收入来源、用户结构）；时序对比用 chart-line，数值对比用 chart-bar',
+    fieldsDoc: 'eyebrow?, heading, slices (2-6 个 { label, value:number, note? }), centerLabel? (中心标注), highlight? (要强调的 slice.label), source?',
+    example: `{ "type": "chart-pie", "heading": "企业级订阅成为压舱石", "slices": [{"label":"企业订阅","value":60},{"label":"广告分成","value":25},{"label":"专业服务","value":15}], "centerLabel":"$2.4M", "highlight":"企业订阅" }`,
+  },
+  'chart-area': {
+    type: 'chart-area',
+    label: '堆叠面积图',
+    whenToUse: '随时间累计构成的变化（用户结构演变、收入来源演变）；单序列用 chart-line，固定时间点用 chart-pie',
+    fieldsDoc: 'eyebrow?, heading, xLabels (3-12 个时间标签), series (1-3 个 { name, values: number[] }), unit?, highlight?, source?',
+    example: `{ "type": "chart-area", "heading": "社交推荐正在改写用户来源", "unit":"万人", "xLabels":["Q1","Q2","Q3","Q4"], "series":[{"name":"直营","values":[12,14,18,22]},{"name":"搜索","values":[8,9,11,14]},{"name":"社交","values":[4,5,7,12]}], "highlight":"社交" }`,
+  },
   'kpi-board': {
     type: 'kpi-board',
     label: 'KPI 看板',

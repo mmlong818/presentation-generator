@@ -48,6 +48,9 @@ export type LayoutType =
   | 'checklist'    // 清单
   | 'matrix-2x2'   // 二维矩阵（4 格分类）
   | 'chart-bar'    // 横向柱状对比（4-8 类目）
+  | 'chart-line'   // 折线图（时间序列 / 趋势，1-3 series × 3-12 点）
+  | 'chart-pie'    // 饼图（构成比例，2-6 切片）
+  | 'chart-area'   // 堆叠面积图（累计/构成趋势）
   | 'kpi-board'    // KPI 看板（4 或 6 项）
   | 'roadmap'      // 季度路线（2-4 lane × 3-4 period）
   | 'case-study'   // 案例研究（背景/挑战/方法 + 结果 + 引言）
@@ -225,6 +228,58 @@ export interface ChartBar {
   note?: string;
 }
 
+// ─── chart-line ──────────────────────────────────────────────────────────────
+/** Time-series or sequential line chart. 1-3 series, 3-12 points each. */
+export interface ChartLineSlide extends LayoutBase {
+  type: 'chart-line';
+  heading: string;
+  /** X 轴标签，所有 series 共享。E.g. ['Q1','Q2','Q3','Q4'] or ['1月','2月',...] */
+  xLabels: string[];
+  /** 1-3 条线 */
+  series: ChartLineSeries[];
+  unit?: string;
+  source?: string;
+  /** 高亮某条 series.name */
+  highlight?: string;
+}
+export interface ChartLineSeries {
+  name: string;
+  /** Values aligned with xLabels; length must match */
+  values: number[];
+}
+
+// ─── chart-pie ───────────────────────────────────────────────────────────────
+/** Composition / share breakdown. 2-6 slices. */
+export interface ChartPieSlide extends LayoutBase {
+  type: 'chart-pie';
+  heading: string;
+  /** 2-6 个切片 */
+  slices: ChartPieSlice[];
+  /** 中心标注（如 "100%" 或总数），可选 */
+  centerLabel?: string;
+  /** 要强调的 slice.label */
+  highlight?: string;
+  source?: string;
+}
+export interface ChartPieSlice {
+  label: string;
+  value: number;
+  note?: string;
+}
+
+// ─── chart-area ──────────────────────────────────────────────────────────────
+/** Stacked area chart for cumulative/composition over time. 1-3 series. */
+export interface ChartAreaSlide extends LayoutBase {
+  type: 'chart-area';
+  heading: string;
+  xLabels: string[];
+  /** 1-3 条堆叠区域 */
+  series: ChartLineSeries[];
+  unit?: string;
+  source?: string;
+  highlight?: string;
+}
+
 // ─── kpi-board ───────────────────────────────────────────────────────────────
 export interface KpiBoardSlide extends LayoutBase {
   type: 'kpi-board';
@@ -381,6 +436,9 @@ export type Slide =
   | ChecklistSlide
   | Matrix2x2Slide
   | ChartBarSlide
+  | ChartLineSlide
+  | ChartPieSlide
+  | ChartAreaSlide
   | KpiBoardSlide
   | RoadmapSlide
   | CaseStudySlide

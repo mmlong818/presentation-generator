@@ -15,7 +15,8 @@
 import type {
   CoverSlide, StatementSlide, ProcessSlide, DataSlide, CompareSlide,
   TimelineSlide, ArgumentSlide, QuoteSlide, DiagramSlide, CTASlide,
-  ChecklistSlide, Matrix2x2Slide, ChartBarSlide, KpiBoardSlide,
+  ChecklistSlide, Matrix2x2Slide, ChartBarSlide, ChartLineSlide,
+  ChartPieSlide, ChartAreaSlide, KpiBoardSlide,
   RoadmapSlide, CaseStudySlide, TableSlide, CausalitySlide, PersonaSlide,
   QuadrantSlide, QuestionSlide, Slide,
 } from '../../types'
@@ -23,6 +24,7 @@ import type { ResolvedTheme } from '../theme'
 import type { SlideElement, TextElement } from '../types'
 import { CANVAS_H, CANVAS_W } from '../types'
 import { distributeH, distributeV, eyebrow, ellipse, fitTitleSize, headingHeight, line, rect, text, estimateLines } from './helpers'
+import { buildLineChartSVG, buildPieChartSVG, buildAreaChartSVG, svgToDataUrl } from './charts'
 
 // ─── helpers used across many layouts ────────────────────────────────────────
 
@@ -1112,6 +1114,133 @@ function composeChartBar(s: ChartBarSlide, theme: ResolvedTheme, n: number, tota
   return out
 }
 
+// ─── CHART LINE / PIE / AREA (SVG-rendered, embedded as image) ──────────────
+//
+// 这三种图表用纯 SVG 生成 → svgToDataUrl → ImageElement
+// 单一 element，主题色/字号自动跟随，导出 PPTX 无损（pptxgenjs 把 SVG 转 PNG）
+
+function chartImageId(prefix: string): string {
+  return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`
+}
+
+function commonChartCanvas(theme: ResolvedTheme): { x: number; y: number; w: number; h: number } {
+  // Use the standard 1920×1080 source space; chart occupies area below heading
+  return {
+    x: theme.padding,
+    y: 280,
+    w: CANVAS_W - 2 * theme.padding,
+    h: CANVAS_H - 280 - 120,
+  }
+}
+
+function composeChartLine(s: ChartLineSlide, theme: ResolvedTheme, n: number, total: number): SlideElement[] {
+  const out: SlideElement[] = []
+  if (s.eyebrow) out.push(eyebrow(s.eyebrow, theme))
+  out.push(headingEl(s.heading, theme, { highlight: undefined }))
+
+  const box = commonChartCanvas(theme)
+  const svg = buildLineChartSVG({
+    w: box.w, h: box.h,
+    accent: theme.accent, text: theme.text, muted: theme.muted,
+    fontFamily: theme.fontBody,
+    xLabels: s.xLabels,
+    series: s.series,
+    unit: s.unit,
+    highlight: s.highlight,
+  })
+  out.push({
+    id: chartImageId('chart-line'),
+    type: 'image',
+    x: box.x, y: box.y, w: box.w, h: box.h,
+    src: svgToDataUrl(svg),
+  })
+
+  if (s.source) {
+    out.push(text({
+      text: s.source,
+      x: theme.padding, y: CANVAS_H - 110, w: inner(theme), h: 30,
+      fontSize: theme.caption * 0.9,
+      fontFamily: bodyFont(theme),
+      color: theme.muted,
+      fontStyle: 'italic',
+      role: 'caption',
+    }))
+  }
+  out.push(pageNumEl(n, total, theme))
+  return out
+}
+
+function composeChartPie(s: ChartPieSlide, theme: ResolvedTheme, n: number, total: number): SlideElement[] {
+  const out: SlideElement[] = []
+  if (s.eyebrow) out.push(eyebrow(s.eyebrow, theme))
+  out.push(headingEl(s.heading, theme, { highlight: undefined }))
+
+  const box = commonChartCanvas(theme)
+  const svg = buildPieChartSVG({
+    w: box.w, h: box.h,
+    accent: theme.accent, text: theme.text, muted: theme.muted,
+    fontFamily: theme.fontBody,
+    slices: s.slices,
+    centerLabel: s.centerLabel,
+    highlight: s.highlight,
+  })
+  out.push({
+    id: chartImageId('chart-pie'),
+    type: 'image',
+    x: box.x, y: box.y, w: box.w, h: box.h,
+    src: svgToDataUrl(svg),
+  })
+  if (s.source) {
+    out.push(text({
+      text: s.source,
+      x: theme.padding, y: CANVAS_H - 110, w: inner(theme), h: 30,
+      fontSize: theme.caption * 0.9,
+      fontFamily: bodyFont(theme),
+      color: theme.muted,
+      fontStyle: 'italic',
+      role: 'caption',
+    }))
+  }
+  out.push(pageNumEl(n, total, theme))
+  return out
+}
+
+function composeChartArea(s: ChartAreaSlide, theme: ResolvedTheme, n: number, total: number): SlideElement[] {
+  const out: SlideElement[] = []
+  if (s.eyebrow) out.push(eyebrow(s.eyebrow, theme))
+  out.push(headingEl(s.heading, theme, { highlight: undefined }))
+
+  const box = commonChartCanvas(theme)
+  const svg = buildAreaChartSVG({
+    w: box.w, h: box.h,
+    accent: theme.accent, text: theme.text, muted: theme.muted,
+    fontFamily: theme.fontBody,
+    xLabels: s.xLabels,
+    series: s.series,
+    unit: s.unit,
+    highlight: s.highlight,
+  })
+  out.push({
+    id: chartImageId('chart-area'),
+    type: 'image',
+    x: box.x, y: box.y, w: box.w, h: box.h,
+    src: svgToDataUrl(svg),
+  })
+  if (s.source) {
+    out.push(text({
+      text: s.source,
+      x: theme.padding, y: CANVAS_H - 110, w: inner(theme), h: 30,
+      fontSize: theme.caption * 0.9,
+      fontFamily: bodyFont(theme),
+      color: theme.muted,
+      fontStyle: 'italic',
+      role: 'caption',
+    }))
+  }
+  out.push(pageNumEl(n, total, theme))
+  return out
+}
+
 // ─── KPI BOARD ───────────────────────────────────────────────────────────────
 
 const TONE: Record<string, string | undefined> = {
@@ -1871,6 +2000,9 @@ export function composeSlide(
     case 'checklist':   return composeChecklist(slide, theme, n, total)
     case 'matrix-2x2':  return composeMatrix2x2(slide, theme, n, total)
     case 'chart-bar':   return composeChartBar(slide, theme, n, total)
+    case 'chart-line':  return composeChartLine(slide, theme, n, total)
+    case 'chart-pie':   return composeChartPie(slide, theme, n, total)
+    case 'chart-area':  return composeChartArea(slide, theme, n, total)
     case 'kpi-board':   return composeKpiBoard(slide, theme, n, total)
     case 'roadmap':     return composeRoadmap(slide, theme, n, total)
     case 'case-study':  return composeCaseStudy(slide, theme, n, total)

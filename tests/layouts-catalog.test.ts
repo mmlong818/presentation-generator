@@ -2,10 +2,14 @@ import { describe, expect, it } from 'vitest'
 import { LAYOUTS, defaultSlideForType, migrateSlide } from '@/lib/editor/layouts-catalog'
 
 describe('layouts-catalog', () => {
-  it('covers all 21 layout types', () => {
-    expect(LAYOUTS).toHaveLength(21)
+  it('covers all 24 layout types (21 original + 3 charts)', () => {
+    expect(LAYOUTS).toHaveLength(24)
     const types = new Set(LAYOUTS.map(l => l.type))
-    expect(types.size).toBe(21)
+    expect(types.size).toBe(24)
+    // Spot-check the new chart types
+    expect(types.has('chart-line')).toBe(true)
+    expect(types.has('chart-pie')).toBe(true)
+    expect(types.has('chart-area')).toBe(true)
   })
 
   it('every default slide has matching type discriminator', () => {

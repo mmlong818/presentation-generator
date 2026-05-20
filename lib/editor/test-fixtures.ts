@@ -304,6 +304,58 @@ export const FIXTURES: FixtureMeta[] = [
     ],
   } },
 
+  // ─── CHART LINE ─────────────────────────────────────────────────────────
+  { key: 'chart-line.normal', layoutType: 'chart-line', label: '折线图 · 标准', category: 'normal', slide: {
+    type: 'chart-line',
+    eyebrow: '增长趋势',
+    heading: '4 个季度 GMV 加速',
+    unit: '万元',
+    xLabels: ['Q1', 'Q2', 'Q3', 'Q4'],
+    series: [{ name: 'GMV', values: [120, 180, 240, 320] }],
+    source: '内部财务系统 2026',
+  } },
+  { key: 'chart-line.multi', layoutType: 'chart-line', label: '折线图 · 多线', category: 'normal', slide: {
+    type: 'chart-line',
+    heading: '我们 vs 行业平均',
+    unit: '%',
+    xLabels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+    series: [
+      { name: '我们', values: [62, 65, 68, 72, 76, 81] },
+      { name: '行业', values: [58, 58, 59, 59, 60, 61] },
+    ],
+    highlight: '我们',
+  } },
+
+  // ─── CHART PIE ──────────────────────────────────────────────────────────
+  { key: 'chart-pie.normal', layoutType: 'chart-pie', label: '饼图 · 标准', category: 'normal', slide: {
+    type: 'chart-pie',
+    eyebrow: '收入构成',
+    heading: '2026 H1 营收来源',
+    slices: [
+      { label: '企业级订阅', value: 60 },
+      { label: '广告分成', value: 25 },
+      { label: '专业服务', value: 15 },
+    ],
+    centerLabel: '$2.4M',
+    highlight: '企业级订阅',
+    source: '财务系统 2026',
+  } },
+
+  // ─── CHART AREA ─────────────────────────────────────────────────────────
+  { key: 'chart-area.normal', layoutType: 'chart-area', label: '面积图 · 标准', category: 'normal', slide: {
+    type: 'chart-area',
+    eyebrow: '用户结构变化',
+    heading: '6 个月用户来源演变',
+    unit: '万人',
+    xLabels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+    series: [
+      { name: '直营 APP', values: [12, 14, 18, 22, 26, 31] },
+      { name: '搜索引擎', values: [8, 9, 11, 14, 17, 20] },
+      { name: '社交推荐', values: [4, 5, 7, 10, 14, 18] },
+    ],
+    source: '埋点数据',
+  } },
+
   // ─── TABLE ───────────────────────────────────────────────────────────────
   { key: 'table.normal', layoutType: 'table', label: '表格 · 标准', category: 'normal', slide: {
     type: 'table',
