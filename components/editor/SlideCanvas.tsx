@@ -32,6 +32,8 @@ export default function SlideCanvas({ width, readOnly = false, slide: slideOverr
   const stageRef = useRef<Konva.Stage>(null)
   const trRef = useRef<Konva.Transformer>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
+  // Alignment guides shown during element drag (source-px coordinates).
+  const [guides, setGuides] = useState<{ vert: number[]; horiz: number[] }>({ vert: [], horiz: [] })
 
   const slide = slideOverride ?? presentation?.slides[currentSlide]
   const scale = width / CANVAS_W
@@ -170,6 +172,7 @@ export default function SlideCanvas({ width, readOnly = false, slide: slideOverr
           <TextOverlay
             key={el.id}
             el={el}
+            allElements={slide.elements}
             isSelected={selectedIds.includes(el.id)}
             isEditing={el.id === editingId}
             readOnly={readOnly}
@@ -179,10 +182,32 @@ export default function SlideCanvas({ width, readOnly = false, slide: slideOverr
               setEditingId(null)
               if (nextText !== el.text) updateElement(el.id, { text: nextText })
             }}
-            onDragEnd={(patch) => updateElement(el.id, patch)}
+            onDragEnd={(patch) => { updateElement(el.id, patch); setGuides({ vert: [], horiz: [] }) }}
+            onDragGuides={setGuides}
           />
         ))}
       </div>
+      {/* Alignment guide lines — only visible while dragging */}
+      {(guides.vert.length > 0 || guides.horiz.length > 0) && (
+        <div aria-hidden style={{
+          position: 'absolute', left: 0, top: 0, width: CANVAS_W, height: CANVAS_H,
+          transformOrigin: '0 0', transform: `scale(${scale})`,
+          pointerEvents: 'none', zIndex: 50,
+        }}>
+          {guides.vert.map((x, i) => (
+            <div key={`v${i}`} style={{
+              position: 'absolute', left: x - 1, top: 0, width: 2, height: CANVAS_H,
+              background: '#ec4899',
+            }} />
+          ))}
+          {guides.horiz.map((y, i) => (
+            <div key={`h${i}`} style={{
+              position: 'absolute', left: 0, top: y - 1, width: CANVAS_W, height: 2,
+              background: '#ec4899',
+            }} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -332,8 +357,9 @@ function ImageNode({ el, readOnly, onSelect, onDragEnd, onTransformEnd }: {
 
 // ─── Text overlay (HTML, browser-native typography) ─────────────────────────
 
-function TextOverlay({ el, isSelected, isEditing, readOnly, onSelect, onStartEdit, onEndEdit, onDragEnd }: {
+function TextOverlay({ el, allElements, isSelected, isEditing, readOnly, onSelect, onStartEdit, onEndEdit, onDragEnd, onDragGuides }: {
   el: TextElement
+  allElements: SlideElement[]
   isSelected: boolean
   isEditing: boolean
   readOnly: boolean
@@ -341,6 +367,7 @@ function TextOverlay({ el, isSelected, isEditing, readOnly, onSelect, onStartEdi
   onStartEdit: () => void
   onEndEdit: (nextText: string) => void
   onDragEnd: (patch: Partial<SlideElement>) => void
+  onDragGuides: (g: { vert: number[]; horiz: number[] }) => void
 }) {
   const fontWeight = typeof el.fontWeight === 'number'
     ? el.fontWeight
@@ -357,23 +384,91 @@ function TextOverlay({ el, isSelected, isEditing, readOnly, onSelect, onStartEdi
     e.stopPropagation()
     onSelect(el.id, { additive: e.shiftKey })
     dragRef.current = { startX: e.clientX, startY: e.clientY, origX: el.x, origY: el.y }
+
+    // Snap target edges of OTHER elements + slide center.
+    const others = allElements.filter(o => o.id !== el.id)
+    const snapVert: number[] = [CANVAS_W / 2]   // slide vertical center
+    const snapHoriz: number[] = [CANVAS_H / 2]  // slide horizontal center
+    for (const o of others) {
+      snapVert.push(o.x, o.x + o.w / 2, o.x + o.w)
+      snapHoriz.push(o.y, o.y + o.h / 2, o.y + o.h)
+    }
+    const SNAP = 6 // px in source space
+
     const onMove = (ev: MouseEvent) => {
       if (!dragRef.current) return
-      // Scale screen px → canvas px via parent's transform scale.
-      const parent = (e.currentTarget as HTMLElement)?.parentElement as HTMLElement | null
+      const parent = document.querySelector('[aria-label="text-overlay"]') as HTMLElement | null
       const sm = parent ? getCanvasScale(parent) : 1
-      const dx = (ev.clientX - dragRef.current.startX) / sm
-      const dy = (ev.clientY - dragRef.current.startY) / sm
+      let dx = (ev.clientX - dragRef.current.startX) / sm
+      let dy = (ev.clientY - dragRef.current.startY) / sm
+
+      // Compute candidate edges for the dragged element
+      const cx = dragRef.current.origX + dx
+      const cy = dragRef.current.origY + dy
+      const ownVerts = [cx, cx + el.w / 2, cx + el.w]
+      const ownHorizs = [cy, cy + el.h / 2, cy + el.h]
+      const activeVert: number[] = []
+      const activeHoriz: number[] = []
+
+      // Snap X
+      let bestDx = 0, bestAbsX = SNAP + 1
+      for (const ov of ownVerts) for (const sv of snapVert) {
+        const d = sv - ov
+        if (Math.abs(d) < bestAbsX) { bestAbsX = Math.abs(d); bestDx = d }
+      }
+      if (bestAbsX <= SNAP) {
+        dx += bestDx
+        // Re-derive guides at snapped position
+        const snappedOwn = [cx + bestDx, cx + bestDx + el.w / 2, cx + bestDx + el.w]
+        for (const ov of snappedOwn) {
+          if (snapVert.some(sv => Math.abs(sv - ov) < 0.5)) activeVert.push(ov)
+        }
+      }
+
+      // Snap Y
+      let bestDy = 0, bestAbsY = SNAP + 1
+      for (const oh of ownHorizs) for (const sh of snapHoriz) {
+        const d = sh - oh
+        if (Math.abs(d) < bestAbsY) { bestAbsY = Math.abs(d); bestDy = d }
+      }
+      if (bestAbsY <= SNAP) {
+        dy += bestDy
+        const snappedOwn = [cy + bestDy, cy + bestDy + el.h / 2, cy + bestDy + el.h]
+        for (const oh of snappedOwn) {
+          if (snapHoriz.some(sh => Math.abs(sh - oh) < 0.5)) activeHoriz.push(oh)
+        }
+      }
+
       setDragOffset({ dx, dy })
+      onDragGuides({ vert: activeVert, horiz: activeHoriz })
     }
     const onUp = (ev: MouseEvent) => {
       if (!dragRef.current) return
       const parent = document.querySelector('[aria-label="text-overlay"]') as HTMLElement | null
       const sm = parent ? getCanvasScale(parent) : 1
-      const dx = (ev.clientX - dragRef.current.startX) / sm
-      const dy = (ev.clientY - dragRef.current.startY) / sm
+      // Re-compute final snapped delta the same way as onMove (cheap).
+      let dx = (ev.clientX - dragRef.current.startX) / sm
+      let dy = (ev.clientY - dragRef.current.startY) / sm
+      const cx = dragRef.current.origX + dx
+      const cy = dragRef.current.origY + dy
+      const ownVerts = [cx, cx + el.w / 2, cx + el.w]
+      const ownHorizs = [cy, cy + el.h / 2, cy + el.h]
+      let bestDx = 0, bestAbsX = SNAP + 1
+      for (const ov of ownVerts) for (const sv of snapVert) {
+        const d = sv - ov
+        if (Math.abs(d) < bestAbsX) { bestAbsX = Math.abs(d); bestDx = d }
+      }
+      if (bestAbsX <= SNAP) dx += bestDx
+      let bestDy = 0, bestAbsY = SNAP + 1
+      for (const oh of ownHorizs) for (const sh of snapHoriz) {
+        const d = sh - oh
+        if (Math.abs(d) < bestAbsY) { bestAbsY = Math.abs(d); bestDy = d }
+      }
+      if (bestAbsY <= SNAP) dy += bestDy
+
       dragRef.current = null
       setDragOffset({ dx: 0, dy: 0 })
+      onDragGuides({ vert: [], horiz: [] })
       if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
         onDragEnd({ x: el.x + dx, y: el.y + dy })
       }
