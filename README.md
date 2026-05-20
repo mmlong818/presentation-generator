@@ -181,11 +181,13 @@ pnpm start  # 默认 :3000
 
 参考 [CONTRIBUTING.md](CONTRIBUTING.md)。新主题 / 版式 / LLM provider 都有清晰的扩展点。
 
+人员名单见 [CONTRIBUTORS.md](CONTRIBUTORS.md)。
+
 ---
 
 ## License
 
-**[AGPL-3.0](LICENSE)** © 2025-PRESENT The Presentation Generator Authors
+**[AGPL-3.0](LICENSE)** © 2025-PRESENT totoroo and contributors
 
 This project is licensed under the **GNU Affero General Public License v3.0**.
 
