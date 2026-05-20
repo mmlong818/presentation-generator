@@ -131,6 +131,11 @@ export default function DeckPage() {
   const insertSlideOfType = useEditorStore(s => s.insertSlideOfType)
   const changeSlideLayout = useEditorStore(s => s.changeSlideLayout)
   const removeElement = useEditorStore(s => s.removeElement)
+  const removeSelected = useEditorStore(s => s.removeSelected)
+  const nudgeSelected = useEditorStore(s => s.nudgeSelected)
+  const duplicateSelected = useEditorStore(s => s.duplicateSelected)
+  const selectAll = useEditorStore(s => s.selectAll)
+  const selectedIds = useEditorStore(s => s.selectedElementIds)
   const addElement = useEditorStore(s => s.addElement)
   const selectElement = useEditorStore(s => s.selectElement)
   const undo = useEditorStore(s => s.undo)
@@ -233,21 +238,41 @@ export default function DeckPage() {
       }
       if (isFormField) return
 
+      // Ctrl/Cmd+A — select all elements on current slide
+      if (ctrl && e.key.toLowerCase() === 'a') {
+        e.preventDefault(); selectAll(); return
+      }
+      // Ctrl/Cmd+D — duplicate selected elements
+      if (ctrl && e.key.toLowerCase() === 'd') {
+        e.preventDefault(); duplicateSelected(); return
+      }
+
       if (e.key === 'Escape') { selectElement(null); return }
-      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedElementId) {
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedIds.length > 0) {
         e.preventDefault()
-        removeElement(selectedElementId)
+        removeSelected()
+        return
       }
-      if (e.key === 'ArrowDown' && presentation && currentSlide < presentation.slides.length - 1) {
-        e.preventDefault(); setCurrentSlide(currentSlide + 1)
-      }
-      if (e.key === 'ArrowUp' && currentSlide > 0) {
-        e.preventDefault(); setCurrentSlide(currentSlide - 1)
+
+      // Arrow keys with selection → nudge; without selection → switch slide.
+      if (selectedIds.length > 0) {
+        const step = e.shiftKey ? 20 : 2
+        if (e.key === 'ArrowLeft')  { e.preventDefault(); nudgeSelected(-step, 0); return }
+        if (e.key === 'ArrowRight') { e.preventDefault(); nudgeSelected(step, 0);  return }
+        if (e.key === 'ArrowUp')    { e.preventDefault(); nudgeSelected(0, -step); return }
+        if (e.key === 'ArrowDown')  { e.preventDefault(); nudgeSelected(0, step);  return }
+      } else {
+        if (e.key === 'ArrowDown' && presentation && currentSlide < presentation.slides.length - 1) {
+          e.preventDefault(); setCurrentSlide(currentSlide + 1)
+        }
+        if (e.key === 'ArrowUp' && currentSlide > 0) {
+          e.preventDefault(); setCurrentSlide(currentSlide - 1)
+        }
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [undo, redo, selectedElementId, removeElement, selectElement, presentation, currentSlide, setCurrentSlide])
+  }, [undo, redo, selectedIds, removeSelected, nudgeSelected, duplicateSelected, selectAll, selectElement, presentation, currentSlide, setCurrentSlide])
 
   function handleImageFile(file: File) {
     if (!file.type.startsWith('image/')) return

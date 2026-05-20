@@ -26,6 +26,7 @@ export default function SlideCanvas({ width, readOnly = false, slide: slideOverr
   const presentation = useEditorStore(s => s.presentation)
   const currentSlide = useEditorStore(s => s.currentSlide)
   const selectedId = useEditorStore(s => s.selectedElementId)
+  const selectedIds = useEditorStore(s => s.selectedElementIds)
   const selectElement = useEditorStore(s => s.selectElement)
   const updateElement = useEditorStore(s => s.updateElement)
   const stageRef = useRef<Konva.Stage>(null)
@@ -129,7 +130,7 @@ export default function SlideCanvas({ width, readOnly = false, slide: slideOverr
             <ShapeNode
               key={el.id}
               element={el}
-              isSelected={el.id === selectedId}
+              isSelected={selectedIds.includes(el.id)}
               readOnly={readOnly}
               onSelect={selectElement}
               onTransformEnd={(patch) => updateElement(el.id, patch)}
@@ -169,7 +170,7 @@ export default function SlideCanvas({ width, readOnly = false, slide: slideOverr
           <TextOverlay
             key={el.id}
             el={el}
-            isSelected={el.id === selectedId}
+            isSelected={selectedIds.includes(el.id)}
             isEditing={el.id === editingId}
             readOnly={readOnly}
             onSelect={selectElement}
@@ -197,12 +198,12 @@ function ShapeNode({ element, isSelected, readOnly, onSelect, onTransformEnd }: 
   element: Exclude<SlideElement, TextElement>
   isSelected: boolean
   readOnly: boolean
-  onSelect: (id: string | null) => void
+  onSelect: (id: string | null, opts?: { additive?: boolean }) => void
   onTransformEnd: (patch: Partial<SlideElement>) => void
 }) {
   const handleSelect = readOnly ? undefined : (e: Konva.KonvaEventObject<MouseEvent>) => {
     e.cancelBubble = true
-    onSelect(element.id)
+    onSelect(element.id, { additive: e.evt.shiftKey })
   }
 
   const commonDragEnd = (node: Konva.Node) => {
@@ -336,7 +337,7 @@ function TextOverlay({ el, isSelected, isEditing, readOnly, onSelect, onStartEdi
   isSelected: boolean
   isEditing: boolean
   readOnly: boolean
-  onSelect: (id: string | null) => void
+  onSelect: (id: string | null, opts?: { additive?: boolean }) => void
   onStartEdit: () => void
   onEndEdit: (nextText: string) => void
   onDragEnd: (patch: Partial<SlideElement>) => void
@@ -354,7 +355,7 @@ function TextOverlay({ el, isSelected, isEditing, readOnly, onSelect, onStartEdi
   function onMouseDown(e: React.MouseEvent) {
     if (readOnly || isEditing) return
     e.stopPropagation()
-    onSelect(el.id)
+    onSelect(el.id, { additive: e.shiftKey })
     dragRef.current = { startX: e.clientX, startY: e.clientY, origX: el.x, origY: el.y }
     const onMove = (ev: MouseEvent) => {
       if (!dragRef.current) return

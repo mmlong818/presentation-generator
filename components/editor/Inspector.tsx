@@ -14,11 +14,38 @@ export default function Inspector() {
   const presentation = useEditorStore(s => s.presentation)
   const currentSlide = useEditorStore(s => s.currentSlide)
   const selectedId = useEditorStore(s => s.selectedElementId)
+  const selectedIds = useEditorStore(s => s.selectedElementIds)
   const updateElement = useEditorStore(s => s.updateElement)
   const removeElement = useEditorStore(s => s.removeElement)
+  const removeSelected = useEditorStore(s => s.removeSelected)
+  const duplicateSelected = useEditorStore(s => s.duplicateSelected)
+  const reorderElement = useEditorStore(s => s.reorderElement)
 
   const slide = presentation?.slides[currentSlide]
   const element = slide?.elements.find(e => e.id === selectedId) ?? null
+
+  // Multi-select: show summary actions only.
+  if (selectedIds.length > 1) {
+    return (
+      <aside className="w-[260px] border-l border-stone-200 bg-white p-4 text-sm">
+        <div className="font-semibold text-stone-700 mb-3 flex items-center justify-between">
+          <span>已选 {selectedIds.length} 个元素</span>
+          <button onClick={() => removeSelected()}
+            className="text-xs text-red-600 hover:bg-red-50 px-2 py-1 rounded">全部删除</button>
+        </div>
+        <div className="text-xs text-stone-500 leading-relaxed mb-4">
+          多选模式。单选时才能编辑字段。
+        </div>
+        <button onClick={() => duplicateSelected()}
+          className="w-full text-xs px-2 py-1.5 rounded border border-stone-300 hover:bg-stone-50 mb-2">⎘ 复制全部 (Ctrl+D)</button>
+        <div className="text-xs text-stone-400 leading-relaxed mt-4">
+          · 方向键微调 1 步 = 2px<br/>
+          · Shift + 方向键 = 20px<br/>
+          · Esc 取消选择
+        </div>
+      </aside>
+    )
+  }
 
   if (!element) {
     return (
@@ -28,7 +55,9 @@ export default function Inspector() {
         <div className="mt-6 text-xs text-stone-400 leading-relaxed">
           <div>· 双击文字进入编辑模式</div>
           <div>· 拖拽元素移动</div>
-          <div>· 选中图形显示缩放柄</div>
+          <div>· Shift + 单击 多选</div>
+          <div>· 方向键微调位置</div>
+          <div>· Ctrl+D 复制 · Ctrl+A 全选</div>
           <div>· Delete 删除选中</div>
         </div>
       </aside>
@@ -52,6 +81,19 @@ export default function Inspector() {
           <NumInput label="h" value={Math.round(element.h)} onChange={(v) => updateElement(element.id, { h: Math.max(20, v) })} />
         </div>
         <NumInput label="旋转" value={Math.round(element.rotate ?? 0)} onChange={(v) => updateElement(element.id, { rotate: v || undefined })} />
+      </Section>
+
+      <Section title="层级">
+        <div className="grid grid-cols-2 gap-1">
+          <button onClick={() => reorderElement(element.id, 'front')}
+            className="text-xs px-2 py-1 rounded border border-stone-300 hover:bg-stone-50">⤒ 置顶</button>
+          <button onClick={() => reorderElement(element.id, 'back')}
+            className="text-xs px-2 py-1 rounded border border-stone-300 hover:bg-stone-50">⤓ 置底</button>
+          <button onClick={() => reorderElement(element.id, 'forward')}
+            className="text-xs px-2 py-1 rounded border border-stone-300 hover:bg-stone-50">↑ 上移</button>
+          <button onClick={() => reorderElement(element.id, 'backward')}
+            className="text-xs px-2 py-1 rounded border border-stone-300 hover:bg-stone-50">↓ 下移</button>
+        </div>
       </Section>
 
       {element.type === 'text' && <TextControls element={element} onChange={(p) => updateElement(element.id, p)} />}

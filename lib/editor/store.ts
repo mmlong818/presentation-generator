@@ -1,6 +1,6 @@
 // ─── Zustand editor store ────────────────────────────────────────────────────
 //
-// 简单的全局状态：当前演示稿、选中幻灯片索引、选中元素 ID、撤销栈。
+// 简单的全局状态：当前演示稿、选中幻灯片索引、选中元素 ID（多选）、撤销栈。
 // 不做协同；本地内存即可。
 
 import { create } from 'zustand'
@@ -19,17 +19,32 @@ interface HistoryEntry {
 interface EditorState {
   presentation: EditorPresentation | null
   currentSlide: number
+  /** Multi-select: all selected element IDs. */
+  selectedElementIds: ElementId[]
+  /** Convenience accessor: first selected ID (kept for Inspector single-target editing). */
   selectedElementId: ElementId | null
   history: HistoryEntry[]
   future: HistoryEntry[]
 
   setPresentation: (p: EditorPresentation) => void
   setCurrentSlide: (idx: number) => void
-  selectElement: (id: ElementId | null) => void
+  /**
+   * Select an element. If `additive` is true, toggle membership; otherwise
+   * replace the selection. Pass id=null to clear.
+   */
+  selectElement: (id: ElementId | null, opts?: { additive?: boolean }) => void
+  selectAll: () => void
 
   updateElement: (id: ElementId, patch: Partial<SlideElement>) => void
+  /** Apply same x/y delta to every currently-selected element. */
+  nudgeSelected: (dx: number, dy: number) => void
   removeElement: (id: ElementId) => void
+  removeSelected: () => void
   addElement: (element: SlideElement) => void
+  duplicateSelected: () => void
+  /** Z-order: bringToFront / sendToBack / bringForward / sendBackward */
+  reorderElement: (id: ElementId, direction: 'front' | 'back' | 'forward' | 'backward') => void
+
   addSlide: (afterIndex?: number) => void
   removeSlide: (index: number) => void
   reorderSlides: (from: number, to: number) => void
@@ -51,9 +66,14 @@ function snapshot(p: EditorPresentation): EditorPresentation {
   return JSON.parse(JSON.stringify(p)) as EditorPresentation
 }
 
+function freshId(type: string): string {
+  return `${type[0]}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`
+}
+
 export const useEditorStore = create<EditorState>((set, get) => ({
   presentation: null,
   currentSlide: 0,
+  selectedElementIds: [],
   selectedElementId: null,
   history: [],
   future: [],
@@ -61,14 +81,45 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setPresentation: (p) => set({
     presentation: p,
     currentSlide: 0,
+    selectedElementIds: [],
     selectedElementId: null,
     history: [],
     future: [],
   }),
 
-  setCurrentSlide: (idx) => set({ currentSlide: idx, selectedElementId: null }),
+  setCurrentSlide: (idx) => set({
+    currentSlide: idx,
+    selectedElementIds: [],
+    selectedElementId: null,
+  }),
 
-  selectElement: (id) => set({ selectedElementId: id }),
+  selectElement: (id, opts) => {
+    const additive = opts?.additive === true
+    if (id === null) {
+      set({ selectedElementIds: [], selectedElementId: null })
+      return
+    }
+    const state = get()
+    if (additive) {
+      const cur = state.selectedElementIds
+      const next = cur.includes(id) ? cur.filter(x => x !== id) : [...cur, id]
+      set({
+        selectedElementIds: next,
+        selectedElementId: next[0] ?? null,
+      })
+    } else {
+      set({ selectedElementIds: [id], selectedElementId: id })
+    }
+  },
+
+  selectAll: () => {
+    const state = get()
+    if (!state.presentation) return
+    const slide = state.presentation.slides[state.currentSlide]
+    if (!slide) return
+    const ids = slide.elements.map(e => e.id)
+    set({ selectedElementIds: ids, selectedElementId: ids[0] ?? null })
+  },
 
   updateElement: (id, patch) => {
     const state = get()
@@ -83,6 +134,18 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     set({ presentation: next })
   },
 
+  nudgeSelected: (dx, dy) => {
+    const state = get()
+    if (!state.presentation || state.selectedElementIds.length === 0) return
+    const next = snapshot(state.presentation)
+    const slide = next.slides[state.currentSlide]
+    if (!slide) return
+    const ids = new Set(state.selectedElementIds)
+    slide.elements = slide.elements.map(e => ids.has(e.id) ? { ...e, x: e.x + dx, y: e.y + dy } : e)
+    pushHistory(state, 'nudgeSelected')
+    set({ presentation: next })
+  },
+
   removeElement: (id) => {
     const state = get()
     if (!state.presentation) return
@@ -93,7 +156,23 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     slide.elements = slide.elements.filter(e => e.id !== id)
     if (slide.elements.length === before) return
     pushHistory(state, 'removeElement')
-    set({ presentation: next, selectedElementId: null })
+    set({
+      presentation: next,
+      selectedElementIds: state.selectedElementIds.filter(x => x !== id),
+      selectedElementId: state.selectedElementId === id ? null : state.selectedElementId,
+    })
+  },
+
+  removeSelected: () => {
+    const state = get()
+    if (!state.presentation || state.selectedElementIds.length === 0) return
+    const next = snapshot(state.presentation)
+    const slide = next.slides[state.currentSlide]
+    if (!slide) return
+    const ids = new Set(state.selectedElementIds)
+    slide.elements = slide.elements.filter(e => !ids.has(e.id))
+    pushHistory(state, 'removeSelected')
+    set({ presentation: next, selectedElementIds: [], selectedElementId: null })
   },
 
   addElement: (element) => {
@@ -104,7 +183,55 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     if (!slide) return
     slide.elements.push(element)
     pushHistory(state, 'addElement')
-    set({ presentation: next, selectedElementId: element.id })
+    set({
+      presentation: next,
+      selectedElementIds: [element.id],
+      selectedElementId: element.id,
+    })
+  },
+
+  duplicateSelected: () => {
+    const state = get()
+    if (!state.presentation || state.selectedElementIds.length === 0) return
+    const next = snapshot(state.presentation)
+    const slide = next.slides[state.currentSlide]
+    if (!slide) return
+    const ids = new Set(state.selectedElementIds)
+    const clones = slide.elements
+      .filter(e => ids.has(e.id))
+      .map(e => ({ ...JSON.parse(JSON.stringify(e)), id: freshId(e.type), x: e.x + 24, y: e.y + 24 }) as SlideElement)
+    slide.elements.push(...clones)
+    const cloneIds = clones.map(c => c.id)
+    pushHistory(state, 'duplicateSelected')
+    set({
+      presentation: next,
+      selectedElementIds: cloneIds,
+      selectedElementId: cloneIds[0] ?? null,
+    })
+  },
+
+  reorderElement: (id, direction) => {
+    const state = get()
+    if (!state.presentation) return
+    const next = snapshot(state.presentation)
+    const slide = next.slides[state.currentSlide]
+    if (!slide) return
+    const idx = slide.elements.findIndex(e => e.id === id)
+    if (idx < 0) return
+    const arr = slide.elements
+    if (direction === 'front') {
+      const [el] = arr.splice(idx, 1)
+      arr.push(el)
+    } else if (direction === 'back') {
+      const [el] = arr.splice(idx, 1)
+      arr.unshift(el)
+    } else if (direction === 'forward' && idx < arr.length - 1) {
+      const tmp = arr[idx]; arr[idx] = arr[idx + 1]; arr[idx + 1] = tmp
+    } else if (direction === 'backward' && idx > 0) {
+      const tmp = arr[idx]; arr[idx] = arr[idx - 1]; arr[idx - 1] = tmp
+    }
+    pushHistory(state, `reorder-${direction}`)
+    set({ presentation: next })
   },
 
   addSlide: (afterIndex) => {
@@ -155,7 +282,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const next = snapshot(state.presentation)
     const cloned = snapshot({ ...state.presentation, slides: [src] } as EditorPresentation).slides[0]
     cloned.id = `s_${Date.now()}`
-    cloned.elements = cloned.elements.map(e => ({ ...e, id: `${e.type[0]}_${Math.random().toString(36).slice(2, 9)}` }))
+    cloned.elements = cloned.elements.map(e => ({ ...e, id: freshId(e.type) }))
     next.slides.splice(index + 1, 0, cloned)
     pushHistory(state, 'duplicateSlide')
     set({ presentation: next, currentSlide: index + 1 })
@@ -192,7 +319,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const next = snapshot(state.presentation)
     next.slides[index] = { ...next.slides[index], elements, source: newSource }
     pushHistory(state, 'changeSlideLayout')
-    set({ presentation: next, selectedElementId: null })
+    set({ presentation: next, selectedElementIds: [], selectedElementId: null })
   },
 
   undo: () => {
@@ -204,6 +331,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       presentation: prev.presentation,
       history: state.history.slice(0, -1),
       future,
+      selectedElementIds: [],
       selectedElementId: null,
     })
   },
@@ -216,6 +344,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       presentation: nxt.presentation,
       history: [...state.history, { presentation: state.presentation, label: 'undo-point' }],
       future: state.future.slice(0, -1),
+      selectedElementIds: [],
       selectedElementId: null,
     })
   },
