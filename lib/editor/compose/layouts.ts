@@ -323,16 +323,22 @@ function composeData(s: DataSlide, theme: ResolvedTheme, n: number, total: numbe
 
   stats.forEach((stat, i) => {
     const { x: cx, w: cw } = cols[i]
+    // Long values like "4h → 18h" or "¥1.2 亿" need nowrap + auto-shrink.
+    const valueStr = stat.value || '—'
+    // Rough fit: assume display-weight char ≈ valueSize * 0.6 wide.
+    const estWidth = valueStr.length * valueSize * 0.6
+    const valueFontSize = estWidth > cw ? Math.max(valueSize * 0.5, (cw / valueStr.length) / 0.6) : valueSize
     out.push(text({
-      text: stat.value || '—',
+      text: valueStr,
       x: cx, y: blockY, w: cw, h: valueH,
-      fontSize: valueSize,
+      fontSize: valueFontSize,
       fontFamily: displayFont(theme),
       color: theme.accent,
       fontWeight: 800,
       lineHeight: 1.0,
       letterSpacing: -0.02,
       role: 'hero',
+      nowrap: true,
     }))
     out.push(text({
       text: stat.label,
