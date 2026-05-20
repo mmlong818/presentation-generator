@@ -237,14 +237,26 @@ function composeArgument(s: ArgumentSlide, theme: ResolvedTheme, n: number, tota
   const indent = Math.round(bodySize * 2)
   const itemX = x + indent
 
-  // Distribute rows vertically: each row is single-line height, items
-  // centered as a block within available area.
+  // Estimate longest point's wrapped line count so rowH reserves enough
+  // vertical room when points are long-form (multi-line) — previously fixed
+  // rowH=bodySize*1.7 caused two-line points to crowd each other.
+  const textW = w - indent - numW - numGap
+  const maxLines = points.reduce(
+    (a, p) => Math.max(a, estimateLines(p, bodySize, textW)),
+    1,
+  )
+  const lineH = bodySize * 1.5
+  // Row holds the text block plus a small bottom padding for breathing room.
+  const rowH = Math.max(bodySize * 1.7, maxLines * lineH + bodySize * 0.3)
+  // Gap scales with row height so multi-line rows aren't visually mashed.
+  const minGap = maxLines === 1 ? bodySize * 1.2 : bodySize * 0.9
+
   const rows = distributeV({
     top,
     available: bot - top,
     count,
-    rowH: bodySize * 1.7,
-    minGap: bodySize * 1.2,
+    rowH,
+    minGap,
     align: 'center',
   })
 
@@ -724,10 +736,14 @@ function composeCTA(s: CTASlide, theme: ResolvedTheme): SlideElement[] {
     }))
     y += theme.body * 2.8 + 40
   }
+  // Short newAction reads great at hero size; long ones must shrink to fit
+  // 2-3 lines. Use fitTitleSize so the call-to-action always feels intentional.
+  const actionMax = theme.hero * 0.95
+  const actionSize = fitTitleSize(s.newAction, actionMax, inner(theme), 3, 0.5)
   out.push(text({
     text: s.newAction,
     x: theme.padding, y, w: inner(theme), h: 500,
-    fontSize: theme.hero * 0.85,
+    fontSize: actionSize,
     fontFamily: displayFont(theme),
     color: theme.text,
     fontWeight: 800,
@@ -1140,11 +1156,12 @@ function composeKpiBoard(s: KpiBoardSlide, theme: ResolvedTheme, n: number, tota
       lineHeight: 1.05,
       role: 'heading',
     }))
+    const deltaY = y + 22 + theme.caption * 2 + 8 + theme.section + 12
     if (k.delta) {
       const color = TONE[k.deltaTone ?? 'flat'] ?? theme.muted
       out.push(text({
         text: k.delta,
-        x: x + 28, y: y + 22 + theme.caption * 2 + 8 + theme.section + 12,
+        x: x + 28, y: deltaY,
         w: cellW - 56, h: theme.body * 1.6,
         fontSize: theme.body,
         fontFamily: bodyFont(theme),
@@ -1154,9 +1171,13 @@ function composeKpiBoard(s: KpiBoardSlide, theme: ResolvedTheme, n: number, tota
       }))
     }
     if (k.hint) {
+      // Place hint immediately under the delta (or under the value if no
+      // delta) instead of pinning to the bottom of the cell, which leaves
+      // a visible floating gap.
+      const hintY = k.delta ? deltaY + theme.body * 1.6 + 6 : deltaY
       out.push(text({
         text: k.hint,
-        x: x + 28, y: y + cellH - 50, w: cellW - 56, h: 36,
+        x: x + 28, y: hintY, w: cellW - 56, h: 36,
         fontSize: theme.caption * 0.85,
         fontFamily: bodyFont(theme),
         color: theme.muted,
