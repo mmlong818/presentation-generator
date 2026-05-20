@@ -39,6 +39,8 @@ export interface TextOpts {
   letterSpacing?: number
   highlight?: string
   highlightColor?: string
+  highlightStyle?: 'color' | 'block'
+  highlightFg?: string
   role?: TextElement['role']
   z?: number
   rotate?: number
@@ -61,6 +63,8 @@ export function text(o: TextOpts): TextElement {
     letterSpacing: o.letterSpacing,
     highlight: o.highlight,
     highlightColor: o.highlightColor,
+    highlightStyle: o.highlightStyle,
+    highlightFg: o.highlightFg,
     role: o.role,
     z: o.z,
     rotate: o.rotate,

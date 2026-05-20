@@ -261,7 +261,7 @@ export const THEMES: Record<ThemeId, ThemeTokens> = {
     letterSpacingTitle: '-0.02em',
     showFooter: false, eyebrowStyle: 'tag-block', allowGradient: false,
     textureRule: '关键图形元素 1-2px 错位双色叠印',
-    decoration: 'radial-gradient(circle,rgba(255,90,95,0.10) 1px,transparent 1.5px)',
+    decoration: 'radial-gradient(circle,rgba(255,90,95,0.35) 1.3px,transparent 1.8px)',
   },
 
   // 9. ────────────────────────────────────────────────────────────────────────
@@ -369,7 +369,7 @@ export const THEMES: Record<ThemeId, ThemeTokens> = {
     fontDisplay: '"JetBrains Mono","SF Mono",ui-monospace,monospace', fontBody: '"JetBrains Mono","SF Mono",ui-monospace,monospace', fontMono: '"JetBrains Mono",ui-monospace,monospace',
     hero: 120, section: 60, body: 30, caption: 20, padding: 140, radius: 0, borderWeight: 1, letterSpacingTitle: '0',
     showFooter: true, eyebrowStyle: 'mono-prefix', allowGradient: false,
-    decoration: 'repeating-linear-gradient(0deg,rgba(255,255,255,0.03) 0,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 40px),repeating-linear-gradient(90deg,rgba(255,255,255,0.03) 0,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 40px)',
+    decoration: 'repeating-linear-gradient(0deg,rgba(255,255,255,0.12) 0,rgba(255,255,255,0.12) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(90deg,rgba(255,255,255,0.12) 0,rgba(255,255,255,0.12) 1px,transparent 1px,transparent 60px)',
   },
 
   'cyberpunk-neon': {
@@ -379,7 +379,7 @@ export const THEMES: Record<ThemeId, ThemeTokens> = {
     fontDisplay: '"JetBrains Mono","SF Mono",ui-monospace,monospace', fontBody: '"Inter","Helvetica Neue","PingFang SC",sans-serif', fontMono: '"JetBrains Mono",ui-monospace,monospace',
     hero: 144, section: 72, body: 34, caption: 22, padding: 140, radius: 0, borderWeight: 1, letterSpacingTitle: '0.02em',
     showFooter: false, eyebrowStyle: 'mono-prefix', allowGradient: true,
-    decoration: 'radial-gradient(ellipse at 20% 50%,rgba(255,43,214,0.12) 0,transparent 40%),radial-gradient(ellipse at 80% 50%,rgba(0,229,255,0.08) 0,transparent 40%)',
+    decoration: 'radial-gradient(ellipse at 20% 50%,rgba(255,43,214,0.28) 0,transparent 45%),radial-gradient(ellipse at 80% 50%,rgba(0,229,255,0.20) 0,transparent 45%)',
   },
 
   'glassmorphism': {
@@ -390,7 +390,7 @@ export const THEMES: Record<ThemeId, ThemeTokens> = {
     hero: 144, section: 72, body: 34, caption: 22, padding: 140, radius: 16, borderWeight: 1, letterSpacingTitle: '-0.02em',
     showFooter: false, eyebrowStyle: 'mono-prefix', allowGradient: true,
     glass: true,
-    decoration: 'radial-gradient(ellipse at 25% 30%,rgba(125,211,252,0.12) 0,transparent 45%),radial-gradient(ellipse at 75% 70%,rgba(167,139,250,0.10) 0,transparent 40%)',
+    decoration: 'radial-gradient(ellipse at 25% 30%,rgba(125,211,252,0.32) 0,transparent 50%),radial-gradient(ellipse at 75% 70%,rgba(167,139,250,0.28) 0,transparent 45%)',
   },
 
   'memphis-pop': {

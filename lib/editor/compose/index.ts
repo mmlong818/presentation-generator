@@ -17,6 +17,7 @@ export function deckToEditor(deck: Deck): EditorPresentation {
   const slides: EditorSlide[] = deck.slides.map((s, i) => ({
     id: `s_${i + 1}`,
     background: theme.bg,
+    decoration: theme.decoration,
     elements: composeSlide(s, theme, i + 1, total),
     notes: notesByIndex.get(i + 1),
     source: s,

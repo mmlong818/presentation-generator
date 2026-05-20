@@ -26,6 +26,8 @@ export interface ResolvedTheme {
   caption: number
   /** Source px safe-area inset. */
   padding: number
+  /** CSS background-image string painted behind elements (dots, glow, grid). */
+  decoration?: string
 }
 
 export function resolveTheme(themeId: ThemeId): ResolvedTheme {
@@ -48,5 +50,6 @@ export function resolveTheme(themeId: ThemeId): ResolvedTheme {
     body: t.body,
     caption: t.caption,
     padding: t.padding,
+    decoration: t.decoration,
   }
 }

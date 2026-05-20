@@ -86,7 +86,28 @@ export default function SlideCanvas({ width, readOnly = false, slide: slideOverr
   const texts = sorted.filter((e): e is TextElement => e.type === 'text')
 
   return (
-    <div style={{ position: 'relative', width, height, overflow: 'hidden' }}>
+    <div style={{
+      position: 'relative', width, height, overflow: 'hidden',
+      // Solid slide background on the wrapper; Konva Rect below is just for
+      // visual debug / fallback. Decoration sits on top of this color.
+      background: slide.background,
+    }}>
+      {/* Theme decoration layer (risograph grain, blueprint grid, etc.) */}
+      {slide.decoration && (
+        <div
+          aria-hidden
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: slide.decoration,
+            backgroundSize: slide.decoration.startsWith('radial-gradient(circle')
+              ? `${Math.max(10, Math.round(14 * scale))}px ${Math.max(10, Math.round(14 * scale))}px`
+              : undefined,
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+        />
+      )}
       {/* Background + shapes (Konva canvas) */}
       <Stage
         ref={stageRef}
@@ -102,7 +123,8 @@ export default function SlideCanvas({ width, readOnly = false, slide: slideOverr
         }}
       >
         <Layer>
-          <Rect x={0} y={0} width={CANVAS_W} height={CANVAS_H} fill={slide.background} listening={!readOnly} />
+          {/* Transparent click-target rect; visible bg is on wrapper div behind decoration. */}
+          <Rect x={0} y={0} width={CANVAS_W} height={CANVAS_H} fill="rgba(0,0,0,0)" listening={!readOnly} />
           {shapes.map(el => (
             <ShapeNode
               key={el.id}
@@ -448,6 +470,24 @@ function renderWithHighlight(el: TextElement): React.ReactNode {
   if (idx < 0) return el.text
   const before = el.text.slice(0, idx)
   const after = el.text.slice(idx + el.highlight.length)
+  // Block style: inverted fill (e.g. for brutalist themes where accent==text)
+  if (el.highlightStyle === 'block') {
+    return (
+      <>
+        {before}
+        <span style={{
+          background: el.highlightColor,
+          color: el.highlightFg ?? '#ffffff',
+          whiteSpace: 'nowrap',
+          padding: '0 0.12em',
+          // Tight box-decoration so wrapped spans keep contiguous fill
+          boxDecorationBreak: 'clone',
+          WebkitBoxDecorationBreak: 'clone',
+        }}>{el.highlight}</span>
+        {after}
+      </>
+    )
+  }
   return (
     <>
       {before}

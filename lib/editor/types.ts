@@ -63,6 +63,16 @@ export interface TextElement extends BaseElement {
   /** A substring within `text` to be highlighted in `highlightColor`. */
   highlight?: string
   highlightColor?: string
+  /**
+   * How to render the highlight span:
+   * - 'color' (default): change text color to highlightColor
+   * - 'block': inverted-fill, highlightColor as background, text recolored to a
+   *   readable contrast. Used by brutalist themes where the accent equals the
+   *   text color and color-based emphasis disappears.
+   */
+  highlightStyle?: 'color' | 'block'
+  /** When highlightStyle='block', the foreground color of the highlighted span. */
+  highlightFg?: string
   /** Optional semantic role — used by export to map text into PPT outline structure. */
   role?: 'heading' | 'body' | 'caption' | 'hero'
   /** When true, text never wraps (overflows on overflow). Useful for compact numeric labels. */
@@ -111,6 +121,12 @@ export interface EditorSlide {
   id: string
   /** Background as solid color hex; future: gradient/image. */
   background: string
+  /**
+   * CSS background-image string painted behind elements: theme decoration
+   * (risograph grain, blueprint grid, cyberpunk glow). Rendered as a div
+   * layer under the canvas, not exported to PPTX (loses subtle textures).
+   */
+  decoration?: string
   elements: SlideElement[]
   /** Speaker notes — preserved from deck.script for the matching slide index. */
   notes?: string

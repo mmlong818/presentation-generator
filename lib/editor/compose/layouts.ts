@@ -30,6 +30,27 @@ function bodyFont(theme: ResolvedTheme) { return theme.fontBody }
 function displayFont(theme: ResolvedTheme) { return theme.fontDisplay }
 function inner(theme: ResolvedTheme) { return CANVAS_W - 2 * theme.padding }
 
+/**
+ * Return the appropriate highlight emphasis for the theme.
+ *
+ * Most themes use color-based highlight (accent recolors the text). But some
+ * themes (brutalist-mono) deliberately set accent === text, so color emphasis
+ * disappears. For these, switch to inverted-block fill — text foreground
+ * becomes the theme's background, span fills with the text color.
+ */
+function emphFor(theme: ResolvedTheme): {
+  highlightColor: string
+  highlightStyle?: 'color' | 'block'
+  highlightFg?: string
+} {
+  const accent = (theme.accent || '').toLowerCase()
+  const text = (theme.text || '').toLowerCase()
+  if (accent === text || accent === '#000000' && text === '#000000') {
+    return { highlightColor: theme.text, highlightStyle: 'block', highlightFg: theme.bg }
+  }
+  return { highlightColor: theme.accent }
+}
+
 function headingEl(value: string, theme: ResolvedTheme, opts: {
   y?: number; size?: number; highlight?: string
 } = {}): TextElement {
@@ -37,6 +58,7 @@ function headingEl(value: string, theme: ResolvedTheme, opts: {
   const w = inner(theme)
   // Allocate height for the actual number of wrapped lines, not a guess.
   const h = headingHeight(value, size, w, 1.22)
+  const emph = emphFor(theme)
   return text({
     text: value,
     x: theme.padding,
@@ -49,7 +71,7 @@ function headingEl(value: string, theme: ResolvedTheme, opts: {
     fontWeight: 800,
     lineHeight: 1.22,
     highlight: opts.highlight,
-    highlightColor: theme.accent,
+    ...emph,
     role: 'heading',
   })
 }
@@ -144,7 +166,7 @@ function composeCover(s: CoverSlide, theme: ResolvedTheme): SlideElement[] {
     lineHeight: titleLineH,
     letterSpacing: -0.01,
     highlight: s.highlight,
-    highlightColor: theme.accent,
+    ...emphFor(theme),
     role: 'hero',
   }))
   cursorY += titleH
@@ -196,7 +218,7 @@ function composeStatement(s: StatementSlide, theme: ResolvedTheme): SlideElement
     letterSpacing: -0.01,
     align,
     highlight: s.highlight?.[0],
-    highlightColor: theme.accent,
+    ...emphFor(theme),
     role: 'hero',
   })]
 }
@@ -699,7 +721,7 @@ function composeQuote(s: QuoteSlide, theme: ResolvedTheme): SlideElement[] {
     fontWeight: 500,
     lineHeight: 1.4,
     highlight: s.highlight,
-    highlightColor: theme.accent,
+    ...emphFor(theme),
     role: 'heading',
   }))
 
@@ -749,7 +771,7 @@ function composeCTA(s: CTASlide, theme: ResolvedTheme): SlideElement[] {
     fontWeight: 800,
     lineHeight: 1.15,
     highlight: s.highlight,
-    highlightColor: theme.accent,
+    ...emphFor(theme),
     role: 'hero',
   }))
   return out
