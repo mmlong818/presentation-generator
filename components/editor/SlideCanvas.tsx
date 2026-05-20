@@ -536,7 +536,12 @@ function TextOverlay({ el, allElements, isSelected, isEditing, readOnly, onSelec
         lineHeight: el.lineHeight ?? 1.2,
         letterSpacing: el.letterSpacing ? `${el.letterSpacing}em` : undefined,
         lineBreak: 'strict',
-        wordBreak: el.nowrap ? 'keep-all' : 'normal',
+        // keep-all everywhere: CJK text should only break at punctuation /
+        // whitespace, never inside compound words like "会热爱". Latin words
+        // still respect spaces; very long latin without spaces will overflow,
+        // but that's preferable to splitting CJK semantics. (Older versions
+        // used 'normal' + break-word, which split "会|热爱" mid-phrase.)
+        wordBreak: 'keep-all',
         overflowWrap: el.nowrap ? 'normal' : 'break-word',
         whiteSpace: el.nowrap ? 'nowrap' : 'pre-wrap',
         // Balance line lengths for hero/heading text so the last line doesn't
