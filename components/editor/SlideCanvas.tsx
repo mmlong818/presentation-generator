@@ -443,6 +443,12 @@ function TextOverlay({ el, isSelected, isEditing, readOnly, onSelect, onStartEdi
         wordBreak: el.nowrap ? 'keep-all' : 'normal',
         overflowWrap: el.nowrap ? 'normal' : 'break-word',
         whiteSpace: el.nowrap ? 'nowrap' : 'pre-wrap',
+        // Balance line lengths for hero/heading text so the last line doesn't
+        // get a single orphan character ("路" alone, etc.).
+        // Chrome 114+ / Firefox 121+ / Safari 17.5+ support text-wrap.
+        ...(el.nowrap ? {} : {
+          textWrap: (el.role === 'hero' || el.role === 'heading' ? 'balance' : 'pretty') as 'balance' | 'pretty',
+        }),
         opacity: el.opacity ?? 1,
         transform: el.rotate ? `rotate(${el.rotate}deg)` : undefined,
         transformOrigin: el.rotate ? 'center' : undefined,

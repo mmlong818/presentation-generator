@@ -187,7 +187,14 @@ export function estimateLines(s: string, fontSize: number, width: number): numbe
 
 /**
  * Adapt a heading font size so the text never wraps to more than `maxLines`.
- * Shrinks by 8% per iteration until satisfied or a floor (default 60% of base) is hit.
+ * Shrinks by 8% per iteration until satisfied or a floor (default 60% of base)
+ * is hit.
+ *
+ * Also avoids the "orphan" pattern: when the wrap fits exactly maxLines but
+ * the last line ends up with very few characters (≤ 2 CJK chars), shrink one
+ * more step so the text balances better. (Browser text-wrap:balance handles
+ * this at render time too, but we want estimated layout space to be
+ * consistent for both Konva and pptxgenjs output.)
  */
 export function fitTitleSize(
   text: string,
@@ -200,6 +207,18 @@ export function fitTitleSize(
   const floor = base * floorRatio
   while (estimateLines(text, size, width) > maxLines && size > floor) {
     size = Math.round(size * 0.92)
+  }
+  // Orphan check: at the current size, would the last line have only 1-2
+  // characters? If so, drop one more step (still respecting floor).
+  if (size > floor) {
+    const cjkCount = (text.match(/[㐀-鿿぀-ヿ가-힯]/g) || []).length
+    const cjkRatio = cjkCount / Math.max(1, text.length)
+    const avgCharWidth = size * (0.55 + 0.6 * cjkRatio)
+    const charsPerLine = Math.max(1, Math.floor(width / avgCharWidth))
+    const remainder = text.replace(/\n/g, '').length % charsPerLine
+    if (remainder > 0 && remainder <= 2) {
+      size = Math.round(size * 0.92)
+    }
   }
   return size
 }
