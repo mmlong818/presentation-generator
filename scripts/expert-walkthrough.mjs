@@ -12,7 +12,8 @@ const fixtures = ['cover', 'statement', 'argument', 'argument5', 'process', 'pro
 const themes = ['modern-minimal', 'editorial-monocle', 'midnight-luxe', 'tech-utility', 'pitch-deck-vc', 'swiss-grid']
 
 const browser = await chromium.launch()
-const ctx = await browser.newContext({ viewport: { width: 1600, height: 1000 }, locale: 'zh-CN', proxy: { server: 'http://localhost:7897', bypass: 'localhost,127.0.0.1' } })
+const proxy = process.env.PG_NO_PROXY ? undefined : { server: 'http://localhost:7897', bypass: 'localhost,127.0.0.1' }
+const ctx = await browser.newContext({ viewport: { width: 1600, height: 1000 }, locale: 'zh-CN', proxy })
 const page = await ctx.newPage()
 
 const pageErrors = []
