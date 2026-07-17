@@ -7,6 +7,8 @@ import { useEditorStore } from '@/lib/editor/store'
 import { deckToEditor } from '@/lib/editor/compose'
 import { useT } from '@/lib/i18n'
 import { FIXTURES, fixtureByKey } from '@/lib/editor/test-fixtures'
+import { THEMES } from '@/lib/themes'
+import ThemeSwitcherDialog from '@/components/editor/ThemeSwitcherDialog'
 import type { Deck, LayoutType, Slide } from '@/lib/types'
 import type { ImageElement, TextElement } from '@/lib/editor/types'
 
@@ -131,6 +133,7 @@ export default function DeckPage() {
   const duplicateSlide = useEditorStore(s => s.duplicateSlide)
   const insertSlideOfType = useEditorStore(s => s.insertSlideOfType)
   const changeSlideLayout = useEditorStore(s => s.changeSlideLayout)
+  const changeTheme = useEditorStore(s => s.changeTheme)
   const replaceSlideSource = useEditorStore(s => s.replaceSlideSource)
   const removeElement = useEditorStore(s => s.removeElement)
   const removeSelected = useEditorStore(s => s.removeSelected)
@@ -149,8 +152,15 @@ export default function DeckPage() {
   const [pickerMode, setPickerMode] = useState<'insert' | 'change' | null>(null)
   const [iconPickerOpen, setIconPickerOpen] = useState(false)
   const [rewriteOpen, setRewriteOpen] = useState(false)
+  const [themeSwitcherOpen, setThemeSwitcherOpen] = useState(false)
+  const themeButtonRef = useRef<HTMLButtonElement>(null)
   const [exportOpen, setExportOpen] = useState(false)
   const exportMenuRef = useRef<HTMLDivElement>(null)
+
+  function closeThemeSwitcher() {
+    setThemeSwitcherOpen(false)
+    requestAnimationFrame(() => themeButtonRef.current?.focus())
+  }
 
   // Click outside closes the export dropdown
   useEffect(() => {
@@ -361,15 +371,16 @@ export default function DeckPage() {
   }
 
   function handleAddText() {
+    const theme = THEMES[presentation?.theme ?? 'modern-minimal']
     const el: TextElement = {
       id: `t_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
       type: 'text',
       x: 240, y: 480, w: 1400, h: 120,
       text: '点击此处编辑文字',
       fontSize: 64,
-      fontFamily: '"Inter","PingFang SC",sans-serif',
+      fontFamily: theme.fontBody,
       fontWeight: 700,
-      color: '#0a0a0a',
+      color: theme.text,
       align: 'left',
       lineHeight: 1.25,
       role: 'body',
@@ -477,7 +488,16 @@ export default function DeckPage() {
         <header className="px-4 py-2 border-b border-stone-200 bg-white flex items-center gap-3 text-sm">
           <span className="text-stone-500">{currentSlide + 1} / {presentation.slides.length}</span>
           <span className="text-stone-400">·</span>
-          <span className="text-stone-500">主题：{presentation.theme}</span>
+          <button
+            ref={themeButtonRef}
+            type="button"
+            onClick={() => setThemeSwitcherOpen(true)}
+            aria-haspopup="dialog"
+            className="rounded border border-stone-300 px-2.5 py-1 text-xs text-stone-700 hover:bg-stone-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-900"
+            title="不重新生成内容，直接更换整套模板"
+          >
+            换模板 · {THEMES[presentation.theme]?.name ?? presentation.theme}
+          </button>
           {saveStatus !== 'idle' && (
             <span className={`text-[10px] uppercase tracking-wider ${saveStatus === 'saving' ? 'text-stone-400' : 'text-emerald-600'}`}
               title="编辑会自动保存到本地浏览器，无需手动操作">
@@ -547,11 +567,13 @@ export default function DeckPage() {
       {iconPickerOpen && (
         <IconPicker
           open
+          color={THEMES[presentation.theme].text}
           onClose={() => setIconPickerOpen(false)}
           onPick={(svgDataUrl, name) => {
             const el: ImageElement = {
               id: `i_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
               type: 'image',
+              themeColorRole: 'text',
               x: 900, y: 460, w: 160, h: 160,
               src: svgDataUrl,
             }
@@ -593,6 +615,18 @@ export default function DeckPage() {
           />
         )
       })()}
+
+      {themeSwitcherOpen && (
+        <ThemeSwitcherDialog
+          presentation={presentation}
+          slideIndex={currentSlide}
+          onClose={closeThemeSwitcher}
+          onApply={(theme) => {
+            changeTheme(theme)
+            closeThemeSwitcher()
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -16,6 +16,8 @@ export type ElementKind = 'text' | 'rect' | 'ellipse' | 'line' | 'image'
 interface BaseElement {
   id: ElementId
   type: ElementKind
+  /** Whether the element came from a layout composer or was added in the editor. */
+  origin?: 'composed' | 'manual'
   /** Left, top in source px (1920×1080 canvas). */
   x: number
   y: number
@@ -108,6 +110,8 @@ export interface LineElement extends BaseElement {
 export interface ImageElement extends BaseElement {
   type: 'image'
   src: string
+  /** Optional theme token used by generated SVG icons. Raster images leave this unset. */
+  themeColorRole?: 'text' | 'accent'
 }
 
 export type SlideElement =
