@@ -77,10 +77,9 @@ console.log('\n=== Phase 3: PPTX export ===')
 await page.goto(`${BASE}/deck?fixture=cover&theme=modern-minimal`, { waitUntil: 'networkidle' })
 await page.waitForTimeout(1200)
 const dlPromise = page.waitForEvent('download', { timeout: 30000 }).catch(() => null)
-// Toolbar uses dropdown menu now
-await page.locator('button:has-text("导出")').first().hover()
-await page.waitForTimeout(300)
-await page.locator('button:has-text("PPTX")').first().click()
+// Toolbar uses a click-opened dropdown menu.
+await page.getByRole('button', { name: /导出/ }).click()
+await page.getByRole('menuitem', { name: 'PPTX', exact: true }).click()
 const dl = await dlPromise
 if (dl) {
   const savedAt = path.join(outDir, 'export.pptx')
