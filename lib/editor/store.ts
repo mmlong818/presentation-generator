@@ -5,10 +5,12 @@
 
 import { create } from 'zustand'
 import type { EditorPresentation, ElementId, SlideElement } from './types'
-import type { LayoutType, Slide } from '../types'
+import type { LayoutType, Slide, ThemeId } from '../types'
 import { defaultSlideForType, migrateSlide } from './layouts-catalog'
 import { composeSlide } from './compose/layouts'
 import { resolveTheme } from './theme'
+import { resetIds } from './compose/helpers'
+import { rethemeSlide } from './retheme'
 
 interface HistoryEntry {
   presentation: EditorPresentation
@@ -56,6 +58,8 @@ interface EditorState {
    * Slide payload) and re-compose its elements. Preserves notes.
    */
   replaceSlideSource: (index: number, newSource: Slide) => void
+  /** Recompose the whole presentation with a new theme while preserving sources and notes. */
+  changeTheme: (theme: ThemeId) => void
 
   undo: () => void
   redo: () => void
@@ -186,12 +190,13 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const next = snapshot(state.presentation)
     const slide = next.slides[state.currentSlide]
     if (!slide) return
-    slide.elements.push(element)
+    const manualElement = { ...element, origin: 'manual' as const }
+    slide.elements.push(manualElement)
     pushHistory(state, 'addElement')
     set({
       presentation: next,
-      selectedElementIds: [element.id],
-      selectedElementId: element.id,
+      selectedElementIds: [manualElement.id],
+      selectedElementId: manualElement.id,
     })
   },
 
@@ -204,7 +209,13 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const ids = new Set(state.selectedElementIds)
     const clones = slide.elements
       .filter(e => ids.has(e.id))
-      .map(e => ({ ...JSON.parse(JSON.stringify(e)), id: freshId(e.type), x: e.x + 24, y: e.y + 24 }) as SlideElement)
+      .map(e => ({
+        ...JSON.parse(JSON.stringify(e)),
+        id: freshId(e.type),
+        origin: 'manual',
+        x: e.x + 24,
+        y: e.y + 24,
+      }) as SlideElement)
     slide.elements.push(...clones)
     const cloneIds = clones.map(c => c.id)
     pushHistory(state, 'duplicateSelected')
@@ -338,6 +349,22 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const next = snapshot(state.presentation)
     next.slides[index] = { ...next.slides[index], elements, source: newSource }
     pushHistory(state, 'replaceSlideSource')
+    set({ presentation: next, selectedElementIds: [], selectedElementId: null })
+  },
+
+  changeTheme: (themeId) => {
+    const state = get()
+    if (!state.presentation || state.presentation.theme === themeId) return
+    const previousTheme = resolveTheme(state.presentation.theme)
+    const nextTheme = resolveTheme(themeId)
+    const next = snapshot(state.presentation)
+    const total = next.slides.length
+
+    resetIds()
+    next.theme = themeId
+    next.slides = next.slides.map((slide, index) => rethemeSlide(slide, index, total, previousTheme, nextTheme))
+
+    pushHistory(state, 'changeTheme')
     set({ presentation: next, selectedElementIds: [], selectedElementId: null })
   },
 

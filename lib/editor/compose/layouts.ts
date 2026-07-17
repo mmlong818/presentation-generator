@@ -331,6 +331,109 @@ function composeData(s: DataSlide, theme: ResolvedTheme, n: number, total: numbe
   const bot = CANVAS_H - 100
   const avail = bot - top
 
+  if (count <= 3) {
+    const [primary, ...secondary] = stats
+    const primaryW = count === 1 ? w : w * 0.58
+    const primarySize = theme.hero * 1.18
+    const primaryEstimate = primary.value.length * primarySize * 0.6
+    const primaryFont = primaryEstimate > primaryW
+      ? Math.max(primarySize * 0.52, primaryW / primary.value.length / 0.6)
+      : primarySize
+    const primaryY = top + Math.max(20, avail * 0.23)
+    const primaryAlign = count === 1 ? 'center' as const : 'left' as const
+
+    out.push(text({
+      text: primary.value || '—',
+      x, y: primaryY, w: primaryW, h: primaryFont * 1.15,
+      fontSize: primaryFont,
+      fontFamily: displayFont(theme),
+      color: theme.accent,
+      fontWeight: 800,
+      lineHeight: 1.0,
+      letterSpacing: -0.02,
+      align: primaryAlign,
+      role: 'hero',
+      nowrap: true,
+      ...(primary.value === '—' || primary.value === '-' ? { opacity: 0.35 } : {}),
+    }))
+    out.push(text({
+      text: primary.label,
+      x, y: primaryY + primaryFont * 1.15 + 22, w: primaryW, h: theme.body * 2.2,
+      fontSize: theme.body * 1.05,
+      fontFamily: bodyFont(theme),
+      color: theme.text,
+      fontWeight: 700,
+      lineHeight: 1.4,
+      align: primaryAlign,
+      role: 'body',
+    }))
+    if (primary.source) {
+      out.push(text({
+        text: primary.source,
+        x, y: primaryY + primaryFont * 1.15 + theme.body * 2.2 + 28, w: primaryW, h: theme.caption * 2,
+        fontSize: theme.caption * 0.9,
+        fontFamily: bodyFont(theme),
+        color: theme.muted,
+        fontStyle: 'italic',
+        align: primaryAlign,
+        role: 'caption',
+      }))
+    }
+
+    if (secondary.length > 0) {
+      const dividerX = x + w * 0.64
+      const rightX = dividerX + 48
+      const rightW = x + w - rightX
+      const rowH = avail / secondary.length
+      out.push(line({ x1: dividerX, y1: top, x2: dividerX, y2: bot, stroke: theme.border, strokeWidth: 2 }))
+      secondary.forEach((stat, index) => {
+        const rowTop = top + rowH * index
+        if (index > 0) out.push(line({ x1: dividerX, y1: rowTop, x2: x + w, y2: rowTop, stroke: theme.border, strokeWidth: 1 }))
+        const valueSize = theme.hero * 0.58
+        const estimate = stat.value.length * valueSize * 0.6
+        const valueFont = estimate > rightW ? Math.max(valueSize * 0.56, rightW / stat.value.length / 0.6) : valueSize
+        const valueY = rowTop + Math.max(24, rowH * 0.18)
+        out.push(text({
+          text: stat.value || '—',
+          x: rightX, y: valueY, w: rightW, h: valueFont * 1.1,
+          fontSize: valueFont,
+          fontFamily: displayFont(theme),
+          color: theme.text,
+          fontWeight: 750,
+          lineHeight: 1.0,
+          nowrap: true,
+          role: 'hero',
+          ...(stat.value === '—' || stat.value === '-' ? { opacity: 0.35 } : {}),
+        }))
+        out.push(text({
+          text: stat.label,
+          x: rightX, y: valueY + valueFont * 1.1 + 16, w: rightW, h: theme.body * 1.9,
+          fontSize: theme.body * 0.88,
+          fontFamily: bodyFont(theme),
+          color: theme.text,
+          fontWeight: 700,
+          lineHeight: 1.35,
+          role: 'body',
+        }))
+        if (stat.source) {
+          out.push(text({
+            text: stat.source,
+            x: rightX, y: valueY + valueFont * 1.1 + theme.body * 1.9 + 18, w: rightW, h: theme.caption * 1.8,
+            fontSize: theme.caption * 0.82,
+            fontFamily: bodyFont(theme),
+            color: theme.muted,
+            fontStyle: 'italic',
+            lineHeight: 1.35,
+            role: 'caption',
+          }))
+        }
+      })
+    }
+
+    out.push(pageNumEl(n, total, theme))
+    return out
+  }
+
   // Adapt value font to stat count: 2-3 stats → giant; 4 → tighter; 5+ → smaller.
   const valueScale = count <= 2 ? 1.0
     : count === 3 ? 0.9
@@ -520,92 +623,67 @@ function composeProcess(s: ProcessSlide, theme: ResolvedTheme, n: number, total:
   const top = afterHeading(s.heading, theme, 130, headSize, 60)
   const bot = CANVAS_H - 100
 
-  // Step number scales down for many steps (3 → giant; 6 → moderate).
-  const numScale = count <= 3 ? 1.0 : count === 4 ? 0.8 : count === 5 ? 0.65 : 0.55
-  const numSize = theme.section * numScale
-  const titleSize = theme.body * (count <= 3 ? 1.1 : count === 4 ? 1.0 : 0.9)
-  const descSize = theme.caption * (count <= 3 ? 1.1 : 1.0)
-
-  // Distribute columns. Each column is a step card.
-  const gap = 32
+  const titleSize = theme.body * (count <= 4 ? 1.05 : 0.9)
+  const descSize = theme.caption * (count <= 4 ? 1.05 : 0.92)
+  const gap = 24
   const cols = distributeH({
     left: x, available: w, count,
     colW: (w - gap * (count - 1)) / count,
     minGap: gap,
     align: 'start',
   })
-
-  // Cards hug content: compute each card's needed height from real wrapped
-  // lines, then align all cards to the max so the row reads as a unit.
-  const ipad = Math.max(40, Math.round(titleSize * 1.4))
-  const titleLineH = titleSize * 1.3
-  const descLineH = descSize * 1.55
-  const colW = cols[0]?.w ?? w
-  const innerW = colW - 2 * ipad
-
-  const cardHs = steps.map(step => {
-    const titleLines = Math.max(1, estimateLines(step.title || '', titleSize, innerW))
-    const descLines = step.desc ? Math.max(1, estimateLines(step.desc, descSize, innerW)) : 0
-    const titleBlock = Math.min(titleLines, 3) * titleLineH
-    const descBlock = descLines > 0 ? 12 + descLines * descLineH : 0
-    return ipad + numSize * 1.1 + 24 + titleBlock + descBlock + ipad
-  })
   const avail = bot - top
-  const minCardH = 280
-  const maxCardH = avail
-  const cardH = Math.min(maxCardH, Math.max(minCardH, ...cardHs))
+  const railY = top + Math.max(120, avail * 0.34)
+  const markerR = count >= 6 ? 30 : 36
+  const firstCX = cols[0].x + cols[0].w / 2
+  const lastCX = cols[cols.length - 1].x + cols[cols.length - 1].w / 2
+
+  out.push(line({ x1: firstCX, y1: railY, x2: lastCX, y2: railY, stroke: theme.border, strokeWidth: 2 }))
 
   steps.forEach((step, i) => {
     const { x: cx, w: cw } = cols[i]
-
-    // Card background
-    out.push(rect({
-      x: cx, y: top, w: cw, h: cardH,
-      fill: theme.paper, cornerRadius: 8,
+    const markerCX = cx + cw / 2
+    out.push(ellipse({
+      cx: markerCX, cy: railY,
+      rx: markerR, ry: markerR,
+      fill: theme.bg,
+      stroke: theme.accent,
+      strokeWidth: 2,
     }))
-
-    // Step number (big, accent)
     out.push(text({
       text: String(i + 1).padStart(2, '0'),
-      x: cx + ipad, y: top + ipad,
-      w: cw - 2 * ipad, h: numSize * 1.1,
-      fontSize: numSize,
+      x: markerCX - markerR, y: railY - markerR * 0.52,
+      w: markerR * 2, h: markerR * 1.1,
+      fontSize: markerR * 0.68,
       fontFamily: displayFont(theme),
       color: theme.accent,
       fontWeight: 800,
       lineHeight: 1.0,
-      letterSpacing: -0.02,
-      role: 'heading',
+      align: 'center',
+      role: 'caption',
     }))
-
-    // Step title
-    const titleY = top + ipad + numSize * 1.1 + 24
-    const titleLines = Math.max(1, estimateLines(step.title || '', titleSize, cw - 2 * ipad))
-    const titleH = Math.min(titleLines, 3) * titleLineH
+    const titleY = railY + markerR + 34
     out.push(text({
       text: step.title,
-      x: cx + ipad, y: titleY, w: cw - 2 * ipad, h: titleH,
+      x: cx + 12, y: titleY, w: cw - 24, h: titleSize * 2.7,
       fontSize: titleSize,
-      fontFamily: bodyFont(theme),
+      fontFamily: displayFont(theme),
       color: theme.text,
       fontWeight: 700,
       lineHeight: 1.3,
+      align: 'center',
       role: 'body',
     }))
-
-    // Step description (only as tall as the wrapped text actually needs)
     if (step.desc) {
-      const descY = titleY + titleH + 12
-      const descLines = Math.max(1, estimateLines(step.desc, descSize, cw - 2 * ipad))
-      const descH = descLines * descLineH
       out.push(text({
         text: step.desc,
-        x: cx + ipad, y: descY,
-        w: cw - 2 * ipad, h: descH,
+        x: cx + 12, y: titleY + titleSize * 2.2,
+        w: cw - 24, h: Math.max(100, bot - titleY - titleSize * 2.2),
         fontSize: descSize,
         fontFamily: bodyFont(theme),
         color: theme.muted,
-        lineHeight: 1.55,
+        lineHeight: 1.5,
+        align: 'center',
         role: 'caption',
       }))
     }
@@ -1151,6 +1229,7 @@ function composeChartLine(s: ChartLineSlide, theme: ResolvedTheme, n: number, to
   out.push({
     id: chartImageId('chart-line'),
     type: 'image',
+    origin: 'composed',
     x: box.x, y: box.y, w: box.w, h: box.h,
     src: svgToDataUrl(svg),
   })
@@ -1187,6 +1266,7 @@ function composeChartPie(s: ChartPieSlide, theme: ResolvedTheme, n: number, tota
   out.push({
     id: chartImageId('chart-pie'),
     type: 'image',
+    origin: 'composed',
     x: box.x, y: box.y, w: box.w, h: box.h,
     src: svgToDataUrl(svg),
   })
@@ -1223,6 +1303,7 @@ function composeChartArea(s: ChartAreaSlide, theme: ResolvedTheme, n: number, to
   out.push({
     id: chartImageId('chart-area'),
     type: 'image',
+    origin: 'composed',
     x: box.x, y: box.y, w: box.w, h: box.h,
     src: svgToDataUrl(svg),
   })

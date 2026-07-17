@@ -45,12 +45,14 @@ export interface TextOpts {
   z?: number
   rotate?: number
   nowrap?: boolean
+  opacity?: number
 }
 
 export function text(o: TextOpts): TextElement {
   return {
     id: nextId('t'),
     type: 'text',
+    origin: 'composed',
     x: o.x, y: o.y, w: o.w, h: o.h,
     text: o.text,
     fontSize: o.fontSize,
@@ -69,6 +71,7 @@ export function text(o: TextOpts): TextElement {
     z: o.z,
     rotate: o.rotate,
     nowrap: o.nowrap,
+    opacity: o.opacity,
   }
 }
 
@@ -89,6 +92,7 @@ export function rect(o: RectOpts): RectElement {
   return {
     id: nextId('r'),
     type: 'rect',
+    origin: 'composed',
     x: o.x, y: o.y, w: o.w, h: o.h,
     fill: o.fill,
     stroke: o.stroke,
@@ -115,6 +119,7 @@ export function ellipse(o: EllipseOpts): EllipseElement {
   return {
     id: nextId('e'),
     type: 'ellipse',
+    origin: 'composed',
     x: o.cx - o.rx, y: o.cy - o.ry,
     w: o.rx * 2, h: o.ry * 2,
     fill: o.fill,
@@ -137,6 +142,7 @@ export function line(o: LineOpts): LineElement {
   return {
     id: nextId('ln'),
     type: 'line',
+    origin: 'composed',
     x: Math.min(o.x1, o.x2),
     y: Math.min(o.y1, o.y2),
     w: Math.abs(o.x2 - o.x1),

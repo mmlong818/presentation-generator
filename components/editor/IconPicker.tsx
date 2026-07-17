@@ -85,12 +85,13 @@ const ICONS: IconDef[] = [
 
 interface Props {
   open: boolean
+  color?: string
   onClose: () => void
   /** Called with an SVG data URL ready for ImageElement.src */
   onPick: (svgDataUrl: string, name: string) => void
 }
 
-export default function IconPicker({ open, onClose, onPick }: Props) {
+export default function IconPicker({ open, color = 'currentColor', onClose, onPick }: Props) {
   const [q, setQ] = useState('')
   const items = useMemo(() => {
     const lower = q.toLowerCase()
@@ -120,7 +121,7 @@ export default function IconPicker({ open, onClose, onPick }: Props) {
               <button key={name}
                 onClick={() => {
                   const svg = renderToStaticMarkup(
-                    <Icon size={64} strokeWidth={1.6} color="currentColor" />
+                    <Icon size={64} strokeWidth={1.6} color={color} />
                   )
                   const data = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
                   onPick(data, name)

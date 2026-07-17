@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { useEditorStore } from '@/lib/editor/store'
 import type { EditorPresentation, TextElement } from '@/lib/editor/types'
+import { resolveTheme } from '@/lib/editor/theme'
 
 const baseSlide = () => ({
   id: 's1', background: '#fff', elements: [], notes: undefined,
@@ -93,5 +94,110 @@ describe('editor store', () => {
     expect(slides).toHaveLength(2)
     expect(slides[1].source?.type).toBe('cover')
     expect(slides[1].elements.length).toBeGreaterThan(0)
+  })
+
+  it('changeTheme recomposes sourced slides and supports undo', () => {
+    const p = basePresentation()
+    p.slides[0] = {
+      ...baseSlide(),
+      source: { type: 'statement', title: '内容不变，只换模板', highlight: ['换模板'] },
+    }
+    useEditorStore.getState().setPresentation(p)
+
+    useEditorStore.getState().changeTheme('tech-utility')
+    const changed = useEditorStore.getState().presentation!
+    expect(changed.theme).toBe('tech-utility')
+    expect(changed.slides[0].background).toBe(resolveTheme('tech-utility').bg)
+    expect(changed.slides[0].elements.some(e => e.type === 'text' && e.text.includes('内容不变'))).toBe(true)
+
+    useEditorStore.getState().undo()
+    expect(useEditorStore.getState().presentation?.theme).toBe('modern-minimal')
+  })
+
+  it('changeTheme retokens custom slides without moving their elements', () => {
+    const from = resolveTheme('modern-minimal')
+    const to = resolveTheme('midnight-luxe')
+    const p = basePresentation()
+    p.slides[0].elements = [
+      { id: 't1', type: 'text', x: 120, y: 160, w: 800, h: 100, text: '自定义内容', fontSize: 48, fontFamily: from.fontBody, color: from.text },
+      { id: 't2', type: 'text', x: 120, y: 300, w: 800, h: 100, text: '品牌色', fontSize: 40, fontFamily: 'Custom', color: '#123456' },
+    ]
+    useEditorStore.getState().setPresentation(p)
+
+    useEditorStore.getState().changeTheme('midnight-luxe')
+    const elements = useEditorStore.getState().presentation!.slides[0].elements as TextElement[]
+    expect(elements[0]).toMatchObject({ x: 120, y: 160, text: '自定义内容', fontFamily: to.fontBody, color: to.text })
+    expect(elements[1]).toMatchObject({ color: '#123456', fontFamily: 'Custom' })
+  })
+
+  it('changeTheme preserves elements manually added to a sourced slide', () => {
+    const from = resolveTheme('modern-minimal')
+    const to = resolveTheme('midnight-luxe')
+    const p = basePresentation()
+    p.slides[0] = {
+      ...baseSlide(),
+      source: { type: 'statement', title: '结构内容' },
+    }
+    useEditorStore.getState().setPresentation(p)
+    useEditorStore.getState().addElement({
+      id: 't_manual',
+      type: 'text',
+      x: 111,
+      y: 222,
+      w: 500,
+      h: 80,
+      text: '手动补充内容',
+      fontSize: 36,
+      fontFamily: from.fontBody,
+      color: from.text,
+    })
+
+    useEditorStore.getState().changeTheme('midnight-luxe')
+    const manual = useEditorStore.getState().presentation!.slides[0].elements
+      .find(element => element.id === 't_manual') as TextElement
+    expect(manual).toMatchObject({
+      origin: 'manual',
+      x: 111,
+      y: 222,
+      text: '手动补充内容',
+      fontFamily: to.fontBody,
+      color: to.text,
+    })
+  })
+
+  it('changeTheme recolors theme-aware SVG icons but leaves raster images untouched', () => {
+    const from = resolveTheme('modern-minimal')
+    const to = resolveTheme('midnight-luxe')
+    const p = basePresentation()
+    p.slides[0].elements = [
+      {
+        id: 'i_icon',
+        type: 'image',
+        origin: 'manual',
+        x: 100,
+        y: 100,
+        w: 120,
+        h: 120,
+        src: `data:image/svg+xml,%3Csvg%20color%3D%22${encodeURIComponent(from.text)}%22%3E%3C%2Fsvg%3E`,
+        themeColorRole: 'text',
+      },
+      {
+        id: 'i_photo',
+        type: 'image',
+        origin: 'manual',
+        x: 300,
+        y: 100,
+        w: 120,
+        h: 120,
+        src: 'data:image/png;base64,photo',
+      },
+    ]
+    useEditorStore.getState().setPresentation(p)
+
+    useEditorStore.getState().changeTheme('midnight-luxe')
+    const images = useEditorStore.getState().presentation!.slides[0].elements
+    expect(images[0]).toMatchObject({ themeColorRole: 'text' })
+    expect((images[0] as { src: string }).src).toContain(encodeURIComponent(to.text))
+    expect((images[1] as { src: string }).src).toBe('data:image/png;base64,photo')
   })
 })

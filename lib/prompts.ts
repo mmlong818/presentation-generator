@@ -30,7 +30,17 @@ const COACH_METHODOLOGY = `# 演讲设计方法论（必须遵守）
 
 Duarte 框架要求情感节奏：开场钩子 → What Is（共鸣）↔ What Could Be（向往）三次循环 → New Bliss（行动 + 听众未来图景）。每次循环更深入：表层问题 → 情感原因 → 价值观 / 使命。
 
-## 第三步：写讲稿 ≠ 抄幻灯片
+## 第三步：先编排整套视觉节奏，再填写单页内容
+
+- **一页一个判断**：标题给结论，正文只保留证明这个结论所需的信息。
+- **高低密度交替**：连续 2-4 张信息页后，用 statement / quote / question 等低密度页形成呼吸；没有真实内容时不要硬插。
+- **版式要换拍**：相邻页优先使用互补结构，同一种 type 最多连续 2 张。
+- **少用等宽卡片墙**：只有同层级 KPI、清单或流程才允许等分；其余优先用主次分区、左右分栏、时间轨或大数字。
+- **纯文字页要完整居中**：没有图片或图表时，不要把一小块文字孤零零放在左上角。
+- **版式有准入条件**：data 只放 1-3 个真实数字且第一个最重要；compare 必须有真实二元对照；process 必须是 3-5 个有顺序的步骤；quote 必须可追溯；persona / case-study 必须来自用户素材；question 整篇最多 1 张。
+- **控制字量**：标题 ≤ 30 字；卡片/步骤标题 ≤ 10 字；单条说明尽量 ≤ 22 字；单页正文通常 ≤ 90 字。
+
+## 第四步：写讲稿 ≠ 抄幻灯片
 
 讲稿和幻灯片**不能重复**。幻灯片是视觉锚点，讲稿是扩展、故事、过渡。
 - 每张开头有过渡句（"说完这个，我想带你们看一个数字……"）
@@ -122,7 +132,9 @@ ${layoutSchemasForPrompt()}
 8. 所有 script[].durationSec 加起来必须接近 \`durationMin × 60\` 秒（±10%）。每张 script[].durationSec 应接近 \`60 / density\` 秒。
 9. 第一张通常是 \`cover\`，最后一张通常是 \`cta\` 或 \`cover\`（呼应）或 \`checklist\`。
 10. 用户在 notes 中提供的素材 → 优先编入对应 slide。
-11. 输出**纯 JSON**，第一个字符是 \`{\`，最后一个字符是 \`}\`。
+11. 相邻两张优先使用互补版式；同一种 \`type\` 最多连续 2 张。密度=2 时拆出的两张必须承担不同任务，例如“结论 + 证据”或“问题 + 方法”，不要复制同一结构。
+12. 数组顺序就是视觉层级：\`data.stats[0]\`、\`argument.points[0]\`、\`compare.right\` 放最重要、最希望观众记住的内容。
+13. 输出**纯 JSON**，第一个字符是 \`{\`，最后一个字符是 \`}\`。
     - 不要写 "以下是 deck:" / "Here is the JSON:" 等前言
     - 不要包在 \`\`\`json 代码块里
     - 不要在 JSON 之后写解释或总结
@@ -188,6 +200,7 @@ ${outline.sections.map((s, i) => `${i + 1}. **${s.title}**（建议版式 \`${s.
 ⚠ 关键约束：
 - slides[].length **必须等于** ${expectedSlides}${fanOutHint}
 - slides 的 type 应符合 sections 的 suggestedLayout（密度=2 时拆出的两张可以是不同版式）
+- 相邻章节优先安排互补版式；同一种 suggestedLayout 最多连续 2 次
 - slides 的标题应忠于 sections 的核心观点
 - 总时长仍要接近 ${brief.durationMin * 60} 秒`;
 
@@ -254,6 +267,14 @@ Duarte 必须有 3 次 What Is ↔ What Could Be 张力循环。
 - 论点 + 支撑 → argument / causality
 - 收尾 → cta / checklist / cover
 - 提问观众 → question
+
+## 视觉节奏硬性要求
+
+- 先排整套节奏，再逐节填内容：避免连续出现 3 张同形状、同密度页面。
+- 同一种 suggestedLayout 最多连续 2 次；密度=2 时，同一章节拆出的两张必须是“结论 + 证据”等互补组合。
+- 只有真正同层级的信息才用等宽卡片；优先安排大数字、分栏、时间轨、居中单句等有明确主次的结构。
+- data 的第一个数字必须是主数字；纯文字且无视觉素材时，优先 statement / quote / question 的完整居中构图。
+- specialty 版式必须满足内容条件，不要为了“丰富”而硬套 persona、case-study、quadrant、matrix-2x2。
 
 ## 时长分配
 
