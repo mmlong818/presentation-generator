@@ -3,7 +3,7 @@
 > 把一个想法，变成一场可放映的演讲。
 > 填一段简介 → 选一个风格 → 30 秒后拿到结构化的幻灯片 + 可编辑 PPTX + 演讲模式。
 
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-orange.svg)](LICENSE)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/mmlong818/presentation-generator)
 
 ---
@@ -187,31 +187,26 @@ pnpm start  # 默认 :3000
 
 ## License
 
-**[AGPL-3.0](LICENSE)** © 2025-PRESENT totoroo and contributors
+**[PolyForm Noncommercial 1.0.0](LICENSE)** © 2025-PRESENT totoroo and contributors
 
-This project is licensed under the **GNU Affero General Public License v3.0**.
+This project is source-available under the **PolyForm Noncommercial License 1.0.0**.
 
 ### What this means
 
-- ✅ **Free to use, modify, and run** (personal, commercial, internal tooling)
-- ✅ **Free to charge for hosted access**（你可以卖订阅）
-- ⚠️ **Strong copyleft**: if you distribute it OR run it as a network service,
-  you MUST release the entire source — including your modifications — under AGPL-3.0
-- ⚠️ **AGPL §13 (network use)**: every user accessing the deployed app has the
-  right to receive the complete corresponding source code. The app ships with a
-  "Source" link in the page footer that satisfies this requirement — do not
-  remove it in production deployments.
-- ❌ **Closed-source commercial use is NOT permitted** under this license. For a
-  proprietary / closed-source commercial license, contact the maintainer.
+- ✅ **Use, modify, and distribute for noncommercial purposes**
+- ✅ Personal research, study, testing, hobbies, and other uses without an anticipated commercial application
+- ✅ Use by charitable, educational, public research, public safety or health,
+  environmental protection, and government organizations as defined by the license
+- ⚠️ Distributions must include these license terms (or their URL) and any required notices
+- ❌ **Commercial use is not granted**. Contact the maintainer for a separate commercial license.
 
 ### Third-party dependencies
 
 All NPM dependencies (Next.js / React / Tailwind / pptxgenjs / jspdf /
 html-to-image / konva / zustand / lucide-react / zod) are MIT or similarly
-permissive — compatible with AGPL-3.0 downstream.
+permissive and remain governed by their own license terms.
 
 ### Source link configuration
 
 Forks should set the `NEXT_PUBLIC_SOURCE_URL` environment variable to point at
-their own repository so the in-app footer link complies with AGPL §13 for that
-deployment.
+their own repository so the in-app source link points to the corresponding code.

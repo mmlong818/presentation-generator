@@ -128,4 +128,4 @@ issue 模板：
 
 ## License
 
-贡献的代码在 AGPL-3.0 下发布。提交 PR 即视为同意此授权。
+贡献的代码在 PolyForm Noncommercial License 1.0.0 下发布。提交 PR 即视为同意此授权。

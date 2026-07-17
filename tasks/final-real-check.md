@@ -9,7 +9,7 @@
 |---|---|
 | 主题 | 为什么 dev-friendly 是 AI PPT 服务唯一可防御的护城河 |
 | 听众 | 内部团队 + 早期投资人 (Seed → A 轮) |
-| 目标 | 让团队对齐"我们不抢 Gamma 的 prosumer，要建 dev/开源帝国" |
+| 目标 | 让团队对齐"我们不抢 Gamma 的 prosumer，要建 dev/源码可用生态" |
 | 时长 | 20 分钟（→ AI 自主生成 20 张 slide）|
 | 主题 | midnight-luxe（深夜金调）|
 | LLM | claude-cli（本地订阅复用，不烧 quota）|
@@ -76,7 +76,7 @@
 
 - **Slide 1 cover**：标题"我们不和 Gamma 抢 prosumer，我们要建一个 开发者帝国" — "开发者帝国" 金色高亮，midnight-luxe 深色底 + 衬线字体，发布会级
 - **Slide 5 argument**：标题 "真正的壁垒不在产品里，在产品外" + "产品外" 金色高亮 + 3 个论点（工具/基础设施/系统）— 真正商业洞察
-- **Slide 10 argument**：标题 "开源核心不是放弃商业化，是用代码换分发" — AI 自己合成了"代码换分发"这种 framework 级 punchline
+- **Slide 10 argument**：标题 "源码可用不是放弃商业化，是用代码换分发" — AI 自己合成了"代码换分发"这种 framework 级 punchline
 
 ## 结论
 

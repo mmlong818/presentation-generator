@@ -33,7 +33,7 @@ const SCENARIOS = [
     title: 'Series A 融资 pitch',
     theme: 'midnight-luxe',
     text: `这是一份面向 VC 合伙人的 Series A pitch。
-公司定位：开源 + BYOK 的 AI PPT 服务，主打 dev/power-user 市场。
+公司定位：源码可用 + BYOK 的 AI PPT 服务，主打 dev/power-user 市场。
 要先有一个吸引人的封面（一句话定位），然后讲市场痛点（Gamma 不够灵活 / PowerPoint 不够智能），
 我们的差异化（11 provider / 21 版式 / 12 主题 / 真 PPTX 导出 / CLI / API），
 关键数据（用户增长 +180%、创作者收入 +240%、国家覆盖 14→27、NPS 4.8），

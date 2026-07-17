@@ -1,6 +1,6 @@
 # 世界级 AI PPT 服务 · 90 天路线
 
-> 路径 A：开源、BYOK、本地跑、原生 PPTX、power-user / dev-friendly
+> 路径 A：源码可用、BYOK、本地跑、原生 PPTX、power-user / dev-friendly
 > 启动日：2026-05-20
 > 模式：自主长任务，每个 sprint 完成后读取本文件继续下一节点
 

@@ -19,7 +19,7 @@ _(Be the second one — see [CONTRIBUTING.md](CONTRIBUTING.md))_
 
 - Every git commit you author lands in `git log` permanently — that's the canonical record
 - This file is the human-readable acknowledgment; updated when a PR ships
-- The AGPL-3.0 `LICENSE` covers all contributions; by submitting a PR you agree your work is released under the same license
+- The PolyForm Noncommercial 1.0.0 `LICENSE` covers all contributions; by submitting a PR you agree your work is released under the same license
 
 ## Stats
 

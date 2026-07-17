@@ -42,14 +42,14 @@ page.on('pageerror', e => pageErrors.push(`pageerror: ${e.message}`))
 const brief = {
   topic: '为什么 dev-friendly 是 AI PPT 服务唯一可防御的护城河',
   audience: '内部团队 + 早期投资人 (Seed → A 轮)',
-  goal: '让团队对齐"我们不抢 Gamma 的 prosumer，要建 dev/开源帝国"',
+  goal: '让团队对齐"我们不抢 Gamma 的 prosumer，要建 dev/源码可用生态"',
   durationMin: 20,
   materials: `最近三周做了 252 视觉矩阵 + 5 位设计大师视角评审。
 关键数据：12 个版式 × 12 主题全绿；brutalist 反白终于实现；blueprint 网格真显示。
 我们的差异化：11 个 LLM provider（其中 1 个是 claude-cli 订阅复用，市面独家）、
 21 个数据驱动版式、4 种导出（PPTX/HTML/PDF/JSON）、CLI + HTTP API。
 Gamma 卡在 prosumer，没法走 dev；Tome 没有可编辑 PPTX 导出。
-我们的策略：BYOK + 开源 + AGPL，让付费 prosumer 工具失去定价权。`,
+我们的策略：BYOK + 源码可用 + 非商业授权，把社区分发与商业授权拆开。`,
 }
 const llm = { provider: 'claude-cli', model: 'claude-sonnet-4-6' }
 const theme = 'midnight-luxe'

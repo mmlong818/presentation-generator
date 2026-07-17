@@ -288,7 +288,7 @@ export default function Home() {
       )}
 
       <footer className="mt-16 pt-8 border-t border-stone-200 text-xs text-stone-500 leading-relaxed">
-        <p>支持 9 种 LLM provider。所有 key 仅存浏览器。开源 AGPL-3.0。</p>
+        <p>支持 9 种 LLM provider。所有 key 仅存浏览器。源码可用，仅限非商业用途。</p>
       </footer>
 
       {llmDialogOpen && (

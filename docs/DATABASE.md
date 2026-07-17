@@ -33,7 +33,7 @@ interface Deck {
 
 ## 方案 A · SQLite（最小改动 · 单机/小团队推荐）
 
-适合：开源用户自部署、Electron 桌面版、 < 1000 个 deck。
+适合：非商业自部署、Electron 桌面版、 < 1000 个 deck。
 
 ### 1. 装依赖
 
@@ -165,7 +165,7 @@ ALTER TABLE decks ADD COLUMN tokens_used INT;
 
 ### 4. 安全
 
-- AGPL-3.0 要求**部署版也开源**。如果你魔改了内核（不只是接 DB），需要把 fork 也开源。
+- PolyForm Noncommercial 1.0.0 仅授权非商业用途；公司内部部署、商业 SaaS 等场景需另行取得商业授权。
 - 不要把用户的 LLM API key 存数据库——保持 client-side localStorage 模式。
 - JSONB 列可建 GIN 索引快速搜索 deck 内容。
 
@@ -210,4 +210,4 @@ export function listLocal(): Array<{ id: string; deck: Deck }> {
 1. **架构污染**：DB 选择是个人偏好，硬塞 Postgres 会绑架轻量用户
 2. **依赖膨胀**：好的 ORM 都几 MB，加进 bundle 不值
 3. **Auth 复杂**：一旦有用户系统就得做注册 / 登录 / 找回密码
-4. **AGPL 边界更清晰**：用户拿干净的核心去派生，加什么由他们自己决定
+4. **授权边界更清晰**：核心允许非商业派生；商业内部使用或 SaaS 需另行授权

@@ -17,27 +17,25 @@ export const metadata: Metadata = {
   description: "把一个想法，变成一场可放映的演讲。",
 };
 
-// AGPL §13: every user accessing the running service has the right to obtain
-// the complete corresponding source code. The footer link below satisfies that
-// obligation by surfacing the source repository in the live UI on every page.
-// Operators forking this project MUST set NEXT_PUBLIC_SOURCE_URL to their fork.
+// Keep the corresponding source repository discoverable from the running app.
+// Operators forking this project should set NEXT_PUBLIC_SOURCE_URL to their fork.
 const SOURCE_URL = process.env.NEXT_PUBLIC_SOURCE_URL
   ?? 'https://github.com/mmlong818/presentation-generator';
 
 function SourceFooter() {
   return (
     <footer
-      aria-label="开源协议与源码"
+      aria-label="许可证与源码"
       className="fixed bottom-1 right-2 z-50 pointer-events-none"
     >
       <a
         href={SOURCE_URL}
         target="_blank"
         rel="noreferrer noopener"
-        title="此应用根据 AGPL-3.0 协议开源。AGPL §13 要求向所有网络用户提供源码。"
+        title="源码采用 PolyForm Noncommercial 1.0.0，仅授权非商业用途。"
         className="pointer-events-auto text-[10px] font-mono text-stone-400 hover:text-stone-700 transition-colors px-2 py-1 rounded"
       >
-        AGPL · Source ↗
+        PolyForm NC · Source ↗
       </a>
     </footer>
   );
